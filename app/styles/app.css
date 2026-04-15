@@ -1,0 +1,220 @@
+@import "tailwindcss" source("../");
+@import "tw-animate-css";
+
+:root {
+  /* Layer 1: Color Primitives */
+  --cv-navy: #1b365d;
+  --cv-navy-light: #2a4a7a;
+  --cv-navy-dark: #0f2240;
+  --cv-copper: #b87333;
+  --cv-copper-light: #d4935a;
+  --cv-copper-dark: #8f5a28;
+  --cv-field-green: #3d5a3e;
+  --cv-field-green-light: #4e7350;
+  --cv-parchment: #f7f4ef;
+  --cv-cream: #fafaf7;
+  --cv-charcoal: #2d3436;
+  --cv-steel: #4a5568;
+  --cv-muted: #6b7c8f;
+  --cv-amber: #d97706;
+  --cv-success: #2d8659;
+  --cv-danger: #c75a3b;
+  --cv-success-bg: #eaf5ee;
+  --cv-info-bg: #e8edf4;
+  --cv-warning-bg: #fef3e2;
+  --cv-danger-bg: #fceaea;
+  --cv-border: #e2ddd5;
+  --cv-border-light: #edead4;
+
+  /* Layer 3: Typography */
+  --cv-font-logo: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --cv-font-headline: "Playfair Display", Georgia, serif;
+  --cv-font-body: "Source Sans 3", system-ui, sans-serif;
+  --cv-font-data: "IBM Plex Mono", "Courier New", monospace;
+
+  /* Layer 4: Type Scale */
+  --cv-type-3xl: 56px;
+  --cv-type-2xl: 36px;
+  --cv-type-xl: 24px;
+  --cv-type-lg: 20px;
+  --cv-type-md: 18px;
+  --cv-type-base: 16px;
+  --cv-type-sm: 14px;
+  --cv-type-xs: 12px;
+  --cv-type-2xs: 11px;
+  --cv-type-data: 22px;
+  --cv-type-data-sm: 14px;
+  --cv-type-label: 12px;
+
+  /* Layer 6: Component Tokens */
+  --cv-radius-sm: 4px;
+  --cv-radius-md: 6px;
+  --cv-radius-lg: 8px;
+  --cv-radius-xl: 12px;
+  --cv-shadow-sm: 0 1px 3px rgba(27, 54, 93, 0.06);
+  --cv-shadow-md: 0 4px 12px rgba(27, 54, 93, 0.08);
+  --cv-shadow-lg: 0 8px 24px rgba(27, 54, 93, 0.12);
+
+  /* Layer 7: Motion */
+  --cv-motion-fast: 0.1s;
+  --cv-motion-normal: 0.2s;
+  --cv-motion-slow: 0.35s;
+  --cv-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layer 8: Dark Surface */
+  --cv-dark-text-primary: #ffffff;
+  --cv-dark-text-secondary: rgba(255, 255, 255, 0.7);
+  --cv-dark-text-muted: rgba(255, 255, 255, 0.45);
+  --cv-dark-text-hint: rgba(255, 255, 255, 0.25);
+  --cv-dark-border: rgba(255, 255, 255, 0.12);
+  --cv-dark-accent-label: #d4935a;
+
+  /* shadcn semantic mapping */
+  --background: var(--cv-parchment);
+  --foreground: var(--cv-charcoal);
+  --card: #ffffff;
+  --card-foreground: var(--cv-charcoal);
+  --popover: #ffffff;
+  --popover-foreground: var(--cv-charcoal);
+  --primary: var(--cv-navy);
+  --primary-foreground: #ffffff;
+  --secondary: var(--cv-cream);
+  --secondary-foreground: var(--cv-navy);
+  --muted: var(--cv-cream);
+  --muted-foreground: var(--cv-steel);
+  --accent: var(--cv-copper);
+  --accent-foreground: #ffffff;
+  --destructive: var(--cv-danger);
+  --destructive-foreground: #ffffff;
+  --border: var(--cv-border);
+  --input: var(--cv-border);
+  --ring: var(--cv-copper);
+  --radius: var(--cv-radius-lg);
+}
+
+@theme inline {
+  --font-sans: var(--cv-font-body);
+  --font-heading: var(--cv-font-headline);
+  --font-logo: var(--cv-font-logo);
+  --font-headline: var(--cv-font-headline);
+  --font-body: var(--cv-font-body);
+  --font-data: var(--cv-font-data);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-cv-navy: var(--cv-navy);
+  --color-cv-navy-light: var(--cv-navy-light);
+  --color-cv-navy-dark: var(--cv-navy-dark);
+  --color-cv-copper: var(--cv-copper);
+  --color-cv-copper-light: var(--cv-copper-light);
+  --color-cv-copper-dark: var(--cv-copper-dark);
+  --color-cv-field-green: var(--cv-field-green);
+  --color-cv-field-green-light: var(--cv-field-green-light);
+  --color-cv-parchment: var(--cv-parchment);
+  --color-cv-cream: var(--cv-cream);
+  --color-cv-charcoal: var(--cv-charcoal);
+  --color-cv-steel: var(--cv-steel);
+  --color-cv-muted: var(--cv-muted);
+  --color-cv-amber: var(--cv-amber);
+  --color-cv-success: var(--cv-success);
+  --color-cv-danger: var(--cv-danger);
+  --color-cv-success-bg: var(--cv-success-bg);
+  --color-cv-info-bg: var(--cv-info-bg);
+  --color-cv-warning-bg: var(--cv-warning-bg);
+  --color-cv-danger-bg: var(--cv-danger-bg);
+  --color-cv-border: var(--cv-border);
+  --color-cv-border-light: var(--cv-border-light);
+
+  --radius-sm: var(--cv-radius-sm);
+  --radius-md: var(--cv-radius-md);
+  --radius-lg: var(--cv-radius-lg);
+  --radius-xl: var(--cv-radius-xl);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--cv-font-body);
+  color: var(--cv-charcoal);
+  background: var(--cv-parchment);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  [role="button"],
+  [tabindex]:not([tabindex="-1"]) {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cv-copper focus-visible:ring-offset-2 focus-visible:ring-offset-cv-parchment;
+  }
+}
+
+@layer utilities {
+  .cv-heading {
+    font-family: var(--cv-font-headline);
+    color: var(--cv-navy);
+  }
+
+  .cv-dark-text-primary {
+    color: var(--cv-dark-text-primary);
+  }
+
+  .cv-dark-text-secondary {
+    color: var(--cv-dark-text-secondary);
+  }
+
+  .cv-dark-text-muted {
+    color: var(--cv-dark-text-muted);
+  }
+
+  .cv-dark-text-hint {
+    color: var(--cv-dark-text-hint);
+  }
+
+  .cv-dark-border {
+    border-color: var(--cv-dark-border);
+  }
+
+  .cv-dark-accent-label {
+    color: var(--cv-dark-accent-label);
+  }
+
+  .cv-min-touch {
+    min-height: 44px;
+  }
+
+  .cv-form-label {
+    font-family: var(--cv-font-body);
+    font-size: var(--cv-type-label);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--cv-steel);
+  }
+}

@@ -1,9 +1,27 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "react-router-app",
-  "compatibility_date": "2025-04-04",
+  "name": "crewvolt-web",
+  "compatibility_date": "2026-04-14",
+  "compatibility_flags": ["nodejs_compat"],
   "main": "./workers/app.ts",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "crewvolt-db",
+      "database_id": "983b5f01-d94a-45e8-870f-8c76a7c57f08",
+      "migrations_dir": "workers/migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "UPLOADS",
+      "bucket_name": "crewvolt-uploads"
+    }
+  ],
   "vars": {
-    "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare"
+    "NOTIFICATION_EMAIL": "staffing@crewvolt.com",
+    "RESEND_FROM_EMAIL": "CrewVolt <no-reply@crewvolt.com>",
+    "PUBLIC_SITE_URL": "https://crewvolt.com",
+    "CF_WEB_ANALYTICS_TOKEN": ""
   }
 }

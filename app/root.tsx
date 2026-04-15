@@ -7,8 +7,33 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import { Footer } from "~/components/footer";
+import { JsonLdScript } from "~/components/json-ld-script";
+import { Nav } from "~/components/nav";
+import { TooltipProvider } from "~/components/ui/tooltip";
+import { Toaster } from "~/components/ui/sonner";
+import { organizationSchema } from "~/lib/seo";
 import type { Route } from "./+types/root";
-import "./app.css";
+import "./styles/app.css";
+
+export function loader({ context }: Route.LoaderArgs) {
+  return {
+    analyticsToken: context.cloudflare.env.CF_WEB_ANALYTICS_TOKEN ?? "",
+  };
+}
+
+export function meta(_: Route.MetaArgs) {
+  return [
+    {
+      title: "CrewVolt | Energy Infrastructure Staffing",
+    },
+    {
+      name: "description",
+      content:
+        "CrewVolt places experienced inspectors, superintendents, and project managers on substation, wind, and solar projects.",
+    },
+  ];
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -19,8 +44,9 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap",
   },
+  { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -41,8 +67,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
-  return <Outlet />;
+export default function App({ loaderData }: Route.ComponentProps) {
+  const analyticsBeacon = loaderData.analyticsToken
+    ? JSON.stringify({ token: loaderData.analyticsToken })
+    : null;
+
+  return (
+    <TooltipProvider>
+      <JsonLdScript data={organizationSchema} />
+      <Nav />
+      <Outlet />
+      <Footer />
+      <Toaster position="top-center" richColors />
+      {analyticsBeacon ? (
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={analyticsBeacon}
+        />
+      ) : null}
+    </TooltipProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
@@ -62,14 +107,18 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
+    <TooltipProvider>
+      <Nav />
+      <main className="mx-auto w-full max-w-3xl px-6 py-20">
+        <h1 className="font-headline text-4xl text-cv-navy">{message}</h1>
+        <p className="mt-4 text-base text-cv-steel">{details}</p>
+        {stack ? (
+          <pre className="mt-8 overflow-x-auto rounded-xl border border-cv-border bg-white p-4 text-xs text-cv-charcoal">
+            <code>{stack}</code>
+          </pre>
+        ) : null}
+      </main>
+      <Footer />
+    </TooltipProvider>
   );
 }
