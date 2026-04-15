@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useActionData, useNavigation, useSubmit } from "react-router";
+import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import { toast } from "sonner";
 
 import { Form } from "~/components/ui/form";
@@ -30,7 +30,7 @@ const fieldClassName =
 
 export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
-    title: "Hire Energy Inspectors and Superintendents | Staff Your Project | CrewVolt",
+    title: "Staff Your Project | Hire Energy Pros | CrewVolt",
     description:
       "Need inspectors, superintendents, or project managers for your energy construction project? CrewVolt sources experienced professionals from our vetted network.",
     path: "/staff-my-project",
@@ -163,7 +163,7 @@ export default function StaffMyProjectRoute() {
       </h1>
       <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
         You have a project that needs experienced leadership or inspection professionals. Tell us
-        about it and we will start matching people from our network.
+        about it and we will start matching people from our network. Not sure which roles you need? Review our <Link to="/services" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">full services list</Link>.
       </p>
 
       <div className="mt-8 rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">

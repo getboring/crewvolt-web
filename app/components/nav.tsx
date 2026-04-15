@@ -55,7 +55,10 @@ export function Nav() {
             );
           })}
 
-          <Button asChild className="ml-2" size="default">
+          <Button asChild variant="secondary" className="ml-2" size="sm">
+            <Link to="/join-our-network">Join network</Link>
+          </Button>
+          <Button asChild size="sm">
             <Link to="/staff-my-project">Staff my project</Link>
           </Button>
         </div>

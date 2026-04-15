@@ -45,10 +45,9 @@ const workerPlanSteps = [
 
 export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
-    title:
-      "CrewVolt | Energy Infrastructure Staffing - Inspectors, Superintendents, Project Managers",
+    title: "Energy Infrastructure Staffing | CrewVolt",
     description:
-      "CrewVolt places experienced inspectors, superintendents, and project managers on substation, wind, and solar projects. W-2 contract staffing for energy construction.",
+      "CrewVolt places experienced inspectors, superintendents, and project managers on substation, wind, and solar projects. W-2 staffing for energy construction.",
     path: "/",
   });
 }
@@ -112,6 +111,30 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-lg border border-cv-border bg-cv-cream p-4">
+            <p className="font-data text-[22px] leading-[1.3] font-medium text-cv-copper">W-2</p>
+            <p className="mt-1 text-sm text-cv-steel">Full employment, not 1099</p>
+          </div>
+          <div className="rounded-lg border border-cv-border bg-cv-cream p-4">
+            <p className="font-data text-[22px] leading-[1.3] font-medium text-cv-copper">Energy only</p>
+            <p className="mt-1 text-sm text-cv-steel">We do not staff outside our industry</p>
+          </div>
+          <div className="rounded-lg border border-cv-border bg-cv-cream p-4">
+            <p className="font-data text-[22px] leading-[1.3] font-medium text-cv-copper">Field vetted</p>
+            <p className="mt-1 text-sm text-cv-steel">References from people who worked alongside them</p>
+          </div>
+          <div className="rounded-lg border border-cv-border bg-cv-cream p-4">
+            <p className="font-data text-[22px] leading-[1.3] font-medium text-cv-copper">Both sides</p>
+            <p className="mt-1 text-sm text-cv-steel">We serve clients and workers equally</p>
+          </div>
+        </div>
+      </SectionWrapper>
+
+      <SectionWrapper tone="parchment">
+        <p className="mb-4 text-[11px] font-semibold tracking-[1.5px] uppercase text-cv-copper">
+          How it works for clients
+        </p>
         <div className="grid gap-4 md:grid-cols-3">
           {clientPlanSteps.map((step, index) => (
             <StepCard key={step.title} step={index + 1} title={step.title} body={step.body} />
@@ -120,6 +143,9 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="parchment">
+        <p className="mb-4 text-[11px] font-semibold tracking-[1.5px] uppercase text-cv-field-green">
+          How it works for workers
+        </p>
         <div className="grid gap-4 md:grid-cols-3">
           {workerPlanSteps.map((step, index) => (
             <StepCard key={step.title} step={index + 1} title={step.title} body={step.body} />
@@ -209,10 +235,10 @@ export default function HomeRoute() {
           By the numbers
         </h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard label="Roles we staff" value="15+" />
-          <MetricCard label="Professionals in our network" value="In progress" />
-          <MetricCard label="Combined years of field experience" value="In progress" />
-          <MetricCard label="Project types" value="6" />
+          <MetricCard label="Distinct roles we staff" value="15+" />
+          <MetricCard label="Project types served" value="6" />
+          <MetricCard label="Employment model" value="W-2" />
+          <MetricCard label="Regions covered" value="5+" />
         </div>
       </SectionWrapper>
     </>

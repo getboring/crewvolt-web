@@ -1,6 +1,8 @@
 import { CheckCircle2 } from "lucide-react";
+import { Link } from "react-router";
 
 import { SectionWrapper } from "~/components/section-wrapper";
+import { Button } from "~/components/ui/button";
 import { buildPageMeta, canonicalLinks } from "~/lib/seo";
 import type { Route } from "./+types/vendor-readiness";
 
@@ -19,7 +21,7 @@ export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
     title: "Vendor Readiness | Subconsultant Onboarding Documentation | CrewVolt",
     description:
-      "CrewVolt maintains current NDA, W-9, insurance certificates, safety prequalification, and quality documentation for efficient vendor onboarding.",
+      "CrewVolt maintains current NDA, W-9, insurance certificates, safety prequalification, and quality documentation ready for vendor onboarding and procurement.",
     path: "/vendor-readiness",
   });
 }
@@ -61,6 +63,17 @@ export default function VendorReadinessRoute() {
           prepared to move through it efficiently. We come prepared with everything procurement
           needs so we are not the reason onboarding takes longer than it should.
         </p>
+        <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
+          Learn more about our <Link to="/services" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">staffing services</Link> or see <Link to="/how-it-works" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">how the engagement works</Link>.
+        </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button asChild>
+            <Link to="/staff-my-project">Staff my project</Link>
+          </Button>
+          <Button asChild variant="secondary">
+            <Link to="/contact">Contact us</Link>
+          </Button>
+        </div>
       </SectionWrapper>
     </>
   );

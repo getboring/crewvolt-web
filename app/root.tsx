@@ -25,12 +25,12 @@ export function loader({ context }: Route.LoaderArgs) {
 export function meta(_: Route.MetaArgs) {
   return [
     {
-      title: "CrewVolt | Energy Infrastructure Staffing",
+      title: "Energy Infrastructure Staffing | CrewVolt",
     },
     {
       name: "description",
       content:
-        "CrewVolt places experienced inspectors, superintendents, and project managers on substation, wind, and solar projects.",
+        "CrewVolt places experienced inspectors, superintendents, and project managers on substation, wind, and solar projects. W-2 staffing for energy construction.",
     },
   ];
 }
@@ -59,6 +59,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-cv-navy focus:px-4 focus:py-2 focus:text-white focus:outline-none"
+        >
+          Skip to content
+        </a>
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -76,7 +82,9 @@ export default function App({ loaderData }: Route.ComponentProps) {
     <TooltipProvider>
       <JsonLdScript data={organizationSchema} />
       <Nav />
-      <Outlet />
+      <main id="main-content">
+        <Outlet />
+      </main>
       <Footer />
       <Toaster position="top-center" richColors />
       {analyticsBeacon ? (

@@ -17,7 +17,7 @@ export function buildPageMeta(params: {
   imagePath?: string;
 }): MetaDescriptor[] {
   const pageUrl = absoluteUrl(params.path);
-  const ogImage = absoluteUrl(params.imagePath ?? "/og/crewvolt-default.svg");
+  const ogImage = absoluteUrl(params.imagePath ?? "/og/crewvolt-default.png");
 
   return [
     { title: params.title },
@@ -41,17 +41,42 @@ export function canonicalLinks(path: string) {
 
 export const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": "ProfessionalService",
   name: "CrewVolt",
   url: DEFAULT_BASE_URL,
   logo: absoluteUrl("/favicon.svg"),
+  image: absoluteUrl("/og/crewvolt-default.png"),
   description:
-    "CrewVolt places experienced inspectors, superintendents, and project managers on energy infrastructure projects.",
+    "W-2 contract staffing company placing experienced inspectors, superintendents, and project managers on energy infrastructure projects including substations, wind, solar, BESS, and transmission.",
+  address: {
+    "@type": "PostalAddress",
+    addressRegion: "TN",
+    addressCountry: "US",
+  },
+  areaServed: [
+    { "@type": "State", name: "Tennessee" },
+    { "@type": "Country", name: "United States" },
+  ],
+  serviceType: [
+    "Energy infrastructure staffing",
+    "W-2 contract staffing",
+    "Inspection staffing",
+    "Construction management staffing",
+  ],
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "sales",
-    areaServed: ["US-TN", "US-TX", "US", "Southeast", "Midwest"],
-    availableLanguage: ["English"],
+    email: "staffing@crewvolt.com",
+    areaServed: "US",
+    availableLanguage: "English",
   },
   sameAs: ["https://www.linkedin.com/company/crewvolt"],
+  knowsAbout: [
+    "Substation construction",
+    "Wind energy construction",
+    "Solar energy construction",
+    "Battery energy storage systems",
+    "Transmission construction",
+    "Grid modernization",
+  ],
 };

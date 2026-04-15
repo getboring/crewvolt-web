@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 
+import { CtaBanner } from "~/components/cta-banner";
 import { JsonLdScript } from "~/components/json-ld-script";
 import { RoleCard } from "~/components/role-card";
 import { SectionWrapper } from "~/components/section-wrapper";
@@ -10,7 +11,7 @@ import type { Route } from "./+types/services._index";
 
 export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
-    title: "Energy Staffing Services | Owner Side and Contractor Side | CrewVolt",
+    title: "Energy Staffing Services | CrewVolt",
     description:
       "CrewVolt staffs inspectors and project managers for owners and superintendents and QA/QC professionals for contractors on energy infrastructure projects.",
     path: "/services",
@@ -140,6 +141,13 @@ export default function ServicesOverviewRoute() {
             <RoleCard key={role.title} title={role.title} description={role.description} />
           ))}
         </div>
+        <p className="mt-6 text-base leading-7 text-cv-charcoal">
+          Need a role not listed here? <Link to="/contact" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">Contact us</Link> to discuss your project requirements.
+        </p>
+      </SectionWrapper>
+
+      <SectionWrapper tone="white">
+        <CtaBanner />
       </SectionWrapper>
     </>
   );

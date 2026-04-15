@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useActionData, useNavigation, useSubmit } from "react-router";
 import { toast } from "sonner";
 
+import { JsonLdScript } from "~/components/json-ld-script";
 import { Form } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
@@ -32,8 +33,7 @@ const fieldClassName =
 
 export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
-    title:
-      "Energy Construction Jobs | Contract Inspector and Superintendent Positions | CrewVolt",
+    title: "Energy Construction Jobs | Join CrewVolt",
     description:
       "Experienced energy construction professionals: join CrewVolt's network for consistent W-2 contract work on substations, wind, solar, and transmission projects.",
     path: "/join-our-network",
@@ -165,15 +165,43 @@ export default function JoinOurNetworkRoute() {
     }
   });
 
+  const jobPostingSchema = {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    title: "Energy Infrastructure Field Professionals",
+    description:
+      "CrewVolt is building a network of experienced inspectors, superintendents, project managers, and QA/QC professionals for W-2 contract assignments on substation, wind, solar, BESS, and transmission projects.",
+    employmentType: "CONTRACTOR",
+    hiringOrganization: {
+      "@type": "Organization",
+      name: "CrewVolt",
+      sameAs: "https://crewvolt.com",
+    },
+    jobLocation: {
+      "@type": "Place",
+      address: {
+        "@type": "PostalAddress",
+        addressRegion: "TN",
+        addressCountry: "US",
+      },
+    },
+    industry: "Energy Infrastructure Construction",
+    datePosted: "2026-04-15",
+  };
+
   return (
-    <SectionWrapper tone="parchment">
-      <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">
-        Your experience has value. We have the projects to prove it.
-      </h1>
-      <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
-        You have field experience on energy infrastructure projects and you want consistent contract
-        work with fair pay and W-2 employment. Tell us about yourself.
-      </p>
+    <>
+      <JsonLdScript data={jobPostingSchema} />
+      <SectionWrapper tone="parchment">
+        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">
+          Your experience has value. We have the projects to prove it.
+        </h1>
+        <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
+          You have field experience on energy infrastructure projects and you want consistent contract
+          work with fair pay and W-2 employment. The{" "}
+          <a href="https://www.energy.gov/policy/us-energy-employment-jobs-report-useer" target="_blank" rel="noopener noreferrer" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">DOE reports</a>{" "}
+          growing demand for experienced energy construction professionals. Tell us about yourself.
+        </p>
 
       <div className="mt-8 rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">
         <Form {...form}>
@@ -314,5 +342,6 @@ export default function JoinOurNetworkRoute() {
         </Form>
       </div>
     </SectionWrapper>
+    </>
   );
 }

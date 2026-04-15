@@ -1,11 +1,13 @@
+import { Link } from "react-router";
+
+import { CtaBanner } from "~/components/cta-banner";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { buildPageMeta, canonicalLinks } from "~/lib/seo";
 import type { Route } from "./+types/about";
 
 export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
-    title:
-      "About CrewVolt | Energy Construction Staffing Built by People Who Have Done the Work",
+    title: "About CrewVolt | Energy Construction Staffing",
     description:
       "CrewVolt was founded by energy construction professionals who know what it takes to staff substations, wind farms, and solar projects with the right people.",
     path: "/about",
@@ -38,12 +40,16 @@ export default function AboutRoute() {
         <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
           The energy industry is building at a pace we have not seen in decades. Data centers are
           driving load growth. Renewable mandates are accelerating schedules. Grid modernization is
-          expanding everywhere. The interconnection queue is backed up, and every project in that
+          expanding everywhere. The{" "}
+          <a href="https://emp.lbl.gov/queues" target="_blank" rel="noopener noreferrer" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">interconnection queue</a>{" "}
+          holds nearly 2,300 GW of capacity waiting for grid connection, and every project in that
           queue needs people who can build, inspect, and lead.
         </p>
         <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
-          At the same time, the experienced workforce is shrinking. That gap between project demand
-          and proven field capability is where CrewVolt operates.
+          At the same time, the experienced workforce is shrinking. The{" "}
+          <a href="https://www.energy.gov/policy/us-energy-employment-jobs-report-useer" target="_blank" rel="noopener noreferrer" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">U.S. Energy &amp; Employment Report</a>{" "}
+          documents the growing gap between project demand and available talent. That gap is where
+          CrewVolt operates.
         </p>
       </SectionWrapper>
 
@@ -64,6 +70,27 @@ export default function AboutRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
+        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
+          Founded from the field
+        </h2>
+        <div className="mt-6 rounded-xl border border-cv-border bg-cv-cream p-6 md:p-8">
+          <blockquote className="max-w-4xl text-base leading-7 text-cv-charcoal italic">
+            "I spent years managing substation projects and watching the same problems repeat.
+            Clients scrambling to fill critical seats weeks before mobilization. Experienced workers
+            getting lowballed and ghosted by agencies that did not understand what they do.
+            CrewVolt exists to fix both sides of that equation."
+          </blockquote>
+          <p className="mt-4 text-sm font-semibold text-cv-navy">
+            Founder, CrewVolt
+          </p>
+          <p className="text-sm text-cv-steel">
+            Former energy construction project manager with field experience across substation,
+            transmission, and generation projects.
+          </p>
+        </div>
+      </SectionWrapper>
+
+      <SectionWrapper tone="parchment">
         <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
           What we stand for
         </h2>
@@ -98,6 +125,13 @@ export default function AboutRoute() {
             </p>
           </article>
         </div>
+        <p className="mt-6 text-base leading-7 text-cv-charcoal">
+          See how we <Link to="/services" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">staff both sides of the project</Link>, or learn more about the <Link to="/industries" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">industries we serve</Link>.
+        </p>
+      </SectionWrapper>
+
+      <SectionWrapper tone="parchment">
+        <CtaBanner />
       </SectionWrapper>
     </>
   );

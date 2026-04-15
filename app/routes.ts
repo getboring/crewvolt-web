@@ -13,5 +13,6 @@ export default [
   route("join-our-network", "routes/join-our-network.tsx"),
   route("contact", "routes/contact.tsx"),
   route("vendor-readiness", "routes/vendor-readiness.tsx"),
+  route("blog", "routes/blog._index.tsx"),
   route("*", "routes/$.tsx"),
 ] satisfies RouteConfig;

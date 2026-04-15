@@ -30,7 +30,7 @@ export default function OwnerSideServicesRoute() {
         <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
           When you are the owner, developer, or utility, inspection and oversight roles protect
           your schedule, quality, and budget. A strong inspector catches issues during
-          construction. A weak one turns them into turnover problems.
+          construction. A weak one turns them into turnover problems. Learn more about <Link to="/how-it-works" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">how our staffing process works</Link>.
         </p>
       </SectionWrapper>
 

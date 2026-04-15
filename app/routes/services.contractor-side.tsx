@@ -30,7 +30,7 @@ export default function ContractorSideServicesRoute() {
         <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
           When you are the contractor, your leadership team drives schedule, quality, and turnover
           performance. CrewVolt places superintendents and quality leaders who keep field work
-          moving and documentation clean.
+          moving and documentation clean. See <Link to="/why-crewvolt" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">why teams choose CrewVolt</Link> over general staffing agencies.
         </p>
       </SectionWrapper>
 

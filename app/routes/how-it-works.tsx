@@ -1,3 +1,6 @@
+import { Link } from "react-router";
+
+import { CtaBanner } from "~/components/cta-banner";
 import { StepCard } from "~/components/step-card";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { howItWorksClientSteps, howItWorksWorkerSteps } from "~/lib/content";
@@ -6,9 +9,9 @@ import type { Route } from "./+types/how-it-works";
 
 export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
-    title: "How Energy Construction Staffing Works | W-2 Contract Staffing Process | CrewVolt",
+    title: "How It Works | W-2 Contract Staffing | CrewVolt",
     description:
-      "CrewVolt makes staffing energy projects simple. Tell us the roles. We match experienced people. They show up ready as CrewVolt employees.",
+      "CrewVolt makes staffing energy projects simple. Tell us the roles, we match experienced people, they show up ready as W-2 CrewVolt employees. One invoice.",
     path: "/how-it-works",
   });
 }
@@ -26,7 +29,9 @@ export default function HowItWorksRoute() {
         </h1>
         <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
           CrewVolt serves both audiences in energy construction staffing: clients who need proven
-          leadership on site and workers who want consistent W-2 contract opportunities.
+          leadership on site and workers who want consistent{" "}
+          <a href="https://www.bls.gov/ooh/construction-and-extraction/" target="_blank" rel="noopener noreferrer" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">W-2 contract</a>{" "}
+          opportunities in one of the fastest-growing employment sectors in the country.
         </p>
       </SectionWrapper>
 
@@ -50,6 +55,16 @@ export default function HowItWorksRoute() {
             <StepCard key={step.title} step={index + 1} title={step.title} body={step.body} />
           ))}
         </div>
+      </SectionWrapper>
+
+      <SectionWrapper tone="white">
+        <p className="max-w-4xl text-base leading-7 text-cv-charcoal">
+          Want to know <Link to="/why-crewvolt" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">why CrewVolt over other options</Link>? Or see the <Link to="/services" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">specific roles we staff</Link>.
+        </p>
+      </SectionWrapper>
+
+      <SectionWrapper tone="parchment">
+        <CtaBanner />
       </SectionWrapper>
     </>
   );

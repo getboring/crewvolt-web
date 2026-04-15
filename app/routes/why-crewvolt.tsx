@@ -1,9 +1,12 @@
+import { Link } from "react-router";
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
+import { CtaBanner } from "~/components/cta-banner";
 import { JsonLdScript } from "~/components/json-ld-script";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { whyCrewVoltFaq } from "~/lib/content";
@@ -14,7 +17,7 @@ export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
     title: "Why CrewVolt | Specialized Energy Staffing vs General Agencies",
     description:
-      "CrewVolt only staffs energy infrastructure projects. Compare our model with engineering firms, general staffing agencies, and direct hiring.",
+      "CrewVolt only staffs energy infrastructure projects. See how we compare to engineering firms, general staffing agencies, direct hiring, and 1099 independence.",
     path: "/why-crewvolt",
   });
 }
@@ -45,7 +48,10 @@ export default function WhyCrewVoltRoute() {
         <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">Why CrewVolt.</h1>
         <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
           Specialized energy staffing built for both sides of the project: clients who need proven
-          field leaders and workers who want fair pay and continuity.
+          field leaders and workers who want fair pay and continuity. With over a quarter of oil,
+          gas, and mining workers{" "}
+          <a href="https://www.energy.gov/topics/energy-workforce" target="_blank" rel="noopener noreferrer" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">nearing retirement</a>,
+          getting the right people on your project matters more than ever.
         </p>
       </SectionWrapper>
 
@@ -67,6 +73,13 @@ export default function WhyCrewVoltRoute() {
             </AccordionItem>
           ))}
         </Accordion>
+        <p className="mt-6 text-base leading-7 text-cv-charcoal">
+          See <Link to="/how-it-works" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">how the process works</Link> or explore the <Link to="/industries" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">industries we serve</Link>.
+        </p>
+      </SectionWrapper>
+
+      <SectionWrapper tone="parchment">
+        <CtaBanner />
       </SectionWrapper>
     </>
   );

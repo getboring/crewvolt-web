@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useActionData, useNavigation, useSubmit } from "react-router";
+import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import { toast } from "sonner";
 
 import { Form } from "~/components/ui/form";
@@ -144,9 +144,18 @@ export default function ContactRoute() {
           <aside className="rounded-xl border border-cv-border bg-cv-cream p-6">
             <p className="font-logo text-lg font-bold tracking-[1.5px] text-cv-navy">CREWVOLT</p>
             <p className="mt-2 text-sm text-cv-charcoal">Tennessee LLC</p>
-            <p className="mt-1 text-sm text-cv-charcoal">Location: East Tennessee</p>
-            <p className="mt-1 text-sm text-cv-charcoal">Phone: To be added</p>
-            <p className="mt-1 text-sm text-cv-charcoal">Email: staffing@crewvolt.com</p>
+            <p className="mt-1 text-sm text-cv-charcoal">East Tennessee</p>
+            <p className="mt-2">
+              <a href="mailto:staffing@crewvolt.com" className="text-sm text-cv-copper hover:text-cv-copper-dark">
+                staffing@crewvolt.com
+              </a>
+            </p>
+            <div className="mt-4 space-y-1 border-t border-cv-border pt-4">
+              <p className="text-xs font-semibold tracking-[1px] uppercase text-cv-steel">Quick links</p>
+              <Link to="/staff-my-project" className="block text-sm text-cv-copper hover:text-cv-copper-dark">Staff my project</Link>
+              <Link to="/join-our-network" className="block text-sm text-cv-copper hover:text-cv-copper-dark">Join our network</Link>
+              <Link to="/vendor-readiness" className="block text-sm text-cv-copper hover:text-cv-copper-dark">Vendor readiness</Link>
+            </div>
           </aside>
 
           <div className="rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">
