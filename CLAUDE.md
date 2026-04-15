@@ -36,11 +36,42 @@ pnpm exec wrangler secret put RESEND_API_KEY
 
 ## Key architecture
 
-- Route map is defined in `app/routes.ts`
+- Route map is defined in `app/routes.ts` (14 routes including blog and catch-all)
 - SEO helpers and canonical metadata are in `app/lib/seo.ts`
 - Form schemas are in `app/lib/forms.ts`
 - Form submission persistence and notifications are in `app/lib/submissions.server.ts`
 - Database migrations are in `workers/migrations/`
+- Shared CTA component: `app/components/cta-banner.tsx` (dual client/worker CTA)
+- Content data: `app/lib/content.ts` (roles, industries, FAQ, how-it-works steps)
+
+## Routes
+
+```
+/                          Home
+/about                     About (founder credibility, values)
+/services                  Services overview (owner + contractor roles)
+/services/owner-side       Owner side staffing
+/services/contractor-side  Contractor side staffing
+/how-it-works              How it works (dual audience steps)
+/industries                Industries we serve (6 sectors)
+/why-crewvolt              Why CrewVolt (FAQ accordion, schema)
+/staff-my-project          Client intake form (D1 + Resend)
+/join-our-network          Worker intake form (D1 + R2 resume + Resend)
+/contact                   Contact form (D1 + Resend)
+/vendor-readiness          Vendor onboarding documentation
+/blog                      Blog placeholder (coming soon)
+*                          404 catch-all
+```
+
+## SEO status
+
+- All pages: title 50-60 chars, description 150-160 chars, canonical, OG tags, twitter:card
+- OG image: `public/og/crewvolt-default.png` (1200x630 PNG)
+- Schema: ProfessionalService (global), Service (services), FAQ (why-crewvolt), LocalBusiness (contact), JobPosting (join-our-network)
+- Sitemap: `public/sitemap.xml` with lastmod/priority
+- External links: DOE USEER, LBL Queues, BLS on relevant pages
+- Internal links: 2+ per page minimum, CtaBanner on all content pages
+- Accessibility: skip-to-content link, semantic `<main>`, focus rings, keyboard nav
 
 ## Content and brand references
 
@@ -53,3 +84,11 @@ pnpm exec wrangler secret put RESEND_API_KEY
 - `RESEND_API_KEY` is required for email notifications.
 - Without `RESEND_API_KEY`, forms still save into D1.
 - `CF_WEB_ANALYTICS_TOKEN` is optional. If blank, analytics script is not injected.
+
+## TODO (needs human action)
+
+- Add real phone number across site (contact page, footer)
+- Point `crewvolt.com` DNS to Cloudflare Workers
+- Add real testimonials/case studies when available
+- Write blog content
+- Replace founder quote on About page with real name when approved
