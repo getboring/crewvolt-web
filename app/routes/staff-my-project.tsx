@@ -149,12 +149,12 @@ export default function StaffMyProjectRoute() {
     }
   }, [actionData, form]);
 
-  const onSubmit = form.handleSubmit((_, event) => {
-    const target = event?.currentTarget;
-    if (target) {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const target = event.currentTarget;
+    form.handleSubmit(() => {
       submit(target, { method: "post" });
-    }
-  });
+    })(event);
+  };
 
   return (
     <SectionWrapper tone="parchment">
