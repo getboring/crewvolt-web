@@ -23,35 +23,15 @@ export function loader({ context }: Route.LoaderArgs) {
 }
 
 export function meta(_: Route.MetaArgs) {
+  // Route-level meta() replaces parent meta in React Router 7. PWA / mobile
+  // meta tags that should be present on EVERY route live in the <head> of
+  // Layout below — not here.
   return [
     { title: "Energy Infrastructure Staffing | CrewVolt" },
     {
       name: "description",
       content:
         "CrewVolt places experienced inspectors, superintendents, and project managers on substation, wind, and solar projects. W-2 staffing for energy construction.",
-    },
-    // Site naming for browsers / Android home screen
-    { name: "application-name", content: "CrewVolt" },
-    { name: "apple-mobile-web-app-title", content: "CrewVolt" },
-    // PWA / mobile-app behavior
-    { name: "mobile-web-app-capable", content: "yes" },
-    { name: "apple-mobile-web-app-capable", content: "yes" },
-    {
-      name: "apple-mobile-web-app-status-bar-style",
-      content: "black-translucent",
-    },
-    { name: "format-detection", content: "telephone=no" },
-    // Color scheme + theme color (light + dark variants)
-    { name: "color-scheme", content: "light" },
-    {
-      name: "theme-color",
-      media: "(prefers-color-scheme: light)",
-      content: "#f7f4ef",
-    },
-    {
-      name: "theme-color",
-      media: "(prefers-color-scheme: dark)",
-      content: "#1b365d",
     },
   ];
 }
@@ -94,6 +74,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+        {/* PWA / iOS / Android — present on every route, not overridable */}
+        <meta name="application-name" content="CrewVolt" />
+        <meta name="apple-mobile-web-app-title" content="CrewVolt" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="color-scheme" content="light" />
+        <meta
+          name="theme-color"
+          media="(prefers-color-scheme: light)"
+          content="#f7f4ef"
+        />
+        <meta
+          name="theme-color"
+          media="(prefers-color-scheme: dark)"
+          content="#1b365d"
         />
         <Meta />
         <Links />
