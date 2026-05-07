@@ -7,8 +7,8 @@ import type { Route } from "./+types/$";
 
 export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
-    title: "Page not found | CrewVolt",
-    description: "The page you are looking for does not exist.",
+    title: "Not in drawing set | CrewVolt",
+    description: "The page you are looking for is not part of the CrewVolt drawing set.",
     path: "/404",
   });
 }
@@ -19,28 +19,57 @@ export function links() {
 
 export default function CatchAllRoute(_: Route.ComponentProps) {
   return (
-    <SectionWrapper tone="parchment" className="min-h-[60vh]" innerClassName="flex justify-center">
-      <div className="max-w-xl text-center">
-        <p className="font-logo text-[20px] font-bold tracking-[1.5px] text-cv-navy">CREWVOLT</p>
-        <h1 className="mt-6 font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">
-          This page does not exist.
-        </h1>
-        <p className="mt-4 text-base leading-7 text-cv-charcoal">
-          The page you are looking for is not here. You can go back to the homepage or use the
-          links below.
-        </p>
-
-        <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-          <Button asChild>
-            <Link to="/staff-my-project">Staff my project</Link>
-          </Button>
-          <Button asChild variant="secondary">
-            <Link to="/join-our-network">Join our network</Link>
-          </Button>
-          <Button asChild variant="link">
-            <Link to="/">Go home</Link>
-          </Button>
+    <SectionWrapper tone="vellum" eyebrow="Sheet — error" badge="Sheet 404">
+      <div className="grid gap-12 md:grid-cols-[1.2fr_1fr]">
+        <div>
+          <h1 className="cv-display text-[clamp(3rem,7vw,5.5rem)]">
+            Not in the
+            <em className="cv-display-italic"> drawing set.</em>
+          </h1>
+          <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-cv-graphite">
+            This sheet does not exist in the current revision. Try one of the linked sheets, or
+            check back after the next revision is issued.
+          </p>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Button asChild>
+              <Link to="/staff-my-project">Staff a project →</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link to="/join-our-network">Join the network →</Link>
+            </Button>
+            <Button asChild variant="link">
+              <Link to="/">Return to cover sheet →</Link>
+            </Button>
+          </div>
         </div>
+
+        <aside className="cv-paper-flat self-start">
+          <div className="border-b border-cv-pencil px-5 py-3">
+            <p className="cv-slug-copper">Drawing set — current revision</p>
+          </div>
+          <ul className="divide-y divide-cv-rule-soft text-sm">
+            {[
+              ["E-001", "Cover", "/"],
+              ["E-003", "Scope of Work", "/services"],
+              ["E-005", "Site Conditions", "/industries"],
+              ["E-006", "Specification", "/why-crewvolt"],
+              ["E-007", "Initial Intake — Owner", "/staff-my-project"],
+              ["E-008", "Initial Intake — Crew", "/join-our-network"],
+            ].map(([num, title, to]) => (
+              <li key={num}>
+                <Link
+                  to={to}
+                  className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-cv-vellum"
+                >
+                  <span className="cv-mono w-[44px] text-[10px] uppercase tracking-[0.22em] text-cv-graphite-light">
+                    {num}
+                  </span>
+                  <span className="text-cv-pencil">{title}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </aside>
       </div>
     </SectionWrapper>
   );
