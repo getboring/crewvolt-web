@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 
 import { Button } from "~/components/ui/button";
-import { relativeTime, type OpenRoleRow } from "~/lib/open-roles.server";
+import { relativeTime, type OpenRoleRow } from "~/lib/open-roles";
 import { cn } from "~/lib/utils";
 
 const statusDot: Record<OpenRoleRow["status"], string> = {
