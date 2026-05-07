@@ -6,10 +6,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
-import { ComparisonMatrix } from "~/components/comparison-matrix";
 import { CtaBanner } from "~/components/cta-banner";
 import { JsonLdScript } from "~/components/json-ld-script";
-import { MatchLine } from "~/components/match-line";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { whyCrewVoltFaq } from "~/lib/content";
 import { buildPageMeta, canonicalLinks } from "~/lib/seo";
@@ -35,7 +33,10 @@ export default function WhyCrewVoltRoute() {
     mainEntity: whyCrewVoltFaq.map((item) => ({
       "@type": "Question",
       name: item.question,
-      acceptedAnswer: { "@type": "Answer", text: item.answer },
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
     })),
   };
 
@@ -43,106 +44,41 @@ export default function WhyCrewVoltRoute() {
     <>
       <JsonLdScript data={faqSchema} />
 
-      <SectionWrapper tone="vellum" eyebrow="Specification" badge="Sheet E-006">
-        <h1 className="cv-display text-[clamp(2.5rem,5vw,4.5rem)]">
-          Why
-          <em className="cv-display-italic"> CrewVolt.</em>
-        </h1>
-        <p className="mt-6 max-w-3xl text-[17px] leading-relaxed text-cv-graphite">
-          Specialized energy staffing built for both sides of the project: clients who need
-          proven field leaders and workers who want fair pay and continuity. With over a
-          quarter of oil, gas, and mining workers{" "}
-          <a
-            href="https://www.energy.gov/topics/energy-workforce"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark"
-          >
-            nearing retirement
-          </a>
-          , getting the right people on your project matters more than ever.
+      <SectionWrapper tone="parchment">
+        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">Why CrewVolt.</h1>
+        <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
+          Specialized energy staffing built for both sides of the project: clients who need proven
+          field leaders and workers who want fair pay and continuity. With over a quarter of oil,
+          gas, and mining workers{" "}
+          <a href="https://www.energy.gov/topics/energy-workforce" target="_blank" rel="noopener noreferrer" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">nearing retirement</a>,
+          getting the right people on your project matters more than ever.
         </p>
       </SectionWrapper>
 
-      <SectionWrapper tone="white" eyebrow="Specification matrix" badge="Compare 4 options">
-        <ComparisonMatrix
-          columns={["CrewVolt", "General agency", "Direct hire", "1099 contractor"]}
-          rows={[
-            {
-              label: "Energy infrastructure specialization",
-              note: "Substation, wind, solar, BESS, Tx",
-              values: ["yes", "no", "partial", "partial"],
-            },
-            {
-              label: "W-2 employment with workers comp",
-              values: ["yes", "partial", "yes", "no"],
-            },
-            {
-              label: "Field-vetted references",
-              note: "Worked-alongside, not resume keywords",
-              values: ["yes", "no", "partial", "partial"],
-            },
-            {
-              label: "Project-timeline staffing",
-              note: "No permanent headcount risk",
-              values: ["yes", "yes", "no", "yes"],
-            },
-            {
-              label: "Continuity between projects",
-              values: ["yes", "no", "yes", "no"],
-            },
-            {
-              label: "One invoice, AP-friendly",
-              values: ["yes", "yes", "partial", "no"],
-            },
-            {
-              label: "5-day average match window",
-              note: "Active network only",
-              values: ["yes", "no", "no", "partial"],
-            },
-          ]}
-        />
-      </SectionWrapper>
-
-      <SectionWrapper tone="vellum" className="!py-10">
-        <MatchLine label="Match line — frequently asked" />
-      </SectionWrapper>
-
-      <SectionWrapper tone="vellum" eyebrow="Frequently asked" badge="FAQ-001 — FAQ-006">
-        <Accordion type="single" collapsible className="cv-paper-flat">
-          {whyCrewVoltFaq.map((item, i) => (
-            <AccordionItem
-              key={item.id}
-              value={item.id}
-              className="border-b border-cv-rule-soft px-5 last:border-b-0"
-            >
-              <AccordionTrigger className="py-5 text-left font-display text-[20px] font-medium text-cv-pencil hover:no-underline [&>svg]:text-cv-copper">
-                <span className="flex w-full items-center gap-4">
-                  <span className="cv-mono shrink-0 text-[10px] uppercase tracking-[0.22em] text-cv-copper">
-                    FAQ-{(i + 1).toString().padStart(3, "0")} · {item.audience.replace("For ", "")}
+      <SectionWrapper tone="white">
+        <Accordion type="single" collapsible className="rounded-xl border border-cv-border bg-cv-cream p-3">
+          {whyCrewVoltFaq.map((item) => (
+            <AccordionItem key={item.id} value={item.id} className="border-cv-border-light px-2">
+              <AccordionTrigger className="text-left font-headline text-[20px] font-semibold text-cv-navy hover:no-underline">
+                <span>
+                  <span className="mr-2 text-[11px] font-semibold tracking-[1px] uppercase text-cv-copper">
+                    {item.audience}
                   </span>
-                  <span className="leading-tight">{item.question}</span>
+                  {item.question}
                 </span>
               </AccordionTrigger>
-              <AccordionContent className="pb-5 pl-[152px] text-base leading-relaxed text-cv-graphite">
+              <AccordionContent className="text-base leading-7 text-cv-charcoal">
                 {item.answer}
               </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
-        <p className="mt-8 cv-mono text-[10px] uppercase tracking-[0.22em] text-cv-graphite-light">
-          See{" "}
-          <Link to="/how-it-works" className="text-cv-copper underline-offset-4 hover:underline">
-            sequence of operations →
-          </Link>{" "}
-          or explore{" "}
-          <Link to="/industries" className="text-cv-copper underline-offset-4 hover:underline">
-            site conditions →
-          </Link>
+        <p className="mt-6 text-base leading-7 text-cv-charcoal">
+          See <Link to="/how-it-works" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">how the process works</Link> or explore the <Link to="/industries" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">industries we serve</Link>.
         </p>
       </SectionWrapper>
 
-      <SectionWrapper tone="vellum" className="!pt-0">
+      <SectionWrapper tone="parchment">
         <CtaBanner />
       </SectionWrapper>
     </>

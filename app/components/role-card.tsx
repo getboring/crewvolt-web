@@ -7,62 +7,38 @@ type RoleCardProps = {
   description?: string;
   href?: string;
   audience?: "owner" | "contractor";
-  code?: string;
 };
 
-export function RoleCard({ title, description, href, audience, code }: RoleCardProps) {
-  const accent =
-    audience === "owner"
-      ? "border-l-cv-copper"
-      : audience === "contractor"
-        ? "border-l-cv-field-green"
-        : "border-l-cv-pencil";
-
+export function RoleCard({ title, description, href, audience }: RoleCardProps) {
   const content = (
     <article
       className={cn(
-        "group relative h-full border border-cv-rule-soft border-l-4 bg-cv-vellum-light p-5 transition-[transform,box-shadow,border-color] duration-[var(--cv-motion-normal)] ease-[var(--cv-ease)]",
-        accent,
-        href ? "hover:-translate-y-[2px] hover:shadow-[var(--cv-shadow-lift)] hover:border-cv-pencil cursor-pointer" : ""
+        "h-full rounded-xl border border-cv-border bg-white p-5 shadow-sm transition-transform duration-[var(--cv-motion-normal)] hover:-translate-y-0.5 hover:shadow-md",
+        href ? "cursor-pointer" : ""
       )}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          {audience ? (
-            <p
-              className={cn(
-                "cv-mono text-[9px] font-medium uppercase tracking-[0.22em]",
-                audience === "owner" ? "text-cv-copper" : "text-cv-field-green"
-              )}
-            >
-              {audience === "owner" ? "Owner side" : "Contractor side"}
-            </p>
-          ) : null}
-          <h3 className="mt-1 font-display text-[19px] font-medium leading-tight tracking-tight text-cv-pencil">
-            {title}
-          </h3>
-        </div>
-        {code ? (
-          <span className="cv-mono text-[9px] uppercase tracking-[0.22em] text-cv-graphite-light">
-            {code}
-          </span>
-        ) : null}
-      </div>
-      {description ? (
-        <p className="mt-3 text-sm leading-relaxed text-cv-graphite">{description}</p>
-      ) : null}
-      {href ? (
+      {audience ? (
         <span
-          aria-hidden="true"
-          className="cv-mono mt-4 inline-block text-[9px] font-semibold uppercase tracking-[0.22em] text-cv-graphite-light transition-colors group-hover:text-cv-copper"
+          className={cn(
+            "inline-flex rounded-sm px-2 py-1 text-[10px] font-semibold tracking-[1px] uppercase",
+            audience === "owner"
+              ? "bg-cv-info-bg text-cv-navy"
+              : "bg-cv-success-bg text-cv-field-green"
+          )}
         >
-          Detail →
+          {audience} side
         </span>
       ) : null}
+      <h3 className="mt-2 font-headline text-[18px] leading-[1.35] font-semibold text-cv-navy">
+        {title}
+      </h3>
+      {description ? <p className="mt-2 text-sm leading-6 text-cv-steel">{description}</p> : null}
     </article>
   );
 
-  if (!href) return content;
+  if (!href) {
+    return content;
+  }
 
   return (
     <Link to={href} className="block h-full">

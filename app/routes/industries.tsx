@@ -1,8 +1,8 @@
 import { Link } from "react-router";
 
 import { CtaBanner } from "~/components/cta-banner";
-import { IndustryCard } from "~/components/industry-card";
 import { SectionWrapper } from "~/components/section-wrapper";
+import { Badge } from "~/components/ui/badge";
 import { industries } from "~/lib/content";
 import { buildPageMeta, canonicalLinks } from "~/lib/seo";
 import type { Route } from "./+types/industries";
@@ -23,52 +23,47 @@ export function links() {
 export default function IndustriesRoute() {
   return (
     <>
-      <SectionWrapper tone="vellum" eyebrow="Site conditions — industries served" badge="Sheet E-005">
-        <h1 className="cv-display text-[clamp(2.5rem,5vw,4.5rem)]">
-          Where we
-          <em className="cv-display-italic"> work.</em>
-        </h1>
-        <p className="mt-6 max-w-3xl text-[17px] leading-relaxed text-cv-graphite">
-          CrewVolt focuses on the Southeast and is expanding as our network grows. The{" "}
-          <a
-            href="https://www.bls.gov/ooh/construction-and-extraction/electricians.htm"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark"
-          >
-            Bureau of Labor Statistics
-          </a>{" "}
+      <SectionWrapper tone="parchment">
+        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">Where we work.</h1>
+        <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
+          CrewVolt is focused on the Southeast and expanding as our network grows. The{" "}
+          <a href="https://www.bls.gov/ooh/construction-and-extraction/electricians.htm" target="_blank" rel="noopener noreferrer" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">Bureau of Labor Statistics</a>{" "}
           projects 81,000 annual openings for electricians alone, with renewable energy and grid
           expansion driving demand across every energy construction sector.
         </p>
       </SectionWrapper>
 
-      <SectionWrapper tone="white" eyebrow="Detail — site profiles" badge="SC-01–06">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {industries.map((industry, i) => (
-            <IndustryCard
-              key={industry.id}
-              code={`SC-${(i + 1).toString().padStart(2, "0")}`}
-              title={industry.title}
-              description={industry.description}
-              status={industry.status}
-              currentlySeeking={industry.currentlySeeking}
-            />
-          ))}
+      <SectionWrapper tone="white">
+        <div className="space-y-6">
+          {industries.map((industry) => {
+            const badgeClass =
+              industry.status === "Hiring"
+                ? "bg-cv-warning-bg text-cv-amber"
+                : "bg-cv-success-bg text-cv-success";
+
+            return (
+              <article key={industry.id} className="rounded-xl border border-cv-border bg-cv-cream p-6">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
+                    {industry.title}
+                  </h2>
+                  <Badge className={badgeClass}>{industry.status}</Badge>
+                </div>
+                <p className="mt-4 text-base leading-7 text-cv-charcoal">{industry.description}</p>
+                <p className="mt-3 text-sm leading-6 text-cv-steel">
+                  <strong className="text-cv-charcoal">Currently seeking:</strong>{" "}
+                  {industry.currentlySeeking}.
+                </p>
+              </article>
+            );
+          })}
         </div>
-        <p className="mt-8 cv-mono text-[10px] uppercase tracking-[0.22em] text-cv-graphite-light">
-          View{" "}
-          <Link to="/services" className="text-cv-copper underline-offset-4 hover:underline">
-            all roles we staff →
-          </Link>
-          {"  "}or see{" "}
-          <Link to="/how-it-works" className="text-cv-copper underline-offset-4 hover:underline">
-            sequence of operations →
-          </Link>
+        <p className="mt-6 text-base leading-7 text-cv-charcoal">
+          View <Link to="/services" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">all roles we staff</Link> or see <Link to="/how-it-works" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">how the process works</Link>.
         </p>
       </SectionWrapper>
 
-      <SectionWrapper tone="vellum" className="!pt-0">
+      <SectionWrapper tone="parchment">
         <CtaBanner />
       </SectionWrapper>
     </>

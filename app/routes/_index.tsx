@@ -1,32 +1,45 @@
 import { Link } from "react-router";
 
 import { CtaBanner } from "~/components/cta-banner";
-import { ComparisonMatrix } from "~/components/comparison-matrix";
 import { HeroSection } from "~/components/hero-section";
 import { IndustryCard } from "~/components/industry-card";
-import { MatchLine } from "~/components/match-line";
 import { MetricCard } from "~/components/metric-card";
-import { RolesBoard } from "~/components/roles-board";
+import { RoleCard } from "~/components/role-card";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { SplitCards } from "~/components/split-cards";
 import { StepCard } from "~/components/step-card";
 import { Button } from "~/components/ui/button";
-import { industries } from "~/lib/content";
+import { industries, rolesWeStaff } from "~/lib/content";
 import { buildPageMeta, canonicalLinks } from "~/lib/seo";
 import type { Route } from "./+types/_index";
 
-const homeClientSteps = [
+const clientPlanSteps = [
   {
     title: "Tell us the project.",
-    body: "Location, roles, timeline. We already understand the scope and ask the right questions on the first call.",
+    body: "Location, roles, timeline. We already understand the scope.",
   },
   {
     title: "We match the right people.",
-    body: "From a network we have already vetted. Field references, not resume keywords.",
+    body: "From a network we have already vetted. People we know can do the work.",
   },
   {
     title: "They show up ready.",
-    body: "Employed by CrewVolt. Payroll, taxes, workers comp, insurance handled. You direct the work.",
+    body: "Employed by CrewVolt. Payroll, taxes, and insurance handled. You direct the work.",
+  },
+] as const;
+
+const workerPlanSteps = [
+  {
+    title: "Tell us about yourself.",
+    body: "Roles you have held, projects you have worked, and where you are willing to go.",
+  },
+  {
+    title: "We vet you the way the jobsite would.",
+    body: "References from people who have worked alongside you, not just names on a resume.",
+  },
+  {
+    title: "We match you with projects that fit.",
+    body: "When a project wraps, we are already working on what comes next.",
   },
 ] as const;
 
@@ -48,219 +61,185 @@ export default function HomeRoute() {
     <>
       <HeroSection />
 
-      {/* Proof bar */}
-      <SectionWrapper tone="vellum-dark" className="!py-8">
-        <div className="flex flex-wrap items-center justify-between gap-x-10 gap-y-4">
-          <p className="cv-slug">Trusted across energy infrastructure</p>
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-cv-graphite-light">
-            {[
-              "Investor-Owned Utility",
-              "Tier-1 EPC",
-              "IPP Developer",
-              "Co-op Substation Program",
-              "Renewables Owner",
-            ].map((logo) => (
-              <span
-                key={logo}
-                className="font-display text-[15px] font-medium tracking-tight"
-              >
-                {logo}
-              </span>
-            ))}
-          </div>
-        </div>
-      </SectionWrapper>
-
-      {/* Split CTA panel */}
-      <SectionWrapper tone="vellum">
+      <SectionWrapper tone="white">
         <SplitCards />
       </SectionWrapper>
 
-      {/* The Frame — combined pain + framing */}
-      <SectionWrapper tone="white" eyebrow="Why this exists" badge="Sheet E-001 / Detail A">
-        <div className="grid gap-10 md:grid-cols-[1.3fr_1fr] md:gap-16">
-          <div>
-            <h2 className="cv-h2 text-[clamp(2rem,3.4vw,3rem)]">
-              A $40 million substation does not wait for you to find an
-              <em className="cv-display-italic"> electrical inspector.</em>
-            </h2>
-            <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-cv-graphite">
-              A wind project with a commissioning deadline does not care that your last QA/QC
-              manager took a direct-hire offer two weeks before mobilization. An interconnection
-              queue does not pause because you are still interviewing candidates.
-            </p>
-            <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-cv-graphite">
-              We built CrewVolt to fix both sides of that equation. Clients get experienced
-              people fast. Workers get consistent, fair-paid W-2 work and a company that
-              understands what they actually do.
-            </p>
-          </div>
-
-          <aside className="cv-paper-flat self-start">
-            <div className="border-b border-cv-pencil px-5 py-3">
-              <p className="cv-slug-copper">General notes — Rev 02</p>
-            </div>
-            <ul className="divide-y divide-cv-rule-soft">
-              {[
-                {
-                  k: "01",
-                  v: "Founder is a former substation project manager. We staff what we have run.",
-                },
-                {
-                  k: "02",
-                  v: "Energy infrastructure only. No general staffing crossover.",
-                },
-                {
-                  k: "03",
-                  v: "Field-vetted references — people who actually worked alongside the candidate.",
-                },
-                {
-                  k: "04",
-                  v: "W-2 employment with workers comp, GL, and continuity to the next placement.",
-                },
-              ].map((n) => (
-                <li key={n.k} className="grid grid-cols-[40px_1fr] gap-3 px-5 py-3 text-sm">
-                  <span className="cv-mono text-[10px] uppercase tracking-[0.22em] text-cv-graphite-light">
-                    {n.k}
-                  </span>
-                  <span className="leading-relaxed text-cv-graphite">{n.v}</span>
-                </li>
-              ))}
-            </ul>
-          </aside>
-        </div>
-      </SectionWrapper>
-
-      <SectionWrapper tone="vellum" className="!py-10">
-        <MatchLine label="Match line — see sheet 003" />
-      </SectionWrapper>
-
-      {/* Drawing schedule (numbers) */}
-      <SectionWrapper
-        tone="vellum"
-        eyebrow="Drawing schedule — by the numbers"
-        badge="Item count: 04"
-      >
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard
-            label="Match window"
-            value="5"
-            unit="days avg"
-            note="Active network only"
-            itemNumber={1}
-          />
-          <MetricCard
-            label="Employment model"
-            value="W-2"
-            note="Workers comp + GL"
-            itemNumber={2}
-          />
-          <MetricCard
-            label="Project types"
-            value="06"
-            note="Substation · Wind · Solar · BESS · Tx · Grid mod"
-            itemNumber={3}
-          />
-          <MetricCard
-            label="Queue served"
-            value="2,300"
-            unit="GW"
-            note="LBL interconnection backlog"
-            itemNumber={4}
-          />
-        </div>
-      </SectionWrapper>
-
-      {/* How it works — 3 detail callouts */}
-      <SectionWrapper tone="white" eyebrow="Sequence of operations — owner side" badge="Detail 01–03">
-        <div className="grid gap-5 md:grid-cols-3">
-          {homeClientSteps.map((step, index) => (
-            <StepCard key={step.title} step={index + 1} title={step.title} body={step.body} />
-          ))}
-        </div>
-        <p className="mt-8 cv-mono text-[10px] uppercase tracking-[0.22em] text-cv-graphite-light">
-          See full sequence of operations on{" "}
-          <Link
-            to="/how-it-works"
-            className="text-cv-copper underline-offset-4 hover:underline"
-          >
-            Sheet E-004 →
-          </Link>
+      <SectionWrapper tone="parchment">
+        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
+          A $40 million substation does not wait for you to find an electrical inspector.
+        </h2>
+        <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
+          A wind project with a commissioning deadline does not care that your last QA/QC manager
+          took a direct hire offer two weeks before mobilization. An interconnection queue does
+          not pause because you are still interviewing candidates.
+        </p>
+        <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
+          Every week you are short a key person on site is a week the schedule slips. And when
+          schedules slip, the calls start coming. From your client. From your VP. From the
+          developer wondering if this project is going to hit COD.
         </p>
       </SectionWrapper>
 
-      {/* Industries with currently-seeking */}
-      <SectionWrapper tone="vellum" eyebrow="Site conditions — industries served" badge="Sheet E-005">
+      <SectionWrapper tone="white">
+        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
+          You are good at what you do, but too many staffing companies treat you like a line item.
+        </h2>
+        <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
+          They lowball your rate, disappear after placement, and leave you scrambling when a
+          project wraps. Going 1099 sounds flexible until weekends are spent on payroll, taxes,
+          insurance, and chasing the next gig.
+        </p>
+        <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
+          Your experience has value and the way you work should reflect it.
+        </p>
+      </SectionWrapper>
+
+      <SectionWrapper tone="parchment">
+        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
+          CrewVolt exists because our founder has lived both sides of this problem.
+        </h2>
+        <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
+          Managing substation projects, scrambling to fill seats, and watching what happens when
+          the wrong person shows up on site. Working alongside experienced professionals who kept
+          being treated like they were disposable.
+        </p>
+        <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
+          We built CrewVolt to fix both sides. Clients get experienced people fast. Workers get
+          consistent work, fair pay, and a company that understands what they do.
+        </p>
+      </SectionWrapper>
+
+      <SectionWrapper tone="white">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-lg border border-cv-border bg-cv-cream p-4">
+            <p className="font-data text-[22px] leading-[1.3] font-medium text-cv-copper">W-2</p>
+            <p className="mt-1 text-sm text-cv-steel">Full employment, not 1099</p>
+          </div>
+          <div className="rounded-lg border border-cv-border bg-cv-cream p-4">
+            <p className="font-data text-[22px] leading-[1.3] font-medium text-cv-copper">Energy only</p>
+            <p className="mt-1 text-sm text-cv-steel">We do not staff outside our industry</p>
+          </div>
+          <div className="rounded-lg border border-cv-border bg-cv-cream p-4">
+            <p className="font-data text-[22px] leading-[1.3] font-medium text-cv-copper">Field vetted</p>
+            <p className="mt-1 text-sm text-cv-steel">References from people who worked alongside them</p>
+          </div>
+          <div className="rounded-lg border border-cv-border bg-cv-cream p-4">
+            <p className="font-data text-[22px] leading-[1.3] font-medium text-cv-copper">Both sides</p>
+            <p className="mt-1 text-sm text-cv-steel">We serve clients and workers equally</p>
+          </div>
+        </div>
+      </SectionWrapper>
+
+      <SectionWrapper tone="parchment">
+        <p className="mb-4 text-[11px] font-semibold tracking-[1.5px] uppercase text-cv-copper">
+          How it works for clients
+        </p>
+        <div className="grid gap-4 md:grid-cols-3">
+          {clientPlanSteps.map((step, index) => (
+            <StepCard key={step.title} step={index + 1} title={step.title} body={step.body} />
+          ))}
+        </div>
+      </SectionWrapper>
+
+      <SectionWrapper tone="parchment">
+        <p className="mb-4 text-[11px] font-semibold tracking-[1.5px] uppercase text-cv-field-green">
+          How it works for workers
+        </p>
+        <div className="grid gap-4 md:grid-cols-3">
+          {workerPlanSteps.map((step, index) => (
+            <StepCard key={step.title} step={index + 1} title={step.title} body={step.body} />
+          ))}
+        </div>
+      </SectionWrapper>
+
+      <SectionWrapper tone="white">
+        <div className="grid gap-6 md:grid-cols-2">
+          <article className="rounded-xl border border-cv-border bg-cv-cream p-6">
+            <h3 className="font-headline text-[20px] leading-[1.3] font-semibold text-cv-navy">
+              What success looks like
+            </h3>
+            <p className="mt-3 text-sm leading-6 text-cv-charcoal">
+              <strong>For clients:</strong> Your project has the right people in place before
+              mobilization. Inspections pass. Documentation is clean. The superintendent is not
+              learning on the job.
+            </p>
+            <p className="mt-3 text-sm leading-6 text-cv-charcoal">
+              <strong>For workers:</strong> You move from one good project to the next without
+              scrambling. Your pay is fair. Your employment is W-2 with taxes handled and insurance
+              covered.
+            </p>
+          </article>
+
+          <article className="rounded-xl border border-cv-border bg-cv-cream p-6">
+            <h3 className="font-headline text-[20px] leading-[1.3] font-semibold text-cv-navy">
+              What failure looks like
+            </h3>
+            <p className="mt-3 text-sm leading-6 text-cv-charcoal">
+              <strong>For clients:</strong> You hire someone who interviews well but cannot perform
+              in the field. Ramp-up, replacement search, and another ramp-up put the schedule at
+              risk.
+            </p>
+            <p className="mt-3 text-sm leading-6 text-cv-charcoal">
+              <strong>For workers:</strong> You take a gig through an agency that cuts your rate
+              and ghosts after placement. The project ends and you are back to square one.
+            </p>
+          </article>
+        </div>
+      </SectionWrapper>
+
+      <SectionWrapper tone="parchment">
+        <div className="mb-8 flex flex-col items-start justify-between gap-3 md:flex-row md:items-end">
+          <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
+            Roles we staff
+          </h2>
+          <Button asChild variant="link" className="px-0">
+            <Link to="/services">See all services</Link>
+          </Button>
+        </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {industries.slice(0, 6).map((industry, i) => (
+          {rolesWeStaff.map((role) => (
+            <RoleCard key={role} title={role} href="/services" />
+          ))}
+        </div>
+      </SectionWrapper>
+
+      <SectionWrapper tone="white">
+        <div className="mb-8 flex flex-col items-start justify-between gap-3 md:flex-row md:items-end">
+          <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
+            Industries
+          </h2>
+          <Button asChild variant="link" className="px-0">
+            <Link to="/industries">View industry detail</Link>
+          </Button>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {industries.map((industry) => (
             <IndustryCard
               key={industry.id}
-              code={`SC-${(i + 1).toString().padStart(2, "0")}`}
               title={industry.title}
               description={industry.description}
               status={industry.status}
-              currentlySeeking={industry.currentlySeeking}
               href="/industries"
             />
           ))}
         </div>
       </SectionWrapper>
 
-      {/* Live roles board */}
-      <SectionWrapper tone="white" eyebrow="Open positions — currently filling" badge="Rev 14 / Live">
-        <RolesBoard />
-        <p className="mt-6 cv-mono text-[10px] uppercase tracking-[0.22em] text-cv-graphite-light">
-          Submit to the network on{" "}
-          <Link
-            to="/join-our-network"
-            className="text-cv-copper underline-offset-4 hover:underline"
-          >
-            Sheet E-008 →
-          </Link>
-        </p>
-      </SectionWrapper>
-
-      {/* Why CrewVolt comparison teaser */}
-      <SectionWrapper tone="vellum" eyebrow="Specification — why CrewVolt" badge="See Sheet E-006">
-        <ComparisonMatrix
-          columns={["CrewVolt", "General agency", "Direct hire", "1099 contractor"]}
-          rows={[
-            {
-              label: "Energy infrastructure specialization",
-              note: "Only this category",
-              values: ["yes", "no", "partial", "partial"],
-            },
-            {
-              label: "W-2 employment with workers comp",
-              values: ["yes", "partial", "yes", "no"],
-            },
-            {
-              label: "Field-vetted references",
-              note: "Worked-alongside, not resume",
-              values: ["yes", "no", "partial", "partial"],
-            },
-            {
-              label: "Project-timeline staffing without permanent headcount",
-              values: ["yes", "yes", "no", "yes"],
-            },
-            {
-              label: "Continuity between projects",
-              values: ["yes", "no", "yes", "no"],
-            },
-          ]}
-        />
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Button asChild>
-            <Link to="/why-crewvolt">View full specification →</Link>
-          </Button>
-          <Button asChild variant="secondary">
-            <Link to="/services">See all roles →</Link>
-          </Button>
-        </div>
-      </SectionWrapper>
-
-      <SectionWrapper tone="vellum" className="!pt-0">
+      <SectionWrapper tone="parchment">
         <CtaBanner />
+      </SectionWrapper>
+
+      <SectionWrapper tone="white">
+        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
+          By the numbers
+        </h2>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <MetricCard label="Distinct roles we staff" value="15+" />
+          <MetricCard label="Project types served" value="6" />
+          <MetricCard label="Employment model" value="W-2" />
+          <MetricCard label="Regions covered" value="5+" />
+        </div>
       </SectionWrapper>
     </>
   );

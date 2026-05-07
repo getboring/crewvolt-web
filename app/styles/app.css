@@ -2,123 +2,103 @@
 @import "tw-animate-css";
 
 :root {
-  /* L1: Color primitives — drafting paper palette */
-  --cv-vellum: #f4efe2;
-  --cv-vellum-light: #faf6ec;
-  --cv-vellum-dark: #ebe3d0;
-  --cv-pencil: #1a1a1a;
-  --cv-graphite: #3a4452;
-  --cv-graphite-light: #5b6776;
-  --cv-graphite-mute: #8893a3;
-
-  /* Brand surfaces */
+  /* Layer 1: Color Primitives */
   --cv-navy: #1b365d;
   --cv-navy-light: #2a4a7a;
-  --cv-navy-dark: #0e1f3a;
+  --cv-navy-dark: #0f2240;
   --cv-copper: #b87333;
   --cv-copper-light: #d4935a;
   --cv-copper-dark: #8f5a28;
-  --cv-blueprint: #0c4a6e;
-  --cv-blueprint-light: #155e8a;
-  --cv-revision-red: #c8442c;
   --cv-field-green: #3d5a3e;
   --cv-field-green-light: #4e7350;
+  --cv-parchment: #f7f4ef;
+  --cv-cream: #fafaf7;
+  --cv-charcoal: #2d3436;
+  --cv-steel: #4a5568;
+  --cv-muted: #6b7c8f;
   --cv-amber: #d97706;
   --cv-success: #2d8659;
-  --cv-warning: #d97706;
-  --cv-danger: #c8442c;
-
-  /* Surface tints */
+  --cv-danger: #c75a3b;
   --cv-success-bg: #eaf5ee;
   --cv-info-bg: #e8edf4;
   --cv-warning-bg: #fef3e2;
-  --cv-danger-bg: #fbe7e1;
-  --cv-cream: #faf6ec;
+  --cv-danger-bg: #fceaea;
+  --cv-border: #e2ddd5;
+  --cv-border-light: #edead4;
 
-  /* Linework */
-  --cv-rule-strong: #1a1a1a;
-  --cv-rule: #807868;
-  --cv-rule-soft: rgba(26, 26, 26, 0.18);
-  --cv-rule-faint: rgba(26, 26, 26, 0.07);
-  --cv-rule-grid: rgba(26, 26, 26, 0.06);
-  --cv-border: #d8cfb8;
-  --cv-border-light: #ebe3d0;
-
-  /* L3: Typography */
+  /* Layer 3: Typography */
   --cv-font-logo: "Barlow Condensed", "Arial Narrow", sans-serif;
-  --cv-font-display: "Fraunces", "Times New Roman", serif;
-  --cv-font-body: "General Sans", ui-sans-serif, system-ui, sans-serif;
-  --cv-font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --cv-font-headline: "Playfair Display", Georgia, serif;
+  --cv-font-body: "Source Sans 3", system-ui, sans-serif;
+  --cv-font-data: "IBM Plex Mono", "Courier New", monospace;
 
-  /* L4: Type scale (clamp-driven for fluid sizing) */
-  --cv-display-xl: clamp(3.25rem, 7vw, 6.5rem);
-  --cv-display-lg: clamp(2.5rem, 5vw, 4.5rem);
-  --cv-display-md: clamp(2rem, 3.5vw, 3rem);
-  --cv-display-sm: clamp(1.5rem, 2.5vw, 2.25rem);
-  --cv-body-lg: 1.125rem;
-  --cv-body: 1rem;
-  --cv-body-sm: 0.9375rem;
-  --cv-body-xs: 0.8125rem;
-  --cv-label: 0.6875rem;
-  --cv-label-sm: 0.625rem;
+  /* Layer 4: Type Scale */
+  --cv-type-3xl: 56px;
+  --cv-type-2xl: 36px;
+  --cv-type-xl: 24px;
+  --cv-type-lg: 20px;
+  --cv-type-md: 18px;
+  --cv-type-base: 16px;
+  --cv-type-sm: 14px;
+  --cv-type-xs: 12px;
+  --cv-type-2xs: 11px;
+  --cv-type-data: 22px;
+  --cv-type-data-sm: 14px;
+  --cv-type-label: 12px;
 
-  /* L6: Component tokens */
-  --cv-radius-none: 0px;
-  --cv-radius-sm: 2px;
-  --cv-radius-md: 3px;
-  --cv-radius-lg: 4px;
-  --cv-radius-xl: 6px;
-  --cv-shadow-paper: 0 1px 0 rgba(26, 26, 26, 0.08), 0 8px 24px -12px rgba(26, 26, 26, 0.16);
-  --cv-shadow-stamp: 0 0 0 1px var(--cv-rule-soft), 0 12px 32px -16px rgba(26, 26, 26, 0.18);
-  --cv-shadow-lift: 0 1px 0 rgba(26, 26, 26, 0.08), 0 16px 32px -18px rgba(26, 26, 26, 0.22);
+  /* Layer 6: Component Tokens */
+  --cv-radius-sm: 4px;
+  --cv-radius-md: 6px;
+  --cv-radius-lg: 8px;
+  --cv-radius-xl: 12px;
+  --cv-shadow-sm: 0 1px 3px rgba(27, 54, 93, 0.06);
+  --cv-shadow-md: 0 4px 12px rgba(27, 54, 93, 0.08);
+  --cv-shadow-lg: 0 8px 24px rgba(27, 54, 93, 0.12);
 
-  /* L7: Motion */
-  --cv-motion-fast: 140ms;
-  --cv-motion-normal: 220ms;
-  --cv-motion-slow: 480ms;
-  --cv-motion-cinematic: 1800ms;
-  --cv-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --cv-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Layer 7: Motion */
+  --cv-motion-fast: 0.1s;
+  --cv-motion-normal: 0.2s;
+  --cv-motion-slow: 0.35s;
+  --cv-ease: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* L8: Dark surface */
-  --cv-dark-text-primary: #f4efe2;
-  --cv-dark-text-secondary: rgba(244, 239, 226, 0.78);
-  --cv-dark-text-muted: rgba(244, 239, 226, 0.54);
-  --cv-dark-text-hint: rgba(244, 239, 226, 0.32);
-  --cv-dark-border: rgba(244, 239, 226, 0.14);
-  --cv-dark-rule: rgba(244, 239, 226, 0.32);
-  --cv-dark-accent: #d4935a;
+  /* Layer 8: Dark Surface */
+  --cv-dark-text-primary: #ffffff;
+  --cv-dark-text-secondary: rgba(255, 255, 255, 0.7);
+  --cv-dark-text-muted: rgba(255, 255, 255, 0.45);
+  --cv-dark-text-hint: rgba(255, 255, 255, 0.25);
+  --cv-dark-border: rgba(255, 255, 255, 0.12);
+  --cv-dark-accent-label: #d4935a;
 
   /* shadcn semantic mapping */
-  --background: var(--cv-vellum);
-  --foreground: var(--cv-pencil);
-  --card: var(--cv-vellum-light);
-  --card-foreground: var(--cv-pencil);
-  --popover: var(--cv-vellum-light);
-  --popover-foreground: var(--cv-pencil);
-  --primary: var(--cv-pencil);
-  --primary-foreground: var(--cv-vellum);
-  --secondary: var(--cv-vellum-dark);
-  --secondary-foreground: var(--cv-pencil);
-  --muted: var(--cv-vellum-dark);
-  --muted-foreground: var(--cv-graphite);
+  --background: var(--cv-parchment);
+  --foreground: var(--cv-charcoal);
+  --card: #ffffff;
+  --card-foreground: var(--cv-charcoal);
+  --popover: #ffffff;
+  --popover-foreground: var(--cv-charcoal);
+  --primary: var(--cv-navy);
+  --primary-foreground: #ffffff;
+  --secondary: var(--cv-cream);
+  --secondary-foreground: var(--cv-navy);
+  --muted: var(--cv-cream);
+  --muted-foreground: var(--cv-steel);
   --accent: var(--cv-copper);
-  --accent-foreground: var(--cv-vellum);
-  --destructive: var(--cv-revision-red);
-  --destructive-foreground: var(--cv-vellum);
+  --accent-foreground: #ffffff;
+  --destructive: var(--cv-danger);
+  --destructive-foreground: #ffffff;
   --border: var(--cv-border);
   --input: var(--cv-border);
   --ring: var(--cv-copper);
-  --radius: var(--cv-radius-sm);
+  --radius: var(--cv-radius-lg);
 }
 
 @theme inline {
   --font-sans: var(--cv-font-body);
-  --font-display: var(--cv-font-display);
+  --font-heading: var(--cv-font-headline);
   --font-logo: var(--cv-font-logo);
-  --font-mono: var(--cv-font-mono);
+  --font-headline: var(--cv-font-headline);
   --font-body: var(--cv-font-body);
-  --font-headline: var(--cv-font-display);
+  --font-data: var(--cv-font-data);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -140,46 +120,29 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --color-cv-vellum: var(--cv-vellum);
-  --color-cv-vellum-light: var(--cv-vellum-light);
-  --color-cv-vellum-dark: var(--cv-vellum-dark);
-  --color-cv-pencil: var(--cv-pencil);
-  --color-cv-graphite: var(--cv-graphite);
-  --color-cv-graphite-light: var(--cv-graphite-light);
-  --color-cv-graphite-mute: var(--cv-graphite-mute);
   --color-cv-navy: var(--cv-navy);
   --color-cv-navy-light: var(--cv-navy-light);
   --color-cv-navy-dark: var(--cv-navy-dark);
   --color-cv-copper: var(--cv-copper);
   --color-cv-copper-light: var(--cv-copper-light);
   --color-cv-copper-dark: var(--cv-copper-dark);
-  --color-cv-blueprint: var(--cv-blueprint);
-  --color-cv-blueprint-light: var(--cv-blueprint-light);
-  --color-cv-revision-red: var(--cv-revision-red);
   --color-cv-field-green: var(--cv-field-green);
   --color-cv-field-green-light: var(--cv-field-green-light);
+  --color-cv-parchment: var(--cv-parchment);
+  --color-cv-cream: var(--cv-cream);
+  --color-cv-charcoal: var(--cv-charcoal);
+  --color-cv-steel: var(--cv-steel);
+  --color-cv-muted: var(--cv-muted);
   --color-cv-amber: var(--cv-amber);
   --color-cv-success: var(--cv-success);
-  --color-cv-warning: var(--cv-warning);
   --color-cv-danger: var(--cv-danger);
   --color-cv-success-bg: var(--cv-success-bg);
   --color-cv-info-bg: var(--cv-info-bg);
   --color-cv-warning-bg: var(--cv-warning-bg);
   --color-cv-danger-bg: var(--cv-danger-bg);
-  --color-cv-cream: var(--cv-cream);
-  --color-cv-rule: var(--cv-rule);
-  --color-cv-rule-strong: var(--cv-rule-strong);
-  --color-cv-rule-soft: var(--cv-rule-soft);
   --color-cv-border: var(--cv-border);
   --color-cv-border-light: var(--cv-border-light);
 
-  /* Backwards-compat with prior token names referenced in components */
-  --color-cv-charcoal: var(--cv-pencil);
-  --color-cv-steel: var(--cv-graphite);
-  --color-cv-muted: var(--cv-graphite-mute);
-  --color-cv-parchment: var(--cv-vellum);
-
-  --radius-none: 0px;
   --radius-sm: var(--cv-radius-sm);
   --radius-md: var(--cv-radius-md);
   --radius-lg: var(--cv-radius-lg);
@@ -190,18 +153,10 @@
   box-sizing: border-box;
 }
 
-html {
-  background: var(--cv-vellum);
-}
-
 body {
   font-family: var(--cv-font-body);
-  font-feature-settings: "ss01", "ss02", "cv01", "cv11";
-  color: var(--cv-pencil);
-  background: var(--cv-vellum);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  color: var(--cv-charcoal);
+  background: var(--cv-parchment);
 }
 
 @layer base {
@@ -216,364 +171,50 @@ body {
   textarea,
   [role="button"],
   [tabindex]:not([tabindex="-1"]) {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cv-copper focus-visible:ring-offset-2 focus-visible:ring-offset-cv-vellum;
-  }
-
-  ::selection {
-    background: var(--cv-copper);
-    color: var(--cv-vellum);
-  }
-
-  /* Drafting-paper grain */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background-image: radial-gradient(rgba(26, 26, 26, 0.04) 1px, transparent 1px);
-    background-size: 3px 3px;
-    pointer-events: none;
-    z-index: 1;
-    mix-blend-mode: multiply;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cv-copper focus-visible:ring-offset-2 focus-visible:ring-offset-cv-parchment;
   }
 }
 
 @layer utilities {
-  /* === Display & body type === */
-  .cv-display {
-    font-family: var(--cv-font-display);
-    font-weight: 400;
-    font-variation-settings: "opsz" 144;
-    color: var(--cv-pencil);
-    letter-spacing: -0.022em;
-    line-height: 0.96;
+  .cv-heading {
+    font-family: var(--cv-font-headline);
+    color: var(--cv-navy);
   }
 
-  .cv-display-italic {
-    font-family: var(--cv-font-display);
-    font-weight: 400;
-    font-style: italic;
-    font-variation-settings: "opsz" 144;
-    letter-spacing: -0.018em;
-    line-height: 1;
-  }
-
-  .cv-h2 {
-    font-family: var(--cv-font-display);
-    font-weight: 500;
-    font-variation-settings: "opsz" 72;
-    color: var(--cv-pencil);
-    letter-spacing: -0.012em;
-    line-height: 1.04;
-  }
-
-  .cv-h3 {
-    font-family: var(--cv-font-display);
-    font-weight: 500;
-    font-variation-settings: "opsz" 36;
-    color: var(--cv-pencil);
-    letter-spacing: -0.005em;
-    line-height: 1.15;
-  }
-
-  .cv-body {
-    font-family: var(--cv-font-body);
-    font-weight: 400;
-    color: var(--cv-graphite);
-    line-height: 1.65;
-  }
-
-  .cv-mono {
-    font-family: var(--cv-font-mono);
-    font-feature-settings: "ss01", "ss20";
-  }
-
-  .cv-slug {
-    font-family: var(--cv-font-mono);
-    font-size: var(--cv-label);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--cv-graphite);
-  }
-
-  .cv-slug-copper {
-    font-family: var(--cv-font-mono);
-    font-size: var(--cv-label);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--cv-copper);
-  }
-
-  /* === Drawing grid === */
-  .cv-drawing-grid {
-    background-image:
-      linear-gradient(to right, var(--cv-rule-grid) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--cv-rule-grid) 1px, transparent 1px);
-    background-size: 64px 64px;
-    background-position: -1px -1px;
-  }
-
-  .cv-drawing-grid-fine {
-    background-image:
-      linear-gradient(to right, rgba(26, 26, 26, 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(26, 26, 26, 0.04) 1px, transparent 1px);
-    background-size: 24px 24px;
-  }
-
-  .cv-blueprint-grid {
-    background-color: var(--cv-blueprint);
-    background-image:
-      linear-gradient(to right, rgba(244, 239, 226, 0.08) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(244, 239, 226, 0.08) 1px, transparent 1px);
-    background-size: 48px 48px;
-  }
-
-  /* === Linework primitives === */
-  .cv-rule {
-    border-color: var(--cv-rule);
-  }
-
-  .cv-rule-strong {
-    border-color: var(--cv-rule-strong);
-  }
-
-  .cv-rule-soft {
-    border-color: var(--cv-rule-soft);
-  }
-
-  .cv-hairline {
-    background: var(--cv-rule-soft);
-    height: 1px;
-    width: 100%;
-  }
-
-  .cv-hairline-strong {
-    background: var(--cv-pencil);
-    height: 1px;
-    width: 100%;
-  }
-
-  /* Match line — divider used between drawing sheets */
-  .cv-match-line {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 0;
-  }
-
-  .cv-match-line::before,
-  .cv-match-line::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background-image: linear-gradient(
-      to right,
-      var(--cv-rule) 0,
-      var(--cv-rule) 6px,
-      transparent 6px,
-      transparent 12px
-    );
-    background-size: 12px 1px;
-    background-repeat: repeat-x;
-  }
-
-  /* === Drawing-style cards === */
-  .cv-paper {
-    background: var(--cv-vellum-light);
-    border: 1px solid var(--cv-border);
-    box-shadow: var(--cv-shadow-paper);
-  }
-
-  .cv-paper-flat {
-    background: var(--cv-vellum-light);
-    border: 1px solid var(--cv-border);
-  }
-
-  .cv-paper-stamp {
-    background: var(--cv-vellum-light);
-    border: 1px solid var(--cv-pencil);
-    box-shadow: var(--cv-shadow-stamp);
-  }
-
-  /* === Dark surfaces === */
   .cv-dark-text-primary {
     color: var(--cv-dark-text-primary);
   }
+
   .cv-dark-text-secondary {
     color: var(--cv-dark-text-secondary);
   }
+
   .cv-dark-text-muted {
     color: var(--cv-dark-text-muted);
   }
+
   .cv-dark-text-hint {
     color: var(--cv-dark-text-hint);
   }
+
   .cv-dark-border {
     border-color: var(--cv-dark-border);
   }
-  .cv-dark-accent {
-    color: var(--cv-dark-accent);
-  }
-  .cv-dark-rule {
-    border-color: var(--cv-dark-rule);
+
+  .cv-dark-accent-label {
+    color: var(--cv-dark-accent-label);
   }
 
   .cv-min-touch {
     min-height: 44px;
   }
 
-  /* Form labels (drafting slug) */
   .cv-form-label {
-    font-family: var(--cv-font-mono);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--cv-graphite);
-  }
-
-  /* Drawing input field */
-  .cv-input {
-    width: 100%;
-    margin-top: 0.5rem;
-    padding: 0.625rem 0.75rem;
-    background: var(--cv-vellum-light);
-    border: 1px solid var(--cv-rule);
-    border-radius: 0;
     font-family: var(--cv-font-body);
-    font-size: 0.9375rem;
-    color: var(--cv-pencil);
-    transition: border-color var(--cv-motion-normal) var(--cv-ease);
-  }
-
-  .cv-input:hover {
-    border-color: var(--cv-pencil);
-  }
-
-  .cv-input:focus {
-    outline: none;
-    border-color: var(--cv-copper);
-    box-shadow: 0 1px 0 var(--cv-copper);
-  }
-}
-
-/* === Cinematic page-load orchestration (gated on motion preference) === */
-@media (prefers-reduced-motion: no-preference) {
-  .cv-reveal {
-    opacity: 0;
-    transform: translateY(8px);
-    animation: cv-reveal var(--cv-motion-slow) var(--cv-ease-out) forwards;
-  }
-  .cv-reveal-d1 {
-    animation-delay: 80ms;
-  }
-  .cv-reveal-d2 {
-    animation-delay: 160ms;
-  }
-  .cv-reveal-d3 {
-    animation-delay: 280ms;
-  }
-  .cv-reveal-d4 {
-    animation-delay: 420ms;
-  }
-  .cv-reveal-d5 {
-    animation-delay: 580ms;
-  }
-  .cv-reveal-d6 {
-    animation-delay: 760ms;
-  }
-
-  .cv-stamp {
-    opacity: 0;
-    transform: scale(0.94);
-    animation: cv-stamp 320ms var(--cv-ease-out) forwards;
-    animation-delay: 200ms;
-  }
-
-  .cv-draw-line path,
-  .cv-draw-line line,
-  .cv-draw-line polyline,
-  .cv-draw-line circle,
-  .cv-draw-line rect {
-    stroke-dasharray: var(--cv-draw-len, 1200);
-    stroke-dashoffset: var(--cv-draw-len, 1200);
-    animation: cv-draw 1800ms var(--cv-ease-out) forwards;
-    animation-delay: 360ms;
-  }
-
-  .cv-draw-line .cv-draw-late {
-    animation-delay: 1500ms;
-  }
-}
-
-@keyframes cv-reveal {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes cv-stamp {
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes cv-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes cv-pulse-dot {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.4);
-  }
-}
-
-.cv-pulse-dot {
-  animation: cv-pulse-dot 2.4s ease-in-out infinite;
-}
-
-/* Scroll-driven bar scale (progressive enhancement) */
-@supports (animation-timeline: scroll()) {
-  .cv-bar-scale-fill {
-    animation: cv-bar-fill linear forwards;
-    animation-timeline: scroll(root);
-  }
-}
-
-@keyframes cv-bar-fill {
-  to {
-    transform: scaleX(1);
-  }
-}
-
-/* Reveal on enter (scroll-driven, optional) */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .cv-on-enter {
-      opacity: 0;
-      transform: translateY(12px);
-      animation: cv-on-enter linear forwards;
-      animation-timeline: view();
-      animation-range: entry 0% cover 30%;
-    }
-  }
-}
-
-@keyframes cv-on-enter {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+    font-size: var(--cv-type-label);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--cv-steel);
   }
 }

@@ -33,49 +33,45 @@ export function links() {
 export default function VendorReadinessRoute() {
   return (
     <>
-      <SectionWrapper tone="vellum" eyebrow="Vendor qualification" badge="Sheet E-010">
-        <h1 className="cv-display text-[clamp(2.5rem,5vw,4.5rem)]">
-          Ready to onboard.
-          <em className="cv-display-italic"> Ready to work.</em>
+      <SectionWrapper tone="parchment">
+        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">
+          Ready to onboard. Ready to work.
         </h1>
-        <p className="mt-6 max-w-3xl text-[17px] leading-relaxed text-cv-graphite">
+        <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
           CrewVolt maintains current documentation to move through standard subconsultant and
           vendor onboarding processes used by engineering firms, utilities, and EPC contractors.
         </p>
       </SectionWrapper>
 
-      <SectionWrapper tone="white" eyebrow="Submittal package — Rev 01" badge="Items 01–08">
-        <div className="cv-paper-flat">
-          <div className="border-b border-cv-pencil px-5 py-3">
-            <p className="cv-slug-copper">Ready to submit</p>
-          </div>
-          <ul className="divide-y divide-cv-rule-soft">
-            {readinessItems.map((item, i) => (
-              <li
-                key={item}
-                className="grid grid-cols-[44px_auto_1fr] items-center gap-3 px-5 py-3.5"
-              >
-                <span className="cv-mono text-[10px] uppercase tracking-[0.22em] text-cv-graphite-light">
-                  {(i + 1).toString().padStart(2, "0")}
-                </span>
-                <CheckCircle2 className="size-4 shrink-0 text-cv-success" aria-hidden="true" />
-                <span className="text-sm leading-relaxed text-cv-pencil">{item}</span>
+      <SectionWrapper tone="white">
+        <div className="rounded-xl border border-cv-border bg-cv-cream p-6">
+          <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
+            Ready to submit
+          </h2>
+          <ul className="mt-5 space-y-3">
+            {readinessItems.map((item) => (
+              <li key={item} className="flex items-start gap-3 text-base leading-7 text-cv-charcoal">
+                <CheckCircle2 className="mt-1 size-5 shrink-0 text-cv-success" />
+                <span>{item}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        <p className="mt-8 max-w-3xl text-[15px] leading-relaxed text-cv-graphite">
-          If your organization uses a formal procurement and vendor qualification process, we
-          are prepared to move through it efficiently. We come prepared with everything
-          procurement needs so we are not the reason onboarding takes longer than it should.
+        <p className="mt-6 max-w-4xl text-base leading-7 text-cv-charcoal">
+          If your organization uses a formal procurement and vendor qualification process, we are
+          prepared to move through it efficiently. We come prepared with everything procurement
+          needs so we are not the reason onboarding takes longer than it should.
+        </p>
+        <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
+          Learn more about our <Link to="/services" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">staffing services</Link> or see <Link to="/how-it-works" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">how the engagement works</Link>.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Button asChild>
-            <Link to="/staff-my-project">Staff my project →</Link>
+            <Link to="/staff-my-project">Staff my project</Link>
           </Button>
           <Button asChild variant="secondary">
-            <Link to="/contact">Contact / RFI →</Link>
+            <Link to="/contact">Contact us</Link>
           </Button>
         </div>
       </SectionWrapper>

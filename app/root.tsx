@@ -7,12 +7,9 @@ import {
   ScrollRestoration,
 } from "react-router";
 
-import { BarScale } from "~/components/bar-scale";
 import { Footer } from "~/components/footer";
 import { JsonLdScript } from "~/components/json-ld-script";
 import { Nav } from "~/components/nav";
-import { StickyMobileCta } from "~/components/sticky-mobile-cta";
-import { TitleBlock } from "~/components/title-block";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { Toaster } from "~/components/ui/sonner";
 import { organizationSchema } from "~/lib/seo";
@@ -27,14 +24,14 @@ export function loader({ context }: Route.LoaderArgs) {
 
 export function meta(_: Route.MetaArgs) {
   return [
-    { title: "Energy Infrastructure Staffing | CrewVolt" },
+    {
+      title: "Energy Infrastructure Staffing | CrewVolt",
+    },
     {
       name: "description",
       content:
         "CrewVolt places experienced inspectors, superintendents, and project managers on substation, wind, and solar projects. W-2 staffing for energy construction.",
     },
-    { name: "theme-color", content: "#1A1A1A" },
-    { name: "color-scheme", content: "light" },
   ];
 }
 
@@ -45,14 +42,9 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.gstatic.com",
     crossOrigin: "anonymous",
   },
-  { rel: "preconnect", href: "https://api.fontshare.com" },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Fraunces:opsz,wght@9..144,300..900&family=JetBrains+Mono:wght@400;500;600&display=swap",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://api.fontshare.com/v2/css?f[]=general-sans@300,400,500,600,700&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap",
   },
   { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
 ];
@@ -69,7 +61,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-cv-pencil focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:uppercase focus:tracking-[0.18em] focus:text-cv-vellum focus:outline-none"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-cv-navy focus:px-4 focus:py-2 focus:text-white focus:outline-none"
         >
           Skip to content
         </a>
@@ -94,9 +86,6 @@ export default function App({ loaderData }: Route.ComponentProps) {
         <Outlet />
       </main>
       <Footer />
-      <TitleBlock />
-      <BarScale />
-      <StickyMobileCta />
       <Toaster position="top-center" richColors />
       {analyticsBeacon ? (
         <script
@@ -128,12 +117,11 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   return (
     <TooltipProvider>
       <Nav />
-      <main id="main-content" className="mx-auto w-full max-w-3xl px-6 py-20">
-        <p className="cv-slug-copper">Sheet — error</p>
-        <h1 className="cv-display mt-4 text-[clamp(2.5rem,5vw,4rem)]">{message}</h1>
-        <p className="mt-4 text-base leading-relaxed text-cv-graphite">{details}</p>
+      <main className="mx-auto w-full max-w-3xl px-6 py-20">
+        <h1 className="font-headline text-4xl text-cv-navy">{message}</h1>
+        <p className="mt-4 text-base text-cv-steel">{details}</p>
         {stack ? (
-          <pre className="mt-8 overflow-x-auto cv-paper-flat p-4 cv-mono text-xs">
+          <pre className="mt-8 overflow-x-auto rounded-xl border border-cv-border bg-white p-4 text-xs text-cv-charcoal">
             <code>{stack}</code>
           </pre>
         ) : null}

@@ -1,26 +1,24 @@
 # CrewVolt Web
 
-Marketing website for CrewVolt, a W-2 contract staffing company focused on energy infrastructure projects (substations, wind, solar, BESS, transmission).
-
-The site is presented as a **set of construction contract drawings** — every route is a numbered sheet (`E-001`...) with a fixed title block, drafting-grid background, match-line dividers, and revision triangles. The aesthetic is the visual language of the buyer.
+Marketing website for CrewVolt, a W-2 contract staffing company focused on energy infrastructure projects.
 
 ## Live status
 
 - Worker URL: `https://crewvolt-web.codyboring.workers.dev`
 - GitHub: `https://github.com/getboring/crewvolt-web`
 - Runtime: Cloudflare Workers
-- See `CLAUDE.md` for the full design system and sheet numbering.
+- Last production deploy: Apr 15, 2026
 
 ## Stack
 
 - React Router v7 (framework mode)
 - Cloudflare Workers + Wrangler
-- Tailwind CSS v4 + custom drafting tokens
-- shadcn/ui primitives, customized for the drawing system
-- React Hook Form + Zod (step-1 minimum, optional disclosure)
-- D1 (form submission storage) + R2 (resume uploads)
-- Resend (form notifications)
-- Fonts: Fraunces (Google), General Sans (Fontshare), JetBrains Mono (Google), Barlow Condensed (Google)
+- Tailwind CSS v4 + CrewVolt token system
+- shadcn/ui components customized for CrewVolt brand tokens
+- React Hook Form + Zod for form validation
+- D1 for form submission storage
+- R2 for resume uploads
+- Resend API integration for form notifications
 
 ## Local setup
 
@@ -29,22 +27,22 @@ pnpm install
 pnpm dev
 ```
 
-App runs on `http://localhost:5173`.
+Local app runs on `http://localhost:5173`.
 
 ## Scripts
 
-- `pnpm dev` — local dev with Cloudflare runtime
-- `pnpm typecheck` — wrangler types + react-router typegen + tsc
-- `pnpm build` — production build
-- `pnpm run deploy` — build + deploy to Cloudflare Workers
-- `pnpm cf-typegen` — regenerate `worker-configuration.d.ts`
+- `pnpm dev` - start local development server
+- `pnpm typecheck` - generate types and run TS checks
+- `pnpm build` - production build
+- `pnpm run deploy` - build and deploy to Cloudflare Workers
+- `pnpm cf-typegen` - regenerate `worker-configuration.d.ts`
 
 ## Cloudflare resources
 
-- Worker: `crewvolt-web`
-- D1: `crewvolt-db` (`983b5f01-d94a-45e8-870f-8c76a7c57f08`)
-- R2: `crewvolt-uploads`
-- Migrations: `workers/migrations/`
+- Worker name: `crewvolt-web`
+- D1 database: `crewvolt-db` (`983b5f01-d94a-45e8-870f-8c76a7c57f08`)
+- R2 bucket: `crewvolt-uploads`
+- Migration folder: `workers/migrations`
 
 Apply migrations:
 
@@ -54,32 +52,42 @@ pnpm exec wrangler d1 migrations apply crewvolt-db --remote
 
 ## Required secrets and vars
 
+Set secret in Cloudflare:
+
 ```bash
 pnpm exec wrangler secret put RESEND_API_KEY
 ```
 
-`wrangler.jsonc` vars:
+Configured vars in `wrangler.jsonc`:
+
 - `NOTIFICATION_EMAIL`
 - `RESEND_FROM_EMAIL`
 - `PUBLIC_SITE_URL`
-- `CF_WEB_ANALYTICS_TOKEN` (optional)
+- `CF_WEB_ANALYTICS_TOKEN`
 
 ## Form pipeline
 
-All three forms (`/staff-my-project`, `/join-our-network`, `/contact`) use React Router actions and follow the same flow:
+All three forms use React Router actions:
 
-1. Zod-validate (only step-1 fields required; deeper detail is optional disclosure)
-2. Save payload to D1 `form_submissions`
-3. Upload resume to R2 for the join form when provided
-4. Send Resend notification when `RESEND_API_KEY` is configured
-5. Render `StampedReceipt` success state
+- `/staff-my-project`
+- `/join-our-network`
+- `/contact`
 
-## Design system
+Flow:
 
-See `CLAUDE.md` for full documentation of:
-- Sheet numbering map (`E-001`...)
-- Type stack (Fraunces / General Sans / JetBrains Mono / Barlow Condensed)
-- Color tokens (vellum + pencil + copper + revision-red + blueprint + field-green)
-- Signature components (`TitleBlock`, `BarScale`, `MatchLine`, `RevisionTriangle`, `SingleLineDiagram`, `NotesColumn`, `ComparisonMatrix`, `RolesBoard`, `EngineerStamp`, `StampedReceipt`)
-- Motion rules (one orchestrated hero load, restrained micro-states, `prefers-reduced-motion` gated)
-- Security headers (CSP, HSTS, Permissions-Policy applied in `workers/app.ts`)
+1. Validate with Zod
+2. Save payload to `form_submissions` in D1
+3. Upload resume to R2 for join form when provided
+4. Send Resend notification when `RESEND_API_KEY` is available
+
+## Content and docs
+
+- Build spec: `../CREWVOLT_BUILD_DOCUMENT_FINAL.md`
+- Content source: `../CREWVOLT_WEBSITE_CONTENT_V3.md`
+- Brand system: `../crewvolt-brand-system.jsx`
+
+## Notes
+
+- This project intentionally uses parchment background (`#F7F4EF`) and a strict 4-font system.
+- Copper is accent only. Body text stays charcoal/navy/steel for contrast.
+- Mobile touch targets are 44px minimum.

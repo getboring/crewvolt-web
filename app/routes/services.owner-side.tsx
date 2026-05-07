@@ -23,43 +23,30 @@ export function links() {
 export default function OwnerSideServicesRoute() {
   return (
     <>
-      <SectionWrapper tone="vellum" eyebrow="Scope of work — owner side" badge="Sheet E-003.1">
-        <h1 className="cv-display text-[clamp(2.5rem,5vw,4.5rem)]">
-          Owner-side
-          <em className="cv-display-italic"> staffing.</em>
+      <SectionWrapper tone="parchment">
+        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">
+          Owner-side staffing
         </h1>
-        <p className="mt-6 max-w-3xl text-[17px] leading-relaxed text-cv-graphite">
+        <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
           When you are the owner, developer, or utility, inspection and oversight roles protect
           your schedule, quality, and budget. A strong inspector catches issues during
-          construction. A weak one turns them into turnover problems.{" "}
-          <Link
-            to="/how-it-works"
-            className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark"
-          >
-            See how the staffing process works →
-          </Link>
+          construction. A weak one turns them into turnover problems. Learn more about <Link to="/how-it-works" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">how our staffing process works</Link>.
         </p>
       </SectionWrapper>
 
-      <SectionWrapper tone="white" eyebrow="Owner-side roles" badge="OW-01–05">
+      <SectionWrapper tone="white">
         <div className="grid gap-4 md:grid-cols-2">
-          {ownerSideRoles.map((role, i) => (
-            <RoleCard
-              key={role.title}
-              code={`OW-${(i + 1).toString().padStart(2, "0")}`}
-              title={role.title}
-              description={role.description}
-              audience="owner"
-            />
+          {ownerSideRoles.map((role) => (
+            <RoleCard key={role.title} title={role.title} description={role.description} audience="owner" />
           ))}
         </div>
 
-        <div className="mt-10 flex flex-wrap gap-3">
+        <div className="mt-8 flex flex-wrap gap-3">
           <Button asChild>
-            <Link to="/staff-my-project">Staff my project →</Link>
+            <Link to="/staff-my-project">Staff my project</Link>
           </Button>
           <Button asChild variant="secondary">
-            <Link to="/services/contractor-side">Contractor-side roles →</Link>
+            <Link to="/services/contractor-side">See contractor-side roles</Link>
           </Button>
         </div>
       </SectionWrapper>

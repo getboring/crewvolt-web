@@ -4,13 +4,12 @@ import { useForm } from "react-hook-form";
 import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import { toast } from "sonner";
 
-import { JsonLdScript } from "~/components/json-ld-script";
-import { SectionWrapper } from "~/components/section-wrapper";
-import { StampedReceipt } from "~/components/stamped-receipt";
 import { Form } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
+import { JsonLdScript } from "~/components/json-ld-script";
+import { SectionWrapper } from "~/components/section-wrapper";
 import { contactSchema, type ContactValues } from "~/lib/forms";
 import { buildPageMeta, canonicalLinks } from "~/lib/seo";
 import {
@@ -19,6 +18,9 @@ import {
   toStringValue,
 } from "~/lib/submissions.server";
 import type { Route } from "./+types/contact";
+
+const fieldClassName =
+  "mt-1 w-full rounded-lg border border-cv-border bg-white px-3 py-2 text-sm text-cv-charcoal shadow-sm";
 
 export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
@@ -55,6 +57,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 
   try {
     await saveFormSubmission(env, "contact", parsed.data, parsed.data.email);
+
     await sendSubmissionNotification(env, {
       subject: "New contact submission",
       submitterName: parsed.data.name,
@@ -62,7 +65,11 @@ export async function action({ request, context }: Route.ActionArgs) {
       summaryLines: [`Phone: ${parsed.data.phone}`],
       payload: parsed.data,
     });
-    return { ok: true, message: "Thank you. We will get back to you shortly." };
+
+    return {
+      ok: true,
+      message: "Thank you. We will get back to you shortly.",
+    };
   } catch {
     return {
       ok: false,
@@ -78,14 +85,27 @@ export default function ContactRoute() {
 
   const form = useForm<ContactValues>({
     resolver: zodResolver(contactSchema),
-    defaultValues: { name: "", email: "", phone: "", message: "" },
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      message: "",
+    },
   });
 
   useEffect(() => {
-    if (!actionData) return;
+    if (!actionData) {
+      return;
+    }
+
     if (actionData.ok) {
       toast.success(actionData.message);
-      form.reset();
+      form.reset({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
     } else {
       toast.error(actionData.message);
     }
@@ -93,7 +113,9 @@ export default function ContactRoute() {
 
   const onSubmit = form.handleSubmit((_, event) => {
     const target = event?.currentTarget;
-    if (target) submit(target, { method: "post" });
+    if (target) {
+      submit(target, { method: "post" });
+    }
   });
 
   const localBusinessSchema = {
@@ -101,171 +123,75 @@ export default function ContactRoute() {
     "@type": "LocalBusiness",
     name: "CrewVolt",
     areaServed: "Tennessee",
-    address: { "@type": "PostalAddress", addressRegion: "TN", addressCountry: "US" },
+    address: {
+      "@type": "PostalAddress",
+      addressRegion: "TN",
+      addressCountry: "US",
+    },
     description:
       "W-2 contract staffing for energy infrastructure projects including substations, wind, solar, BESS, and transmission.",
   };
 
   const { errors } = form.formState;
 
-  if (actionData?.ok) {
-    return (
-      <SectionWrapper tone="vellum" eyebrow="RFI submission" badge="Sheet E-009">
-        <StampedReceipt
-          sheet="E-009"
-          title="RFI received."
-          message="We will get back to you shortly. If urgent, call +1 (423) 555-0100 or email staffing@crewvolt.com."
-        />
-      </SectionWrapper>
-    );
-  }
-
   return (
     <>
       <JsonLdScript data={localBusinessSchema} />
 
-      <SectionWrapper tone="vellum" eyebrow="RFI submission" badge="Sheet E-009">
-        <div className="grid gap-12 md:grid-cols-[0.95fr_1.05fr]">
-          <aside className="cv-paper-flat self-start">
-            <div className="border-b border-cv-pencil px-5 py-3">
-              <p className="cv-slug-copper">Project information</p>
+      <SectionWrapper tone="parchment">
+        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">Get in touch.</h1>
+        <div className="mt-6 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+          <aside className="rounded-xl border border-cv-border bg-cv-cream p-6">
+            <p className="font-logo text-lg font-bold tracking-[1.5px] text-cv-navy">CREWVOLT</p>
+            <p className="mt-2 text-sm text-cv-charcoal">Tennessee LLC</p>
+            <p className="mt-1 text-sm text-cv-charcoal">East Tennessee</p>
+            <p className="mt-2">
+              <a href="mailto:staffing@crewvolt.com" className="text-sm text-cv-copper hover:text-cv-copper-dark">
+                staffing@crewvolt.com
+              </a>
+            </p>
+            <div className="mt-4 space-y-1 border-t border-cv-border pt-4">
+              <p className="text-xs font-semibold tracking-[1px] uppercase text-cv-steel">Quick links</p>
+              <Link to="/staff-my-project" className="block text-sm text-cv-copper hover:text-cv-copper-dark">Staff my project</Link>
+              <Link to="/join-our-network" className="block text-sm text-cv-copper hover:text-cv-copper-dark">Join our network</Link>
+              <Link to="/vendor-readiness" className="block text-sm text-cv-copper hover:text-cv-copper-dark">Vendor readiness</Link>
             </div>
-            <dl className="divide-y divide-cv-rule-soft text-sm">
-              <div className="px-5 py-3">
-                <dt className="cv-mono text-[10px] uppercase tracking-[0.18em] text-cv-graphite-light">
-                  Email
-                </dt>
-                <dd className="mt-1">
-                  <a
-                    href="mailto:staffing@crewvolt.com"
-                    className="font-display text-[18px] font-medium tracking-tight text-cv-pencil hover:text-cv-copper"
-                  >
-                    staffing@crewvolt.com
-                  </a>
-                </dd>
-              </div>
-              <div className="px-5 py-3">
-                <dt className="cv-mono text-[10px] uppercase tracking-[0.18em] text-cv-graphite-light">
-                  Phone
-                </dt>
-                <dd className="mt-1">
-                  <a
-                    href="tel:+1-423-555-0100"
-                    className="font-display text-[18px] font-medium tracking-tight text-cv-pencil hover:text-cv-copper"
-                  >
-                    +1 (423) 555-0100
-                  </a>
-                </dd>
-              </div>
-              <div className="px-5 py-3">
-                <dt className="cv-mono text-[10px] uppercase tracking-[0.18em] text-cv-graphite-light">
-                  Region
-                </dt>
-                <dd className="mt-1 text-cv-pencil">East Tennessee · National field</dd>
-              </div>
-              <div className="px-5 py-3">
-                <dt className="cv-mono text-[10px] uppercase tracking-[0.18em] text-cv-graphite-light">
-                  Quick links
-                </dt>
-                <dd className="mt-1 space-y-1.5">
-                  <Link
-                    to="/staff-my-project"
-                    className="block cv-mono text-[11px] uppercase tracking-[0.18em] text-cv-copper hover:text-cv-copper-dark"
-                  >
-                    Sheet E-007 · Staff a project →
-                  </Link>
-                  <Link
-                    to="/join-our-network"
-                    className="block cv-mono text-[11px] uppercase tracking-[0.18em] text-cv-copper hover:text-cv-copper-dark"
-                  >
-                    Sheet E-008 · Join the network →
-                  </Link>
-                  <Link
-                    to="/vendor-readiness"
-                    className="block cv-mono text-[11px] uppercase tracking-[0.18em] text-cv-copper hover:text-cv-copper-dark"
-                  >
-                    Sheet E-010 · Vendor qualification →
-                  </Link>
-                </dd>
-              </div>
-            </dl>
           </aside>
 
-          <div>
-            <h1 className="cv-display text-[clamp(2.5rem,5vw,4.5rem)]">
-              Submit
-              <em className="cv-display-italic"> RFI.</em>
-            </h1>
-            <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-cv-graphite">
-              Use this for general questions, vendor qualification packets, and partnership
-              inquiries. For project staffing, see{" "}
-              <Link
-                to="/staff-my-project"
-                className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark"
-              >
-                Sheet E-007 →
-              </Link>
-            </p>
+          <div className="rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">
+            <Form {...form}>
+              <form className="space-y-5" onSubmit={onSubmit}>
+                <label className="block">
+                  <span className="cv-form-label">Name</span>
+                  <Input className={fieldClassName} {...form.register("name")} />
+                  {errors.name ? <p className="mt-1 text-xs text-cv-danger">{errors.name.message}</p> : null}
+                </label>
 
-            <div className="mt-8 cv-paper-flat">
-              <div className="border-b border-cv-pencil px-5 py-3">
-                <p className="cv-slug-copper">RFI form</p>
-              </div>
-              <Form {...form}>
-                <form className="space-y-5 p-5 md:p-7" onSubmit={onSubmit}>
-                  <label className="block">
-                    <span className="cv-form-label">A1 — Name</span>
-                    <Input className="cv-input" {...form.register("name")} />
-                    {errors.name ? (
-                      <p className="cv-mono mt-1 text-[10px] uppercase tracking-[0.18em] text-cv-revision-red">
-                        {errors.name.message}
-                      </p>
-                    ) : null}
-                  </label>
+                <label className="block">
+                  <span className="cv-form-label">Email</span>
+                  <Input className={fieldClassName} type="email" {...form.register("email")} />
+                  {errors.email ? <p className="mt-1 text-xs text-cv-danger">{errors.email.message}</p> : null}
+                </label>
 
-                  <div className="grid gap-5 md:grid-cols-2">
-                    <label className="block">
-                      <span className="cv-form-label">A2 — Email</span>
-                      <Input className="cv-input" type="email" {...form.register("email")} />
-                      {errors.email ? (
-                        <p className="cv-mono mt-1 text-[10px] uppercase tracking-[0.18em] text-cv-revision-red">
-                          {errors.email.message}
-                        </p>
-                      ) : null}
-                    </label>
-                    <label className="block">
-                      <span className="cv-form-label">A3 — Phone</span>
-                      <Input className="cv-input" {...form.register("phone")} />
-                      {errors.phone ? (
-                        <p className="cv-mono mt-1 text-[10px] uppercase tracking-[0.18em] text-cv-revision-red">
-                          {errors.phone.message}
-                        </p>
-                      ) : null}
-                    </label>
-                  </div>
+                <label className="block">
+                  <span className="cv-form-label">Phone</span>
+                  <Input className={fieldClassName} {...form.register("phone")} />
+                  {errors.phone ? <p className="mt-1 text-xs text-cv-danger">{errors.phone.message}</p> : null}
+                </label>
 
-                  <label className="block">
-                    <span className="cv-form-label">A4 — Message</span>
-                    <Textarea className="cv-input" rows={5} {...form.register("message")} />
-                    {errors.message ? (
-                      <p className="cv-mono mt-1 text-[10px] uppercase tracking-[0.18em] text-cv-revision-red">
-                        {errors.message.message}
-                      </p>
-                    ) : null}
-                  </label>
+                <label className="block">
+                  <span className="cv-form-label">Message</span>
+                  <Textarea className={fieldClassName} rows={5} {...form.register("message")} />
+                  {errors.message ? (
+                    <p className="mt-1 text-xs text-cv-danger">{errors.message.message}</p>
+                  ) : null}
+                </label>
 
-                  <Button
-                    type="submit"
-                    variant="default"
-                    size="lg"
-                    className="w-full"
-                    disabled={navigation.state === "submitting"}
-                  >
-                    {navigation.state === "submitting" ? "Stamping…" : "Submit RFI →"}
-                  </Button>
-                </form>
-              </Form>
-            </div>
+                <Button type="submit" variant="accent" disabled={navigation.state === "submitting"}>
+                  {navigation.state === "submitting" ? "Sending..." : "Send message"}
+                </Button>
+              </form>
+            </Form>
           </div>
         </div>
       </SectionWrapper>

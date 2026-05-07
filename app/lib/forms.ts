@@ -100,37 +100,36 @@ const requiredText = (label: string) =>
 
 const optionalText = z.string().trim().max(5000).optional().or(z.literal(""));
 
-// Step 1 — minimum-viable intake (4 fields). Optional fields can fill in step 2 / disclosure.
 export const staffProjectSchema = z.object({
   yourName: requiredText("Your name"),
   companyName: requiredText("Company name"),
   email: z.string().trim().email("Enter a valid email"),
   phone: requiredText("Phone"),
-  projectType: z.enum(projectTypeValues).optional(),
-  projectSide: z.enum(sideValues).optional(),
   projectName: optionalText,
-  projectLocation: optionalText,
-  rolesNeeded: z.array(z.enum(roleValues)).optional(),
-  anticipatedStartDate: optionalText,
-  estimatedDuration: optionalText,
-  additionalDetails: optionalText,
+  projectLocation: requiredText("Project location"),
+  projectType: z.enum(projectTypeValues),
+  projectSide: z.enum(sideValues),
+  rolesNeeded: z.array(z.enum(roleValues)).min(1, "Select at least one role"),
+  anticipatedStartDate: requiredText("Anticipated start date"),
+  estimatedDuration: requiredText("Estimated duration"),
+  additionalDetails: requiredText("Additional details"),
 });
 
 export const joinNetworkSchema = z.object({
   name: requiredText("Name"),
   email: z.string().trim().email("Enter a valid email"),
   phone: requiredText("Phone"),
-  cityState: optionalText,
-  rolesHeld: z.array(z.enum(roleValues)).optional(),
-  projectTypesWorked: z.array(z.enum(projectTypeValues)).optional(),
+  cityState: requiredText("City and state"),
+  rolesHeld: z.array(z.enum(roleValues)).min(1, "Select at least one role"),
+  projectTypesWorked: z
+    .array(z.enum(projectTypeValues))
+    .min(1, "Select at least one project type"),
   yearsExperience: z
     .string()
     .trim()
-    .regex(/^\d*$/, "Years of experience must be a whole number")
-    .optional()
-    .or(z.literal("")),
-  regions: z.array(z.enum(regionValues)).optional(),
-  currentAvailability: z.enum(availabilityValues).optional(),
+    .regex(/^\d+$/, "Years of experience must be a whole number"),
+  regions: z.array(z.enum(regionValues)).min(1, "Select at least one region"),
+  currentAvailability: z.enum(availabilityValues),
   certifications: optionalText,
   notes: optionalText,
 });
