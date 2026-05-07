@@ -5,6 +5,7 @@ import { HeroSection } from "~/components/hero-section";
 import { IndustryCard } from "~/components/industry-card";
 import { MetricCard } from "~/components/metric-card";
 import { RoleCard } from "~/components/role-card";
+import { SectionEyebrow } from "~/components/section-eyebrow";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { SplitCards } from "~/components/split-cards";
 import { StepCard } from "~/components/step-card";
@@ -62,11 +63,13 @@ export default function HomeRoute() {
       <HeroSection />
 
       <SectionWrapper tone="white">
+        <SectionEyebrow label="Both sides of the project" index="01" />
         <SplitCards />
       </SectionWrapper>
 
       <SectionWrapper tone="parchment">
-        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
+        <SectionEyebrow label="The problem — for clients" index="02" />
+        <h2 className="font-headline text-[clamp(1.75rem,3vw,2.25rem)] leading-[1.15] font-semibold text-cv-navy">
           A $40 million substation does not wait for you to find an electrical inspector.
         </h2>
         <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
@@ -82,7 +85,12 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
-        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
+        <SectionEyebrow
+          label="The problem — for workers"
+          index="03"
+          tone="field-green"
+        />
+        <h2 className="font-headline text-[clamp(1.75rem,3vw,2.25rem)] leading-[1.15] font-semibold text-cv-navy">
           You are good at what you do, but too many staffing companies treat you like a line item.
         </h2>
         <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
@@ -96,7 +104,8 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="parchment">
-        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
+        <SectionEyebrow label="Why we exist" index="04" />
+        <h2 className="font-headline text-[clamp(1.75rem,3vw,2.25rem)] leading-[1.15] font-semibold text-cv-navy">
           CrewVolt exists because our founder has lived both sides of this problem.
         </h2>
         <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
@@ -111,6 +120,7 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
+        <SectionEyebrow label="What sets us apart" index="05" />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-lg border border-cv-border bg-cv-cream p-4">
             <p className="font-data text-[22px] leading-[1.3] font-medium text-cv-copper">W-2</p>
@@ -132,9 +142,7 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="parchment">
-        <p className="mb-4 text-[11px] font-semibold tracking-[1.5px] uppercase text-cv-copper">
-          How it works for clients
-        </p>
+        <SectionEyebrow label="How it works — for clients" index="06" />
         <div className="grid gap-4 md:grid-cols-3">
           {clientPlanSteps.map((step, index) => (
             <StepCard key={step.title} step={index + 1} title={step.title} body={step.body} />
@@ -143,9 +151,11 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="parchment">
-        <p className="mb-4 text-[11px] font-semibold tracking-[1.5px] uppercase text-cv-field-green">
-          How it works for workers
-        </p>
+        <SectionEyebrow
+          label="How it works — for workers"
+          index="07"
+          tone="field-green"
+        />
         <div className="grid gap-4 md:grid-cols-3">
           {workerPlanSteps.map((step, index) => (
             <StepCard key={step.title} step={index + 1} title={step.title} body={step.body} />
@@ -154,6 +164,7 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
+        <SectionEyebrow label="Outcomes" index="08" />
         <div className="grid gap-6 md:grid-cols-2">
           <article className="rounded-xl border border-cv-border bg-cv-cream p-6">
             <h3 className="font-headline text-[20px] leading-[1.3] font-semibold text-cv-navy">
@@ -189,9 +200,14 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="parchment">
+        <SectionEyebrow
+          label="Roles we staff"
+          index="09"
+          caption="See full list →"
+        />
         <div className="mb-8 flex flex-col items-start justify-between gap-3 md:flex-row md:items-end">
-          <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
-            Roles we staff
+          <h2 className="font-headline text-[clamp(1.5rem,2.5vw,1.875rem)] leading-[1.15] font-semibold text-cv-navy">
+            Inspectors, superintendents, project managers, QA/QC.
           </h2>
           <Button asChild variant="link" className="px-0">
             <Link to="/services">See all services</Link>
@@ -205,9 +221,10 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
+        <SectionEyebrow label="Industries" index="10" caption="View industry detail →" />
         <div className="mb-8 flex flex-col items-start justify-between gap-3 md:flex-row md:items-end">
-          <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
-            Industries
+          <h2 className="font-headline text-[clamp(1.5rem,2.5vw,1.875rem)] leading-[1.15] font-semibold text-cv-navy">
+            Where we work.
           </h2>
           <Button asChild variant="link" className="px-0">
             <Link to="/industries">View industry detail</Link>
@@ -231,8 +248,9 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
-        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
-          By the numbers
+        <SectionEyebrow label="By the numbers" index="11" />
+        <h2 className="font-headline text-[clamp(1.5rem,2.5vw,1.875rem)] leading-[1.15] font-semibold text-cv-navy">
+          A focused operation.
         </h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <MetricCard label="Distinct roles we staff" value="15+" />

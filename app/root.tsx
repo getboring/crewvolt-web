@@ -46,6 +46,14 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap",
   },
+  // LCP boost — preload the hero image so the offshore-wind photo paints fast.
+  {
+    rel: "preload",
+    as: "image",
+    href: "/img/hero-offshore-wind.jpg",
+    fetchPriority: "high",
+    imageSizes: "55vw",
+  },
   { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
 ];
 

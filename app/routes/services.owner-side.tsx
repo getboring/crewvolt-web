@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 
 import { RoleCard } from "~/components/role-card";
+import { SectionEyebrow } from "~/components/section-eyebrow";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { Button } from "~/components/ui/button";
 import { ownerSideRoles } from "~/lib/content";
@@ -24,7 +25,8 @@ export default function OwnerSideServicesRoute() {
   return (
     <>
       <SectionWrapper tone="parchment">
-        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">
+        <SectionEyebrow label="Owner-side staffing" />
+        <h1 className="font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
           Owner-side staffing
         </h1>
         <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
@@ -35,6 +37,7 @@ export default function OwnerSideServicesRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
+        <SectionEyebrow label="Roles we staff" />
         <div className="grid gap-4 md:grid-cols-2">
           {ownerSideRoles.map((role) => (
             <RoleCard key={role.title} title={role.title} description={role.description} audience="owner" />

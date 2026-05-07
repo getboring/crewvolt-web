@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 
 import { RoleCard } from "~/components/role-card";
+import { SectionEyebrow } from "~/components/section-eyebrow";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { Button } from "~/components/ui/button";
 import { contractorSideRoles } from "~/lib/content";
@@ -24,7 +25,8 @@ export default function ContractorSideServicesRoute() {
   return (
     <>
       <SectionWrapper tone="parchment">
-        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">
+        <SectionEyebrow label="Contractor-side staffing" tone="field-green" />
+        <h1 className="font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
           Contractor-side staffing
         </h1>
         <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
@@ -35,6 +37,7 @@ export default function ContractorSideServicesRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
+        <SectionEyebrow label="Roles we staff" tone="field-green" />
         <div className="grid gap-4 md:grid-cols-2">
           {contractorSideRoles.map((role) => (
             <RoleCard

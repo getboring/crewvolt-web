@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 
 import { CtaBanner } from "~/components/cta-banner";
+import { SectionEyebrow } from "~/components/section-eyebrow";
 import { StepCard } from "~/components/step-card";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { howItWorksClientSteps, howItWorksWorkerSteps } from "~/lib/content";
@@ -24,7 +25,8 @@ export default function HowItWorksRoute() {
   return (
     <>
       <SectionWrapper tone="parchment">
-        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">
+        <SectionEyebrow label="How it works" />
+        <h1 className="font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
           Simple process. Both sides.
         </h1>
         <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
@@ -36,9 +38,7 @@ export default function HowItWorksRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
-        <p className="mb-4 text-[11px] font-semibold tracking-[1.5px] uppercase text-cv-copper">
-          For clients
-        </p>
+        <SectionEyebrow label="For clients" index="01" />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {howItWorksClientSteps.map((step, index) => (
             <StepCard key={step.title} step={index + 1} title={step.title} body={step.body} />
@@ -47,9 +47,7 @@ export default function HowItWorksRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="parchment">
-        <p className="mb-4 text-[11px] font-semibold tracking-[1.5px] uppercase text-cv-field-green">
-          For workers
-        </p>
+        <SectionEyebrow label="For workers" index="02" tone="field-green" />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {howItWorksWorkerSteps.map((step, index) => (
             <StepCard key={step.title} step={index + 1} title={step.title} body={step.body} />

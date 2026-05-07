@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 
 import { CtaBanner } from "~/components/cta-banner";
+import { SectionEyebrow } from "~/components/section-eyebrow";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { buildPageMeta, canonicalLinks } from "~/lib/seo";
 import type { Route } from "./+types/about";
@@ -22,7 +23,8 @@ export default function AboutRoute() {
   return (
     <>
       <SectionWrapper tone="parchment">
-        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">
+        <SectionEyebrow label="About CrewVolt" />
+        <h1 className="font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
           Built by people who have done the work.
         </h1>
         <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
@@ -33,9 +35,26 @@ export default function AboutRoute() {
         </p>
       </SectionWrapper>
 
+      {/* Wide image bleed */}
+      <figure className="relative">
+        <img
+          src="/img/about-grid.jpg"
+          alt="Transmission towers at sunset, representing the energy grid CrewVolt staffs."
+          width={1800}
+          height={1200}
+          loading="lazy"
+          decoding="async"
+          className="h-[280px] w-full object-cover md:h-[420px] lg:h-[520px]"
+        />
+        <figcaption className="sr-only">
+          Transmission towers at sunset.
+        </figcaption>
+      </figure>
+
       <SectionWrapper tone="white">
-        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
-          Why this company exists
+        <SectionEyebrow label="Why this company exists" />
+        <h2 className="font-headline text-[clamp(1.75rem,3vw,2.25rem)] leading-[1.15] font-semibold text-cv-navy">
+          The energy industry is building at a pace we have not seen in decades.
         </h2>
         <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
           The energy industry is building at a pace we have not seen in decades. Data centers are
@@ -54,8 +73,9 @@ export default function AboutRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="parchment">
-        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
-          How we are different
+        <SectionEyebrow label="How we are different" />
+        <h2 className="font-headline text-[clamp(1.75rem,3vw,2.25rem)] leading-[1.15] font-semibold text-cv-navy">
+          We are not a generalist staffing agency.
         </h2>
         <p className="mt-4 max-w-4xl text-base leading-7 text-cv-charcoal">
           Most staffing companies are generalists. Their recruiters are learning the difference
@@ -70,8 +90,9 @@ export default function AboutRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
-        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
-          Founded from the field
+        <SectionEyebrow label="Founded from the field" />
+        <h2 className="font-headline text-[clamp(1.75rem,3vw,2.25rem)] leading-[1.15] font-semibold text-cv-navy">
+          A note from the founder.
         </h2>
         <div className="mt-6 rounded-xl border border-cv-border bg-cv-cream p-6 md:p-8">
           <blockquote className="max-w-4xl text-base leading-7 text-cv-charcoal italic">
@@ -91,8 +112,9 @@ export default function AboutRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="parchment">
-        <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
-          What we stand for
+        <SectionEyebrow label="What we stand for" />
+        <h2 className="font-headline text-[clamp(1.75rem,3vw,2.25rem)] leading-[1.15] font-semibold text-cv-navy">
+          Four principles we will not compromise on.
         </h2>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <article className="rounded-xl border border-cv-border bg-cv-cream p-6">

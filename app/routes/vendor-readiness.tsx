@@ -1,6 +1,7 @@
 import { CheckCircle2 } from "lucide-react";
 import { Link } from "react-router";
 
+import { SectionEyebrow } from "~/components/section-eyebrow";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { Button } from "~/components/ui/button";
 import { buildPageMeta, canonicalLinks } from "~/lib/seo";
@@ -34,7 +35,8 @@ export default function VendorReadinessRoute() {
   return (
     <>
       <SectionWrapper tone="parchment">
-        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">
+        <SectionEyebrow label="Vendor readiness" />
+        <h1 className="font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
           Ready to onboard. Ready to work.
         </h1>
         <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
@@ -44,6 +46,7 @@ export default function VendorReadinessRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
+        <SectionEyebrow label="Submittal package" />
         <div className="rounded-xl border border-cv-border bg-cv-cream p-6">
           <h2 className="font-headline text-[24px] leading-[1.25] font-semibold text-cv-navy">
             Ready to submit

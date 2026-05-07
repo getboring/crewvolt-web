@@ -8,6 +8,7 @@ import {
 } from "~/components/ui/accordion";
 import { CtaBanner } from "~/components/cta-banner";
 import { JsonLdScript } from "~/components/json-ld-script";
+import { SectionEyebrow } from "~/components/section-eyebrow";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { whyCrewVoltFaq } from "~/lib/content";
 import { buildPageMeta, canonicalLinks } from "~/lib/seo";
@@ -45,7 +46,10 @@ export default function WhyCrewVoltRoute() {
       <JsonLdScript data={faqSchema} />
 
       <SectionWrapper tone="parchment">
-        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">Why CrewVolt.</h1>
+        <SectionEyebrow label="Why CrewVolt" />
+        <h1 className="font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
+          Why CrewVolt.
+        </h1>
         <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
           Specialized energy staffing built for both sides of the project: clients who need proven
           field leaders and workers who want fair pay and continuity. With over a quarter of oil,
@@ -56,6 +60,7 @@ export default function WhyCrewVoltRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
+        <SectionEyebrow label="Frequently asked questions" />
         <Accordion type="single" collapsible className="rounded-xl border border-cv-border bg-cv-cream p-3">
           {whyCrewVoltFaq.map((item) => (
             <AccordionItem key={item.id} value={item.id} className="border-cv-border-light px-2">
