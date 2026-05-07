@@ -1,6 +1,8 @@
-import type { OpenRoleRow } from "~/lib/open-roles";
+import { relativeTime, type OpenRoleRow } from "~/lib/open-roles";
 
-const fallbackRoles: OpenRoleRow[] = [
+type SeedRow = Omit<OpenRoleRow, "posted_relative">;
+
+const fallbackSeeds: SeedRow[] = [
   {
     id: "fallback-001",
     title: "Electrical Inspector",
@@ -40,11 +42,15 @@ const fallbackRoles: OpenRoleRow[] = [
  * Returns a hardcoded fallback if D1 is unreachable or the table is missing
  * (so the demo never shows an empty list).
  */
+function withRelative(rows: SeedRow[]): OpenRoleRow[] {
+  return rows.map((r) => ({ ...r, posted_relative: relativeTime(r.posted_at) }));
+}
+
 export async function listOpenRoles(
   db: D1Database | undefined,
   limit = 4,
 ): Promise<OpenRoleRow[]> {
-  if (!db) return fallbackRoles.slice(0, limit);
+  if (!db) return withRelative(fallbackSeeds.slice(0, limit));
 
   try {
     const result = await db
@@ -56,15 +62,15 @@ export async function listOpenRoles(
          LIMIT ?1`,
       )
       .bind(limit)
-      .all<OpenRoleRow>();
+      .all<SeedRow>();
 
     if (!result.results || result.results.length === 0) {
-      return fallbackRoles.slice(0, limit);
+      return withRelative(fallbackSeeds.slice(0, limit));
     }
 
-    return result.results;
+    return withRelative(result.results);
   } catch (err) {
     console.warn("listOpenRoles fallback (db query failed)", err);
-    return fallbackRoles.slice(0, limit);
+    return withRelative(fallbackSeeds.slice(0, limit));
   }
 }

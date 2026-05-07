@@ -12,6 +12,9 @@ export type OpenRoleRow = {
   region: string;
   status: OpenRoleStatus;
   posted_at: string;
+  /** Server-formatted "3d ago" string — passed down so client + server
+   *  render identical text and hydration doesn't mismatch. */
+  posted_relative: string;
 };
 
 /** Format an ISO timestamp as e.g. "3 days ago" */

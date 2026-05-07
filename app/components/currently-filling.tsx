@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 
 import { Button } from "~/components/ui/button";
-import { relativeTime, type OpenRoleRow } from "~/lib/open-roles";
+import type { OpenRoleRow } from "~/lib/open-roles";
 import { cn } from "~/lib/utils";
 
 const statusDot: Record<OpenRoleRow["status"], string> = {
@@ -70,7 +70,7 @@ export function CurrentlyFilling({
               dateTime={r.posted_at}
               className="text-xs tabular-nums text-cv-steel"
             >
-              {relativeTime(r.posted_at)}
+              {r.posted_relative}
             </time>
           </li>
         ))}
