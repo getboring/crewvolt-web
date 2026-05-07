@@ -79,11 +79,34 @@ pnpm exec wrangler secret put RESEND_API_KEY
 - Full copy: `../CREWVOLT_WEBSITE_CONTENT_V3.md`
 - Brand tokens and visual system: `../crewvolt-brand-system.jsx`
 
+## Form submit pattern (do not regress)
+
+All three intake forms (`/contact`, `/staff-my-project`, `/join-our-network`) capture the form ref **synchronously** before calling `form.handleSubmit`, because the Zod resolver is async and `event.currentTarget` is null by the time the inner callback runs:
+
+```ts
+const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const target = event.currentTarget; // capture before async
+  form.handleSubmit(() => {
+    submit(target, { method: "post" });
+  })(event);
+};
+```
+
+The naive `form.handleSubmit((_, event) => submit(event?.currentTarget, ...))` pattern fails silently — no POST, no error, no toast. Fixed in commit `336a97b`.
+
+## Verified working (2026-05-07)
+
+End-to-end Playwright smoke pass against the live Worker:
+
+- All 14 routes return 200 with correct titles and zero console errors.
+- `/contact`, `/staff-my-project`, `/join-our-network` each successfully POST → save to D1 `form_submissions` → reset the form on `actionData.ok`.
+- 404 catch-all renders correctly for unknown paths.
+
 ## Operational notes
 
-- `RESEND_API_KEY` is required for email notifications.
-- Without `RESEND_API_KEY`, forms still save into D1.
+- `RESEND_API_KEY` is required for email notifications. Without it, forms still save to D1.
 - `CF_WEB_ANALYTICS_TOKEN` is optional. If blank, analytics script is not injected.
+- Success toast auto-dismisses in ~5s, faster than Playwright's default 30s `waitFor`. The reliable assertion is "form fields cleared" + a D1 row appearing.
 
 ## TODO (needs human action)
 
@@ -92,3 +115,4 @@ pnpm exec wrangler secret put RESEND_API_KEY
 - Add real testimonials/case studies when available
 - Write blog content
 - Replace founder quote on About page with real name when approved
+- Set `RESEND_API_KEY` Worker secret to enable email notifications on submissions

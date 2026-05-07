@@ -80,6 +80,10 @@ Flow:
 3. Upload resume to R2 for join form when provided
 4. Send Resend notification when `RESEND_API_KEY` is available
 
+### Submit pattern gotcha
+
+Capture the form ref synchronously *before* `form.handleSubmit` — the Zod resolver is async and `event.currentTarget` is null inside the inner callback. See `CLAUDE.md` for the working pattern.
+
 ## Content and docs
 
 - Build spec: `../CREWVOLT_BUILD_DOCUMENT_FINAL.md`
