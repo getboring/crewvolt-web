@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useActionData, useNavigation, useSubmit } from "react-router";
 import { toast } from "sonner";
 
+import { CurrentlyFilling } from "~/components/currently-filling";
 import { JsonLdScript } from "~/components/json-ld-script";
 import { SectionWrapper } from "~/components/section-wrapper";
 import {
@@ -215,6 +216,10 @@ export default function JoinOurNetworkRoute() {
           growing demand for experienced energy construction professionals. Tell
           us about yourself.
         </p>
+
+        <div className="mt-8">
+          <CurrentlyFilling hideApply />
+        </div>
 
         <div className="mt-8 rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">
           <Form {...form}>

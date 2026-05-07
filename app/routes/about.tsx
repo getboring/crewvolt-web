@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 
 import { CtaBanner } from "~/components/cta-banner";
+import { PullQuote } from "~/components/pull-quote";
 import { SectionEyebrow } from "~/components/section-eyebrow";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { buildPageMeta, canonicalLinks } from "~/lib/seo";
@@ -109,6 +110,13 @@ export default function AboutRoute() {
             transmission, and generation projects.
           </p>
         </div>
+      </SectionWrapper>
+
+      <SectionWrapper tone="white" className="!py-12 md:!py-16">
+        <PullQuote attribution="Founder, CrewVolt">
+          Not &ldquo;can they interview&rdquo; — but &ldquo;would we trust them
+          on our own jobsite?&rdquo;
+        </PullQuote>
       </SectionWrapper>
 
       <SectionWrapper tone="parchment">
