@@ -32,7 +32,8 @@ export function Nav() {
   return (
     <nav
       aria-label="Primary"
-      className="sticky top-0 z-50 border-b border-cv-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
+      className="sticky top-0 z-50 border-b border-cv-border bg-white/95 backdrop-blur cv-safe-px supports-[backdrop-filter]:bg-white/80"
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between px-6 md:px-8">
         <Link

@@ -24,13 +24,34 @@ export function loader({ context }: Route.LoaderArgs) {
 
 export function meta(_: Route.MetaArgs) {
   return [
-    {
-      title: "Energy Infrastructure Staffing | CrewVolt",
-    },
+    { title: "Energy Infrastructure Staffing | CrewVolt" },
     {
       name: "description",
       content:
         "CrewVolt places experienced inspectors, superintendents, and project managers on substation, wind, and solar projects. W-2 staffing for energy construction.",
+    },
+    // Site naming for browsers / Android home screen
+    { name: "application-name", content: "CrewVolt" },
+    { name: "apple-mobile-web-app-title", content: "CrewVolt" },
+    // PWA / mobile-app behavior
+    { name: "mobile-web-app-capable", content: "yes" },
+    { name: "apple-mobile-web-app-capable", content: "yes" },
+    {
+      name: "apple-mobile-web-app-status-bar-style",
+      content: "black-translucent",
+    },
+    { name: "format-detection", content: "telephone=no" },
+    // Color scheme + theme color (light + dark variants)
+    { name: "color-scheme", content: "light" },
+    {
+      name: "theme-color",
+      media: "(prefers-color-scheme: light)",
+      content: "#f7f4ef",
+    },
+    {
+      name: "theme-color",
+      media: "(prefers-color-scheme: dark)",
+      content: "#1b365d",
     },
   ];
 }
@@ -54,7 +75,15 @@ export const links: Route.LinksFunction = () => [
     fetchPriority: "high",
     imageSizes: "55vw",
   },
+  // PWA manifest
+  { rel: "manifest", href: "/manifest.webmanifest" },
+  // Favicons
   { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+  { rel: "icon", href: "/favicon.ico", sizes: "any" },
+  // iOS home-screen icon
+  { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
+  // Safari pinned tab (uses the SVG mask)
+  { rel: "mask-icon", href: "/favicon.svg", color: "#1b365d" },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -62,7 +91,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
         <Meta />
         <Links />
       </head>
@@ -94,7 +126,12 @@ export default function App({ loaderData }: Route.ComponentProps) {
         <Outlet />
       </main>
       <Footer />
-      <Toaster position="top-center" richColors />
+      <Toaster
+        position="bottom-center"
+        richColors
+        offset={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)" }}
+        mobileOffset={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
+      />
       {analyticsBeacon ? (
         <script
           defer
@@ -108,8 +145,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let title = "Something went wrong on our end.";
-  let details =
-    "Try refreshing, or get in touch and we will look into it.";
+  let details = "Try refreshing, or get in touch and we will look into it.";
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {

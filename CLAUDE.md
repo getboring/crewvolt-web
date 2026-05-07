@@ -102,6 +102,36 @@ End-to-end Playwright smoke pass against the live Worker:
 - `/contact`, `/staff-my-project`, `/join-our-network` each successfully POST → save to D1 `form_submissions` → reset the form on `actionData.ok`.
 - 404 catch-all renders correctly for unknown paths.
 
+## PWA / iOS / Android (2026)
+
+- `public/manifest.webmanifest` — name, short_name, theme_color, icons (SVG + 192/512 PNG + maskable), display=standalone, app-shortcuts for `/staff-my-project` and `/join-our-network`.
+- Icon set generated from `public/icons/icon-source.svg` via macOS `qlmanage` + `sips`. To regenerate after a brand change:
+  ```bash
+  qlmanage -t -s 1024 -o /tmp public/icons/icon-source.svg
+  cp /tmp/icon-source.svg.png public/icons/icon-512.png
+  sips -Z 512 public/icons/icon-512.png --out public/icons/icon-512.png
+  sips -Z 192 public/icons/icon-512.png --out public/icons/icon-192.png
+  sips -Z 180 public/icons/icon-512.png --out public/apple-touch-icon.png
+  cp public/icons/icon-512.png public/icons/icon-maskable-512.png
+  ```
+- Meta tags in `app/root.tsx`:
+  - `mobile-web-app-capable` + `apple-mobile-web-app-capable` for standalone install
+  - `apple-mobile-web-app-status-bar-style: black-translucent`
+  - `apple-mobile-web-app-title: CrewVolt`
+  - `application-name: CrewVolt`
+  - `format-detection: telephone=no` (prevents iOS auto-linking phone-like number patterns)
+  - `theme-color` with `(prefers-color-scheme: light)` and `(prefers-color-scheme: dark)` variants — Android Chrome address bar tints accordingly
+  - `color-scheme: light` meta + CSS declaration
+- Viewport: `width=device-width, initial-scale=1, viewport-fit=cover` — required for `env(safe-area-inset-*)` to work on notched devices.
+- Mobile-only CSS polish in `app/styles/app.css`:
+  - `-webkit-tap-highlight-color: transparent` on all interactive elements
+  - `touch-action: manipulation` (eliminates 300ms double-tap delay)
+  - `overscroll-behavior-y: contain` on body (no rubber-band scroll)
+  - `-webkit-font-smoothing: antialiased`
+  - Safe-area utility classes: `.cv-safe-pt`, `.cv-safe-pb`, `.cv-safe-px`
+- Sonner toaster repositioned to `bottom-center` with `env(safe-area-inset-bottom)` offset so it doesn't collide with the sticky top nav on mobile.
+- Nav header uses `paddingTop: env(safe-area-inset-top)` so notched-iPhone status bars don't overlap the logo.
+
 ## Operational notes
 
 - `RESEND_API_KEY` is required for email notifications. Without it, forms still save to D1.

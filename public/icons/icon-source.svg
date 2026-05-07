@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#1B365D"/>
+  <text
+    x="50%"
+    y="50%"
+    dominant-baseline="central"
+    text-anchor="middle"
+    fill="#FFFFFF"
+    font-family="'Barlow Condensed', 'Arial Narrow', 'Helvetica Condensed', sans-serif"
+    font-size="540"
+    font-weight="700"
+    letter-spacing="20"
+  >CV</text>
+</svg>

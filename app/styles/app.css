@@ -152,10 +152,39 @@
   box-sizing: border-box;
 }
 
+html {
+  /* Honor user's preferred color scheme for native UI (form controls,
+     scrollbars, etc.). Currently light-only — ready for a dark-mode
+     variant later. */
+  color-scheme: light;
+  /* Stop iOS rubber-band drag from pulling the whole document */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   font-family: var(--cv-font-body);
   color: var(--cv-charcoal);
   background: var(--cv-parchment);
+  /* Smoother system font rendering on macOS / iOS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Tame iOS overscroll on body so sticky nav stays usable */
+  overscroll-behavior-y: contain;
+}
+
+@layer base {
+  /* Kill the default ugly tap-flash on iOS / Android */
+  a,
+  button,
+  [role="button"],
+  input[type="submit"],
+  input[type="button"],
+  label[for] {
+    -webkit-tap-highlight-color: transparent;
+    /* Eliminate the 300ms double-tap delay on touch */
+    touch-action: manipulation;
+  }
 }
 
 @layer base {
@@ -206,6 +235,19 @@ body {
 
   .cv-min-touch {
     min-height: 44px;
+  }
+
+  /* Safe-area insets for notched devices (iPhone, Android with display
+     cutouts). Used by sticky headers / fixed bottom bars. */
+  .cv-safe-pt {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .cv-safe-pb {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .cv-safe-px {
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
   }
 
   .cv-form-label {
