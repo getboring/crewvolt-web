@@ -7,12 +7,12 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import { ClientToaster } from "~/components/client-toaster";
 import { Footer } from "~/components/footer";
 import { JsonLdScript } from "~/components/json-ld-script";
 import { Nav } from "~/components/nav";
 import { StickyMobileCta } from "~/components/sticky-mobile-cta";
 import { TooltipProvider } from "~/components/ui/tooltip";
-import { Toaster } from "~/components/ui/sonner";
 import { organizationSchema } from "~/lib/seo";
 import type { Route } from "./+types/root";
 import "./styles/app.css";
@@ -131,12 +131,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
       </main>
       <Footer />
       <StickyMobileCta />
-      <Toaster
-        position="bottom-center"
-        richColors
-        offset={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 80px)" }}
-        mobileOffset={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 80px)" }}
-      />
+      <ClientToaster />
       {analyticsBeacon ? (
         <script
           defer
