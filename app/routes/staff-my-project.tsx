@@ -4,11 +4,19 @@ import { useForm } from "react-hook-form";
 import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import { toast } from "sonner";
 
-import { Form } from "~/components/ui/form";
+import { SectionWrapper } from "~/components/section-wrapper";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
-import { SectionWrapper } from "~/components/section-wrapper";
 import {
   projectTypeOptions,
   roleOptions,
@@ -25,8 +33,11 @@ import {
 } from "~/lib/submissions.server";
 import type { Route } from "./+types/staff-my-project";
 
-const fieldClassName =
-  "mt-1 w-full rounded-lg border border-cv-border bg-white px-3 py-2 text-sm text-cv-charcoal shadow-sm";
+const inputClass =
+  "h-11 rounded-md border-cv-border bg-white text-cv-charcoal shadow-sm focus-visible:border-cv-copper focus-visible:ring-cv-copper/30";
+
+const selectClass =
+  "h-11 w-full rounded-md border border-cv-border bg-white px-3 text-sm text-cv-charcoal shadow-sm transition-colors focus-visible:border-cv-copper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cv-copper/30";
 
 export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
@@ -43,6 +54,14 @@ export function links() {
 
 export async function action({ request, context }: Route.ActionArgs) {
   const formData = await request.formData();
+
+  if (toStringValue(formData.get("website"))) {
+    return {
+      ok: true,
+      message:
+        "Thank you. We will review your project details and reach out within one business day.",
+    };
+  }
 
   const parsed = staffProjectSchema.safeParse({
     yourName: toStringValue(formData.get("yourName")),
@@ -90,7 +109,8 @@ export async function action({ request, context }: Route.ActionArgs) {
       message:
         "Thank you. We will review your project details and reach out within one business day.",
     };
-  } catch {
+  } catch (err) {
+    console.error("staff_project submission failed", err);
     return {
       ok: false,
       message: "We could not process your request. Please try again.",
@@ -121,29 +141,11 @@ export default function StaffMyProjectRoute() {
     },
   });
 
-  const { errors } = form.formState;
-
   useEffect(() => {
-    if (!actionData) {
-      return;
-    }
-
+    if (!actionData) return;
     if (actionData.ok) {
       toast.success(actionData.message);
-      form.reset({
-        yourName: "",
-        companyName: "",
-        email: "",
-        phone: "",
-        projectName: "",
-        projectLocation: "",
-        projectType: "substation",
-        projectSide: "owner_utility",
-        rolesNeeded: [],
-        anticipatedStartDate: "",
-        estimatedDuration: "",
-        additionalDetails: "",
-      });
+      form.reset();
     } else {
       toast.error(actionData.message);
     }
@@ -156,105 +158,230 @@ export default function StaffMyProjectRoute() {
     })(event);
   };
 
+  const rolesNeededError = form.formState.errors.rolesNeeded?.message;
+
   return (
     <SectionWrapper tone="parchment">
-      <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">
+      <h1 className="font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
         Tell us about your project.
       </h1>
-      <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
-        You have a project that needs experienced leadership or inspection professionals. Tell us
-        about it and we will start matching people from our network. Not sure which roles you need? Review our <Link to="/services" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">full services list</Link>.
+      <p className="mt-5 max-w-3xl text-base leading-7 text-cv-charcoal">
+        You have a project that needs experienced leadership or inspection
+        professionals. Tell us about it and we will start matching people from
+        our network. Not sure which roles you need?{" "}
+        <Link
+          to="/services"
+          className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark"
+        >
+          Review our full services list
+        </Link>
+        .
       </p>
 
       <div className="mt-8 rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">
         <Form {...form}>
-          <form className="space-y-6" onSubmit={onSubmit}>
+          <form
+            className="space-y-6"
+            onSubmit={onSubmit}
+            aria-label="Staff my project form"
+          >
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="absolute -left-[9999px] h-px w-px opacity-0"
+            />
+
             <div className="grid gap-5 md:grid-cols-2">
-              <label className="block">
-                <span className="cv-form-label">Your name</span>
-                <Input className={fieldClassName} {...form.register("yourName")} />
-                {errors.yourName ? <p className="mt-1 text-xs text-cv-danger">{errors.yourName.message}</p> : null}
-              </label>
+              <FormField
+                control={form.control}
+                name="yourName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Your name</FormLabel>
+                    <FormControl>
+                      <Input autoComplete="name" className={inputClass} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <label className="block">
-                <span className="cv-form-label">Company name</span>
-                <Input className={fieldClassName} {...form.register("companyName")} />
-                {errors.companyName ? (
-                  <p className="mt-1 text-xs text-cv-danger">{errors.companyName.message}</p>
-                ) : null}
-              </label>
+              <FormField
+                control={form.control}
+                name="companyName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Company name</FormLabel>
+                    <FormControl>
+                      <Input
+                        autoComplete="organization"
+                        className={inputClass}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <label className="block">
-                <span className="cv-form-label">Email</span>
-                <Input className={fieldClassName} type="email" {...form.register("email")} />
-                {errors.email ? <p className="mt-1 text-xs text-cv-danger">{errors.email.message}</p> : null}
-              </label>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        autoComplete="email"
+                        inputMode="email"
+                        className={inputClass}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <label className="block">
-                <span className="cv-form-label">Phone</span>
-                <Input className={fieldClassName} {...form.register("phone")} />
-                {errors.phone ? <p className="mt-1 text-xs text-cv-danger">{errors.phone.message}</p> : null}
-              </label>
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        autoComplete="tel"
+                        inputMode="tel"
+                        className={inputClass}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <label className="block">
-                <span className="cv-form-label">Project name (optional)</span>
-                <Input className={fieldClassName} {...form.register("projectName")} />
-              </label>
+              <FormField
+                control={form.control}
+                name="projectName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project name</FormLabel>
+                    <FormControl>
+                      <Input className={inputClass} {...field} />
+                    </FormControl>
+                    <FormDescription>Optional</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <label className="block">
-                <span className="cv-form-label">Project location</span>
-                <Input className={fieldClassName} {...form.register("projectLocation")} />
-                {errors.projectLocation ? (
-                  <p className="mt-1 text-xs text-cv-danger">{errors.projectLocation.message}</p>
-                ) : null}
-              </label>
+              <FormField
+                control={form.control}
+                name="projectLocation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project location</FormLabel>
+                    <FormControl>
+                      <Input
+                        autoComplete="address-level2"
+                        className={inputClass}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <label className="block">
-                <span className="cv-form-label">Project type</span>
-                <select className={fieldClassName} {...form.register("projectType")}>
-                  {projectTypeOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <FormField
+                control={form.control}
+                name="projectType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project type</FormLabel>
+                    <FormControl>
+                      <select className={selectClass} {...field}>
+                        {projectTypeOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <label className="block">
-                <span className="cv-form-label">Which side</span>
-                <select className={fieldClassName} {...form.register("projectSide")}>
-                  {sideOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <FormField
+                control={form.control}
+                name="projectSide"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Which side</FormLabel>
+                    <FormControl>
+                      <select className={selectClass} {...field}>
+                        {sideOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <label className="block">
-                <span className="cv-form-label">Anticipated start date</span>
-                <Input className={fieldClassName} type="date" {...form.register("anticipatedStartDate")} />
-                {errors.anticipatedStartDate ? (
-                  <p className="mt-1 text-xs text-cv-danger">{errors.anticipatedStartDate.message}</p>
-                ) : null}
-              </label>
+              <FormField
+                control={form.control}
+                name="anticipatedStartDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Anticipated start date</FormLabel>
+                    <FormControl>
+                      <Input type="date" className={inputClass} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <label className="block">
-                <span className="cv-form-label">Estimated duration</span>
-                <Input className={fieldClassName} {...form.register("estimatedDuration")} />
-                {errors.estimatedDuration ? (
-                  <p className="mt-1 text-xs text-cv-danger">{errors.estimatedDuration.message}</p>
-                ) : null}
-              </label>
+              <FormField
+                control={form.control}
+                name="estimatedDuration"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Estimated duration</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="e.g. 12 months"
+                        className={inputClass}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
-            <fieldset>
-              <legend className="cv-form-label">Roles needed</legend>
-              <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset className="grid gap-2">
+              <legend className="text-sm font-medium leading-none text-cv-charcoal">
+                Roles needed
+              </legend>
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {roleOptions.map((option) => (
                   <label
                     key={option.value}
-                    className="flex min-h-11 items-center gap-2 rounded-md border border-cv-border bg-cv-cream px-3 py-2 text-sm text-cv-charcoal"
+                    className="flex min-h-11 items-center gap-2 rounded-md border border-cv-border bg-cv-cream px-3 py-2 text-sm text-cv-charcoal transition-colors hover:border-cv-copper has-[:checked]:border-cv-copper has-[:checked]:bg-white"
                   >
                     <input
                       type="checkbox"
@@ -266,21 +393,41 @@ export default function StaffMyProjectRoute() {
                   </label>
                 ))}
               </div>
-              {errors.rolesNeeded ? (
-                <p className="mt-1 text-xs text-cv-danger">{errors.rolesNeeded.message}</p>
+              {rolesNeededError ? (
+                <p className="text-xs text-cv-danger">{rolesNeededError}</p>
               ) : null}
             </fieldset>
 
-            <label className="block">
-              <span className="cv-form-label">Additional details</span>
-              <Textarea className={fieldClassName} rows={5} {...form.register("additionalDetails")} />
-              {errors.additionalDetails ? (
-                <p className="mt-1 text-xs text-cv-danger">{errors.additionalDetails.message}</p>
-              ) : null}
-            </label>
+            <FormField
+              control={form.control}
+              name="additionalDetails"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Additional details</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      rows={5}
+                      placeholder="Anything else we should know"
+                      className="rounded-md border-cv-border bg-white text-cv-charcoal shadow-sm focus-visible:border-cv-copper focus-visible:ring-cv-copper/30"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>Optional</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <Button type="submit" variant="accent" disabled={navigation.state === "submitting"}>
-              {navigation.state === "submitting" ? "Sending..." : "Send project details"}
+            <Button
+              type="submit"
+              variant="accent"
+              size="lg"
+              className="w-full sm:w-auto"
+              disabled={navigation.state === "submitting"}
+            >
+              {navigation.state === "submitting"
+                ? "Sending…"
+                : "Send project details"}
             </Button>
           </form>
         </Form>

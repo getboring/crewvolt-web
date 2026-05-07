@@ -1,3 +1,5 @@
+import { Card, CardContent } from "~/components/ui/card";
+
 type MetricCardProps = {
   label: string;
   value: string;
@@ -5,9 +7,15 @@ type MetricCardProps = {
 
 export function MetricCard({ label, value }: MetricCardProps) {
   return (
-    <article className="rounded-lg border border-cv-border bg-cv-cream p-5">
-      <p className="text-[12px] font-semibold tracking-[1px] uppercase text-cv-steel">{label}</p>
-      <p className="mt-2 font-data text-[22px] leading-[1.3] font-medium text-cv-copper">{value}</p>
-    </article>
+    <Card className="@container/card h-full border-transparent bg-cv-cream shadow-none ring-1 ring-cv-border">
+      <CardContent className="flex flex-col gap-2 py-4">
+        <p className="text-[12px] font-semibold uppercase tracking-[1px] text-cv-steel">
+          {label}
+        </p>
+        <p className="font-data text-[22px] leading-[1.3] font-medium text-cv-copper @md/card:text-[24px]">
+          {value}
+        </p>
+      </CardContent>
+    </Card>
   );
 }

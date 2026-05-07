@@ -5,11 +5,19 @@ import { useActionData, useNavigation, useSubmit } from "react-router";
 import { toast } from "sonner";
 
 import { JsonLdScript } from "~/components/json-ld-script";
-import { Form } from "~/components/ui/form";
+import { SectionWrapper } from "~/components/section-wrapper";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
-import { SectionWrapper } from "~/components/section-wrapper";
 import {
   availabilityOptions,
   joinNetworkSchema,
@@ -28,8 +36,11 @@ import {
 } from "~/lib/submissions.server";
 import type { Route } from "./+types/join-our-network";
 
-const fieldClassName =
-  "mt-1 w-full rounded-lg border border-cv-border bg-white px-3 py-2 text-sm text-cv-charcoal shadow-sm";
+const inputClass =
+  "h-11 rounded-md border-cv-border bg-white text-cv-charcoal shadow-sm focus-visible:border-cv-copper focus-visible:ring-cv-copper/30";
+
+const selectClass =
+  "h-11 w-full rounded-md border border-cv-border bg-white px-3 text-sm text-cv-charcoal shadow-sm transition-colors focus-visible:border-cv-copper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cv-copper/30";
 
 export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
@@ -46,6 +57,14 @@ export function links() {
 
 export async function action({ request, context }: Route.ActionArgs) {
   const formData = await request.formData();
+
+  if (toStringValue(formData.get("website"))) {
+    return {
+      ok: true,
+      message:
+        "Thank you. We will review your information and reach out to schedule a conversation.",
+    };
+  }
 
   const parsed = joinNetworkSchema.safeParse({
     name: toStringValue(formData.get("name")),
@@ -74,13 +93,17 @@ export async function action({ request, context }: Route.ActionArgs) {
   try {
     const resumeEntry = formData.get("resume");
     const resumeFile = resumeEntry instanceof File ? resumeEntry : null;
+
+    if (resumeFile && resumeFile.size > 5 * 1024 * 1024) {
+      return {
+        ok: false,
+        message: "Resume must be 5 MB or smaller.",
+      };
+    }
+
     const resumeKey = await uploadResumeIfPresent(env, resumeFile);
 
-    const payload = {
-      ...parsed.data,
-      resumeKey,
-    };
-
+    const payload = { ...parsed.data, resumeKey };
     await saveFormSubmission(env, "join_network", payload, parsed.data.email);
 
     await sendSubmissionNotification(env, {
@@ -101,7 +124,8 @@ export async function action({ request, context }: Route.ActionArgs) {
       message:
         "Thank you. We will review your information and reach out to schedule a conversation.",
     };
-  } catch {
+  } catch (err) {
+    console.error("join_network submission failed", err);
     return {
       ok: false,
       message: "We could not process your request. Please try again.",
@@ -131,28 +155,11 @@ export default function JoinOurNetworkRoute() {
     },
   });
 
-  const { errors } = form.formState;
-
   useEffect(() => {
-    if (!actionData) {
-      return;
-    }
-
+    if (!actionData) return;
     if (actionData.ok) {
       toast.success(actionData.message);
-      form.reset({
-        name: "",
-        email: "",
-        phone: "",
-        cityState: "",
-        rolesHeld: [],
-        projectTypesWorked: [],
-        yearsExperience: "",
-        regions: [],
-        currentAvailability: "available_now",
-        certifications: "",
-        notes: "",
-      });
+      form.reset();
     } else {
       toast.error(actionData.message);
     }
@@ -164,6 +171,8 @@ export default function JoinOurNetworkRoute() {
       submit(target, { method: "post", encType: "multipart/form-data" });
     })(event);
   };
+
+  const { errors } = form.formState;
 
   const jobPostingSchema = {
     "@context": "https://schema.org",
@@ -179,169 +188,314 @@ export default function JoinOurNetworkRoute() {
     },
     jobLocation: {
       "@type": "Place",
-      address: {
-        "@type": "PostalAddress",
-        addressRegion: "TN",
-        addressCountry: "US",
-      },
+      address: { "@type": "PostalAddress", addressRegion: "TN", addressCountry: "US" },
     },
     industry: "Energy Infrastructure Construction",
-    datePosted: "2026-04-15",
+    datePosted: new Date().toISOString().slice(0, 10),
   };
 
   return (
     <>
       <JsonLdScript data={jobPostingSchema} />
       <SectionWrapper tone="parchment">
-        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">
+        <h1 className="font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
           Your experience has value. We have the projects to prove it.
         </h1>
-        <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
-          You have field experience on energy infrastructure projects and you want consistent contract
-          work with fair pay and W-2 employment. The{" "}
-          <a href="https://www.energy.gov/policy/us-energy-employment-jobs-report-useer" target="_blank" rel="noopener noreferrer" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">DOE reports</a>{" "}
-          growing demand for experienced energy construction professionals. Tell us about yourself.
+        <p className="mt-5 max-w-3xl text-base leading-7 text-cv-charcoal">
+          You have field experience on energy infrastructure projects and you
+          want consistent contract work with fair pay and W-2 employment. The{" "}
+          <a
+            href="https://www.energy.gov/policy/us-energy-employment-jobs-report-useer"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark"
+          >
+            DOE reports
+          </a>{" "}
+          growing demand for experienced energy construction professionals. Tell
+          us about yourself.
         </p>
 
-      <div className="mt-8 rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">
-        <Form {...form}>
-          <form className="space-y-6" onSubmit={onSubmit} encType="multipart/form-data">
-            <div className="grid gap-5 md:grid-cols-2">
-              <label className="block">
-                <span className="cv-form-label">Your name</span>
-                <Input className={fieldClassName} {...form.register("name")} />
-                {errors.name ? <p className="mt-1 text-xs text-cv-danger">{errors.name.message}</p> : null}
-              </label>
+        <div className="mt-8 rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">
+          <Form {...form}>
+            <form
+              className="space-y-6"
+              onSubmit={onSubmit}
+              encType="multipart/form-data"
+              aria-label="Join our network form"
+            >
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="absolute -left-[9999px] h-px w-px opacity-0"
+              />
 
-              <label className="block">
-                <span className="cv-form-label">Email</span>
-                <Input className={fieldClassName} type="email" {...form.register("email")} />
-                {errors.email ? <p className="mt-1 text-xs text-cv-danger">{errors.email.message}</p> : null}
-              </label>
+              <div className="grid gap-5 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Your name</FormLabel>
+                      <FormControl>
+                        <Input
+                          autoComplete="name"
+                          className={inputClass}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <label className="block">
-                <span className="cv-form-label">Phone</span>
-                <Input className={fieldClassName} {...form.register("phone")} />
-                {errors.phone ? <p className="mt-1 text-xs text-cv-danger">{errors.phone.message}</p> : null}
-              </label>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          autoComplete="email"
+                          inputMode="email"
+                          className={inputClass}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <label className="block">
-                <span className="cv-form-label">City / state</span>
-                <Input className={fieldClassName} {...form.register("cityState")} />
-                {errors.cityState ? (
-                  <p className="mt-1 text-xs text-cv-danger">{errors.cityState.message}</p>
-                ) : null}
-              </label>
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          autoComplete="tel"
+                          inputMode="tel"
+                          className={inputClass}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <label className="block">
-                <span className="cv-form-label">Years of experience in energy construction</span>
-                <Input className={fieldClassName} inputMode="numeric" {...form.register("yearsExperience")} />
-                {errors.yearsExperience ? (
-                  <p className="mt-1 text-xs text-cv-danger">{errors.yearsExperience.message}</p>
-                ) : null}
-              </label>
+                <FormField
+                  control={form.control}
+                  name="cityState"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>City / state</FormLabel>
+                      <FormControl>
+                        <Input
+                          autoComplete="address-level2"
+                          className={inputClass}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <label className="block">
-                <span className="cv-form-label">Current availability</span>
-                <select className={fieldClassName} {...form.register("currentAvailability")}>
-                  {availabilityOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
+                <FormField
+                  control={form.control}
+                  name="yearsExperience"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Years of experience in energy construction</FormLabel>
+                      <FormControl>
+                        <Input
+                          inputMode="numeric"
+                          className={inputClass}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="currentAvailability"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Current availability</FormLabel>
+                      <FormControl>
+                        <select className={selectClass} {...field}>
+                          {availabilityOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="md:col-span-2">
+                  <label className="block">
+                    <span className="text-sm font-medium leading-none text-cv-charcoal">
+                      Resume upload
+                    </span>
+                    <input
+                      type="file"
+                      name="resume"
+                      accept=".pdf,.doc,.docx"
+                      className="mt-2 block w-full rounded-md border border-cv-border bg-white px-3 py-2 text-sm text-cv-charcoal shadow-sm file:mr-3 file:rounded-md file:border-0 file:bg-cv-navy file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-white hover:file:bg-cv-copper"
+                    />
+                    <span className="mt-1 block text-xs text-cv-steel">
+                      Optional · PDF or Word · 5&nbsp;MB max
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <fieldset className="grid gap-2">
+                <legend className="text-sm font-medium leading-none text-cv-charcoal">
+                  Roles you have held
+                </legend>
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {roleOptions.map((option) => (
+                    <label
+                      key={option.value}
+                      className="flex min-h-11 items-center gap-2 rounded-md border border-cv-border bg-cv-cream px-3 py-2 text-sm text-cv-charcoal transition-colors hover:border-cv-copper has-[:checked]:border-cv-copper has-[:checked]:bg-white"
+                    >
+                      <input
+                        type="checkbox"
+                        value={option.value}
+                        className="size-4 accent-cv-copper"
+                        {...form.register("rolesHeld")}
+                      />
                       {option.label}
-                    </option>
+                    </label>
                   ))}
-                </select>
-              </label>
+                </div>
+                {errors.rolesHeld ? (
+                  <p className="text-xs text-cv-danger">{errors.rolesHeld.message}</p>
+                ) : null}
+              </fieldset>
 
-              <label className="block md:col-span-2">
-                <span className="cv-form-label">Resume upload (optional, PDF or Word)</span>
-                <Input className={fieldClassName} type="file" name="resume" accept=".pdf,.doc,.docx" />
-              </label>
-            </div>
+              <fieldset className="grid gap-2">
+                <legend className="text-sm font-medium leading-none text-cv-charcoal">
+                  Project types worked
+                </legend>
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {projectTypeOptions.map((option) => (
+                    <label
+                      key={option.value}
+                      className="flex min-h-11 items-center gap-2 rounded-md border border-cv-border bg-cv-cream px-3 py-2 text-sm text-cv-charcoal transition-colors hover:border-cv-copper has-[:checked]:border-cv-copper has-[:checked]:bg-white"
+                    >
+                      <input
+                        type="checkbox"
+                        value={option.value}
+                        className="size-4 accent-cv-copper"
+                        {...form.register("projectTypesWorked")}
+                      />
+                      {option.label}
+                    </label>
+                  ))}
+                </div>
+                {errors.projectTypesWorked ? (
+                  <p className="text-xs text-cv-danger">
+                    {errors.projectTypesWorked.message}
+                  </p>
+                ) : null}
+              </fieldset>
 
-            <fieldset>
-              <legend className="cv-form-label">Roles you have held</legend>
-              <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                {roleOptions.map((option) => (
-                  <label
-                    key={option.value}
-                    className="flex min-h-11 items-center gap-2 rounded-md border border-cv-border bg-cv-cream px-3 py-2 text-sm text-cv-charcoal"
-                  >
-                    <input
-                      type="checkbox"
-                      value={option.value}
-                      className="size-4 accent-cv-copper"
-                      {...form.register("rolesHeld")}
-                    />
-                    {option.label}
-                  </label>
-                ))}
-              </div>
-              {errors.rolesHeld ? (
-                <p className="mt-1 text-xs text-cv-danger">{errors.rolesHeld.message}</p>
-              ) : null}
-            </fieldset>
+              <fieldset className="grid gap-2">
+                <legend className="text-sm font-medium leading-none text-cv-charcoal">
+                  Regions willing to work
+                </legend>
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {regionOptions.map((option) => (
+                    <label
+                      key={option.value}
+                      className="flex min-h-11 items-center gap-2 rounded-md border border-cv-border bg-cv-cream px-3 py-2 text-sm text-cv-charcoal transition-colors hover:border-cv-copper has-[:checked]:border-cv-copper has-[:checked]:bg-white"
+                    >
+                      <input
+                        type="checkbox"
+                        value={option.value}
+                        className="size-4 accent-cv-copper"
+                        {...form.register("regions")}
+                      />
+                      {option.label}
+                    </label>
+                  ))}
+                </div>
+                {errors.regions ? (
+                  <p className="text-xs text-cv-danger">{errors.regions.message}</p>
+                ) : null}
+              </fieldset>
 
-            <fieldset>
-              <legend className="cv-form-label">Project types worked</legend>
-              <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                {projectTypeOptions.map((option) => (
-                  <label
-                    key={option.value}
-                    className="flex min-h-11 items-center gap-2 rounded-md border border-cv-border bg-cv-cream px-3 py-2 text-sm text-cv-charcoal"
-                  >
-                    <input
-                      type="checkbox"
-                      value={option.value}
-                      className="size-4 accent-cv-copper"
-                      {...form.register("projectTypesWorked")}
-                    />
-                    {option.label}
-                  </label>
-                ))}
-              </div>
-              {errors.projectTypesWorked ? (
-                <p className="mt-1 text-xs text-cv-danger">{errors.projectTypesWorked.message}</p>
-              ) : null}
-            </fieldset>
+              <FormField
+                control={form.control}
+                name="certifications"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Certifications or licenses</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        rows={4}
+                        className="rounded-md border-cv-border bg-white text-cv-charcoal shadow-sm focus-visible:border-cv-copper focus-visible:ring-cv-copper/30"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>Optional</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <fieldset>
-              <legend className="cv-form-label">Regions willing to work</legend>
-              <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                {regionOptions.map((option) => (
-                  <label
-                    key={option.value}
-                    className="flex min-h-11 items-center gap-2 rounded-md border border-cv-border bg-cv-cream px-3 py-2 text-sm text-cv-charcoal"
-                  >
-                    <input
-                      type="checkbox"
-                      value={option.value}
-                      className="size-4 accent-cv-copper"
-                      {...form.register("regions")}
-                    />
-                    {option.label}
-                  </label>
-                ))}
-              </div>
-              {errors.regions ? <p className="mt-1 text-xs text-cv-danger">{errors.regions.message}</p> : null}
-            </fieldset>
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Anything else</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        rows={5}
+                        className="rounded-md border-cv-border bg-white text-cv-charcoal shadow-sm focus-visible:border-cv-copper focus-visible:ring-cv-copper/30"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>Optional</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <label className="block">
-              <span className="cv-form-label">Certifications or licenses (optional)</span>
-              <Textarea className={fieldClassName} rows={4} {...form.register("certifications")} />
-            </label>
-
-            <label className="block">
-              <span className="cv-form-label">Anything else</span>
-              <Textarea className={fieldClassName} rows={5} {...form.register("notes")} />
-            </label>
-
-            <Button type="submit" variant="accent" disabled={navigation.state === "submitting"}>
-              {navigation.state === "submitting" ? "Sending..." : "Join the network"}
-            </Button>
-          </form>
-        </Form>
-      </div>
-    </SectionWrapper>
+              <Button
+                type="submit"
+                variant="accent"
+                size="lg"
+                className="w-full sm:w-auto"
+                disabled={navigation.state === "submitting"}
+              >
+                {navigation.state === "submitting"
+                  ? "Sending…"
+                  : "Join the network"}
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </SectionWrapper>
     </>
   );
 }

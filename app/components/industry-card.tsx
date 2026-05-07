@@ -1,5 +1,12 @@
 import { Link } from "react-router";
 
+import { Badge } from "~/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
 type IndustryCardProps = {
@@ -9,32 +16,50 @@ type IndustryCardProps = {
   href?: string;
 };
 
-export function IndustryCard({ title, description, status, href }: IndustryCardProps) {
-  const badgeClass =
-    status === "Hiring" ? "bg-cv-warning-bg text-cv-amber" : "bg-cv-success-bg text-cv-success";
-
-  const content = (
-    <article
+export function IndustryCard({
+  title,
+  description,
+  status,
+  href,
+}: IndustryCardProps) {
+  const inner = (
+    <Card
       className={cn(
-        "h-full rounded-xl border border-cv-border bg-white p-5 shadow-sm transition-transform duration-[var(--cv-motion-normal)] hover:-translate-y-0.5 hover:shadow-md",
-        href ? "cursor-pointer" : ""
+        "@container/card h-full border-transparent bg-white shadow-sm ring-1 ring-cv-border transition-all duration-200",
+        href
+          ? "hover:-translate-y-0.5 hover:shadow-md hover:ring-cv-copper/40"
+          : "",
       )}
     >
-      <span className={cn("inline-flex rounded-sm px-2 py-1 text-[10px] font-semibold tracking-[1px] uppercase", badgeClass)}>
-        {status}
-      </span>
-      <h3 className="mt-2 font-headline text-[18px] leading-[1.35] font-semibold text-cv-navy">{title}</h3>
-      {description ? <p className="mt-2 text-sm leading-6 text-cv-steel">{description}</p> : null}
-    </article>
+      <CardHeader>
+        <Badge
+          variant="outline"
+          className={cn(
+            "rounded-sm border-transparent text-[10px] font-semibold uppercase tracking-[1px]",
+            status === "Hiring"
+              ? "bg-cv-warning-bg text-cv-amber"
+              : "bg-cv-success-bg text-cv-success",
+          )}
+        >
+          {status}
+        </Badge>
+        <CardTitle className="mt-2 font-headline text-lg leading-snug font-semibold text-cv-navy @md/card:text-[19px]">
+          {title}
+        </CardTitle>
+      </CardHeader>
+      {description ? (
+        <CardContent>
+          <p className="text-sm leading-6 text-cv-steel">{description}</p>
+        </CardContent>
+      ) : null}
+    </Card>
   );
 
-  if (!href) {
-    return content;
-  }
+  if (!href) return inner;
 
   return (
     <Link to={href} className="block h-full">
-      {content}
+      {inner}
     </Link>
   );
 }

@@ -4,12 +4,19 @@ import { useForm } from "react-hook-form";
 import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import { toast } from "sonner";
 
-import { Form } from "~/components/ui/form";
+import { JsonLdScript } from "~/components/json-ld-script";
+import { SectionWrapper } from "~/components/section-wrapper";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
-import { JsonLdScript } from "~/components/json-ld-script";
-import { SectionWrapper } from "~/components/section-wrapper";
 import { contactSchema, type ContactValues } from "~/lib/forms";
 import { buildPageMeta, canonicalLinks } from "~/lib/seo";
 import {
@@ -20,7 +27,7 @@ import {
 import type { Route } from "./+types/contact";
 
 const fieldClassName =
-  "mt-1 w-full rounded-lg border border-cv-border bg-white px-3 py-2 text-sm text-cv-charcoal shadow-sm";
+  "h-11 rounded-md border-cv-border bg-white text-cv-charcoal shadow-sm focus-visible:border-cv-copper focus-visible:ring-cv-copper/30";
 
 export function meta(_: Route.MetaArgs) {
   return buildPageMeta({
@@ -37,6 +44,11 @@ export function links() {
 
 export async function action({ request, context }: Route.ActionArgs) {
   const formData = await request.formData();
+
+  // Honeypot — silent success, never persists.
+  if (toStringValue(formData.get("website"))) {
+    return { ok: true, message: "Thank you. We will get back to you shortly." };
+  }
 
   const parsed = contactSchema.safeParse({
     name: toStringValue(formData.get("name")),
@@ -57,7 +69,6 @@ export async function action({ request, context }: Route.ActionArgs) {
 
   try {
     await saveFormSubmission(env, "contact", parsed.data, parsed.data.email);
-
     await sendSubmissionNotification(env, {
       subject: "New contact submission",
       submitterName: parsed.data.name,
@@ -65,12 +76,9 @@ export async function action({ request, context }: Route.ActionArgs) {
       summaryLines: [`Phone: ${parsed.data.phone}`],
       payload: parsed.data,
     });
-
-    return {
-      ok: true,
-      message: "Thank you. We will get back to you shortly.",
-    };
-  } catch {
+    return { ok: true, message: "Thank you. We will get back to you shortly." };
+  } catch (err) {
+    console.error("contact submission failed", err);
     return {
       ok: false,
       message: "We could not process your request. Please try again.",
@@ -85,27 +93,14 @@ export default function ContactRoute() {
 
   const form = useForm<ContactValues>({
     resolver: zodResolver(contactSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-    },
+    defaultValues: { name: "", email: "", phone: "", message: "" },
   });
 
   useEffect(() => {
-    if (!actionData) {
-      return;
-    }
-
+    if (!actionData) return;
     if (actionData.ok) {
       toast.success(actionData.message);
-      form.reset({
-        name: "",
-        email: "",
-        phone: "",
-        message: "",
-      });
+      form.reset();
     } else {
       toast.error(actionData.message);
     }
@@ -123,72 +118,160 @@ export default function ContactRoute() {
     "@type": "LocalBusiness",
     name: "CrewVolt",
     areaServed: "Tennessee",
-    address: {
-      "@type": "PostalAddress",
-      addressRegion: "TN",
-      addressCountry: "US",
-    },
+    address: { "@type": "PostalAddress", addressRegion: "TN", addressCountry: "US" },
     description:
       "W-2 contract staffing for energy infrastructure projects including substations, wind, solar, BESS, and transmission.",
   };
-
-  const { errors } = form.formState;
 
   return (
     <>
       <JsonLdScript data={localBusinessSchema} />
 
       <SectionWrapper tone="parchment">
-        <h1 className="font-headline text-[36px] leading-[1.15] font-bold text-cv-navy">Get in touch.</h1>
-        <div className="mt-6 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+        <h1 className="font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
+          Get in touch.
+        </h1>
+        <div className="mt-8 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <aside className="rounded-xl border border-cv-border bg-cv-cream p-6">
-            <p className="font-logo text-lg font-bold tracking-[1.5px] text-cv-navy">CREWVOLT</p>
+            <p className="font-logo text-lg font-bold tracking-[1.5px] text-cv-navy">
+              CREWVOLT
+            </p>
             <p className="mt-2 text-sm text-cv-charcoal">Tennessee LLC</p>
             <p className="mt-1 text-sm text-cv-charcoal">East Tennessee</p>
             <p className="mt-2">
-              <a href="mailto:staffing@crewvolt.com" className="text-sm text-cv-copper hover:text-cv-copper-dark">
+              <a
+                href="mailto:staffing@crewvolt.com"
+                className="text-sm text-cv-copper hover:text-cv-copper-dark"
+              >
                 staffing@crewvolt.com
               </a>
             </p>
             <div className="mt-4 space-y-1 border-t border-cv-border pt-4">
-              <p className="text-xs font-semibold tracking-[1px] uppercase text-cv-steel">Quick links</p>
-              <Link to="/staff-my-project" className="block text-sm text-cv-copper hover:text-cv-copper-dark">Staff my project</Link>
-              <Link to="/join-our-network" className="block text-sm text-cv-copper hover:text-cv-copper-dark">Join our network</Link>
-              <Link to="/vendor-readiness" className="block text-sm text-cv-copper hover:text-cv-copper-dark">Vendor readiness</Link>
+              <p className="text-xs font-semibold tracking-[1px] uppercase text-cv-steel">
+                Quick links
+              </p>
+              <Link
+                to="/staff-my-project"
+                className="block text-sm text-cv-copper hover:text-cv-copper-dark"
+              >
+                Staff my project
+              </Link>
+              <Link
+                to="/join-our-network"
+                className="block text-sm text-cv-copper hover:text-cv-copper-dark"
+              >
+                Join our network
+              </Link>
+              <Link
+                to="/vendor-readiness"
+                className="block text-sm text-cv-copper hover:text-cv-copper-dark"
+              >
+                Vendor readiness
+              </Link>
             </div>
           </aside>
 
           <div className="rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">
             <Form {...form}>
-              <form className="space-y-5" onSubmit={onSubmit}>
-                <label className="block">
-                  <span className="cv-form-label">Name</span>
-                  <Input className={fieldClassName} {...form.register("name")} />
-                  {errors.name ? <p className="mt-1 text-xs text-cv-danger">{errors.name.message}</p> : null}
-                </label>
+              <form
+                className="space-y-5"
+                onSubmit={onSubmit}
+                aria-label="Contact form"
+              >
+                {/* Honeypot — bots fill this; humans don't see it. */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="absolute -left-[9999px] h-px w-px opacity-0"
+                />
 
-                <label className="block">
-                  <span className="cv-form-label">Email</span>
-                  <Input className={fieldClassName} type="email" {...form.register("email")} />
-                  {errors.email ? <p className="mt-1 text-xs text-cv-danger">{errors.email.message}</p> : null}
-                </label>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          autoComplete="name"
+                          className={fieldClassName}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                <label className="block">
-                  <span className="cv-form-label">Phone</span>
-                  <Input className={fieldClassName} {...form.register("phone")} />
-                  {errors.phone ? <p className="mt-1 text-xs text-cv-danger">{errors.phone.message}</p> : null}
-                </label>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          autoComplete="email"
+                          inputMode="email"
+                          className={fieldClassName}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                <label className="block">
-                  <span className="cv-form-label">Message</span>
-                  <Textarea className={fieldClassName} rows={5} {...form.register("message")} />
-                  {errors.message ? (
-                    <p className="mt-1 text-xs text-cv-danger">{errors.message.message}</p>
-                  ) : null}
-                </label>
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          autoComplete="tel"
+                          inputMode="tel"
+                          className={fieldClassName}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                <Button type="submit" variant="accent" disabled={navigation.state === "submitting"}>
-                  {navigation.state === "submitting" ? "Sending..." : "Send message"}
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Message</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          rows={5}
+                          className="rounded-md border-cv-border bg-white text-cv-charcoal shadow-sm focus-visible:border-cv-copper focus-visible:ring-cv-copper/30"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="submit"
+                  variant="accent"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                  disabled={navigation.state === "submitting"}
+                >
+                  {navigation.state === "submitting" ? "Sending…" : "Send message"}
                 </Button>
               </form>
             </Form>

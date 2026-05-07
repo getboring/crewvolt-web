@@ -112,7 +112,7 @@ export const staffProjectSchema = z.object({
   rolesNeeded: z.array(z.enum(roleValues)).min(1, "Select at least one role"),
   anticipatedStartDate: requiredText("Anticipated start date"),
   estimatedDuration: requiredText("Estimated duration"),
-  additionalDetails: requiredText("Additional details"),
+  additionalDetails: optionalText,
 });
 
 export const joinNetworkSchema = z.object({

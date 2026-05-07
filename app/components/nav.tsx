@@ -26,28 +26,37 @@ export function Nav() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
 
+  const isActive = (to: string) =>
+    location.pathname === to || location.pathname.startsWith(`${to}/`);
+
   return (
-    <nav className="sticky top-0 z-50 border-b border-cv-border bg-white/95 backdrop-blur-sm">
+    <nav
+      aria-label="Primary"
+      className="sticky top-0 z-50 border-b border-cv-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
+    >
       <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between px-6 md:px-8">
         <Link
           to="/"
-          className="font-logo text-[20px] font-bold tracking-[1.5px] text-cv-navy transition-colors hover:text-cv-copper"
+          className="font-logo text-[20px] font-bold tracking-[1.5px] text-cv-navy transition-colors hover:text-cv-copper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cv-copper focus-visible:ring-offset-4 focus-visible:ring-offset-white"
         >
           CREWVOLT
         </Link>
 
-        <div className="hidden items-center gap-5 md:flex">
+        <div className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => {
-            const active =
-              location.pathname === link.to || location.pathname.startsWith(`${link.to}/`);
+            const active = isActive(link.to);
 
             return (
               <Link
                 key={link.to}
                 to={link.to}
+                aria-current={active ? "page" : undefined}
                 className={cn(
-                  "inline-flex min-h-10 items-center px-1 text-[13px] font-medium text-cv-steel transition-colors",
-                  active ? "text-cv-navy" : "hover:text-cv-copper"
+                  "relative inline-flex h-10 items-center px-1 text-[13px] font-medium transition-colors",
+                  "after:absolute after:bottom-1 after:left-0 after:right-0 after:mx-auto after:h-[2px] after:w-0 after:bg-cv-copper after:transition-[width,opacity] after:duration-200",
+                  active
+                    ? "text-cv-navy after:w-6 after:opacity-100"
+                    : "text-cv-steel hover:text-cv-navy hover:after:w-3 hover:after:opacity-60",
                 )}
               >
                 {link.label}
@@ -55,7 +64,9 @@ export function Nav() {
             );
           })}
 
-          <Button asChild variant="secondary" className="ml-2" size="sm">
+          <span aria-hidden="true" className="ml-2 h-5 w-px bg-cv-border" />
+
+          <Button asChild variant="secondary" size="sm">
             <Link to="/join-our-network">Join network</Link>
           </Button>
           <Button asChild size="sm">
@@ -66,42 +77,67 @@ export function Nav() {
         <div className="md:hidden">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Open navigation menu">
-                <Menu className="size-6" />
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Open navigation menu"
+              >
+                <Menu className="size-6" aria-hidden="true" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[90vw] border-cv-border bg-white px-6 py-6 sm:max-w-sm">
-              <SheetHeader className="mb-6">
+            <SheetContent
+              side="right"
+              className="w-[92vw] border-cv-border bg-white px-6 py-6 sm:max-w-sm"
+            >
+              <SheetHeader className="mb-6 border-b border-cv-border pb-4">
                 <SheetTitle className="text-left font-logo text-xl tracking-[1.5px] text-cv-navy">
                   CREWVOLT
                 </SheetTitle>
               </SheetHeader>
 
-              <div className="flex flex-col gap-2">
-                {navLinks.map((link) => (
-                  <SheetClose asChild key={link.to}>
-                    <Link
-                      to={link.to}
-                      className="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-cv-steel transition-colors hover:bg-cv-cream hover:text-cv-navy"
-                    >
-                      {link.label}
-                    </Link>
-                  </SheetClose>
-                ))}
-              </div>
+              <nav aria-label="Mobile primary" className="flex flex-col gap-1">
+                {navLinks.map((link) => {
+                  const active = isActive(link.to);
+                  return (
+                    <SheetClose asChild key={link.to}>
+                      <Link
+                        to={link.to}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          "inline-flex min-h-12 items-center rounded-md border-l-2 px-3 text-sm font-medium transition-colors",
+                          active
+                            ? "border-cv-copper bg-cv-cream text-cv-navy"
+                            : "border-transparent text-cv-steel hover:border-cv-copper/50 hover:bg-cv-cream hover:text-cv-navy",
+                        )}
+                      >
+                        {link.label}
+                      </Link>
+                    </SheetClose>
+                  );
+                })}
+              </nav>
 
-              <div className="mt-6 flex flex-col gap-3">
+              <div className="mt-6 grid gap-3">
                 <SheetClose asChild>
-                  <Button asChild>
+                  <Button asChild size="lg">
                     <Link to="/staff-my-project">I need to staff a project</Link>
                   </Button>
                 </SheetClose>
                 <SheetClose asChild>
-                  <Button asChild variant="secondary">
+                  <Button asChild variant="secondary" size="lg">
                     <Link to="/join-our-network">I am looking for work</Link>
                   </Button>
                 </SheetClose>
               </div>
+
+              <p className="mt-8 text-xs text-cv-steel">
+                <a
+                  href="mailto:staffing@crewvolt.com"
+                  className="text-cv-copper hover:text-cv-copper-dark"
+                >
+                  staffing@crewvolt.com
+                </a>
+              </p>
             </SheetContent>
           </Sheet>
         </div>

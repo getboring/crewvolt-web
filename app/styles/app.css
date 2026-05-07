@@ -1,5 +1,4 @@
 @import "tailwindcss" source("../");
-@import "tw-animate-css";
 
 :root {
   /* Layer 1: Color Primitives */

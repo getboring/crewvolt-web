@@ -99,16 +99,19 @@ export default function App({ loaderData }: Route.ComponentProps) {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let title = "Something went wrong on our end.";
+  let details =
+    "Try refreshing, or get in touch and we will look into it.";
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
+    if (error.status === 404) {
+      title = "This page does not exist.";
+      details = "Use the links below to get back on track.";
+    } else {
+      title = `Error ${error.status}`;
+      details = error.statusText || details;
+    }
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
@@ -117,9 +120,33 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   return (
     <TooltipProvider>
       <Nav />
-      <main className="mx-auto w-full max-w-3xl px-6 py-20">
-        <h1 className="font-headline text-4xl text-cv-navy">{message}</h1>
-        <p className="mt-4 text-base text-cv-steel">{details}</p>
+      <main
+        id="main-content"
+        className="mx-auto w-full max-w-3xl px-6 py-20 md:py-28"
+      >
+        <p className="text-[11px] font-semibold uppercase tracking-[2px] text-cv-copper">
+          CrewVolt
+        </p>
+        <h1 className="mt-4 font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
+          {title}
+        </h1>
+        <p className="mt-4 max-w-2xl text-base leading-7 text-cv-charcoal">
+          {details}
+        </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <a
+            href="/"
+            className="inline-flex h-11 items-center rounded-md bg-cv-navy px-7 text-sm font-semibold text-white transition-colors hover:bg-cv-copper"
+          >
+            Back home
+          </a>
+          <a
+            href="/contact"
+            className="inline-flex h-11 items-center rounded-md border border-cv-navy bg-transparent px-7 text-sm font-semibold text-cv-navy transition-colors hover:border-cv-copper hover:text-cv-copper"
+          >
+            Contact us
+          </a>
+        </div>
         {stack ? (
           <pre className="mt-8 overflow-x-auto rounded-xl border border-cv-border bg-white p-4 text-xs text-cv-charcoal">
             <code>{stack}</code>

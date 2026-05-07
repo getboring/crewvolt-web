@@ -1,5 +1,13 @@
+import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router";
 
+import { Badge } from "~/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
 type RoleCardProps = {
@@ -10,39 +18,56 @@ type RoleCardProps = {
 };
 
 export function RoleCard({ title, description, href, audience }: RoleCardProps) {
-  const content = (
-    <article
+  const inner = (
+    <Card
       className={cn(
-        "h-full rounded-xl border border-cv-border bg-white p-5 shadow-sm transition-transform duration-[var(--cv-motion-normal)] hover:-translate-y-0.5 hover:shadow-md",
-        href ? "cursor-pointer" : ""
+        "@container/card h-full border-transparent bg-white shadow-sm ring-1 ring-cv-border transition-all duration-200",
+        href
+          ? "hover:-translate-y-0.5 hover:shadow-md hover:ring-cv-copper/40"
+          : "",
       )}
     >
-      {audience ? (
-        <span
-          className={cn(
-            "inline-flex rounded-sm px-2 py-1 text-[10px] font-semibold tracking-[1px] uppercase",
-            audience === "owner"
-              ? "bg-cv-info-bg text-cv-navy"
-              : "bg-cv-success-bg text-cv-field-green"
+      <CardHeader>
+        <div className="flex items-start justify-between gap-3">
+          {audience ? (
+            <Badge
+              variant="outline"
+              className={cn(
+                "rounded-sm border-cv-border-light text-[10px] font-semibold uppercase tracking-[1px]",
+                audience === "owner"
+                  ? "bg-cv-info-bg text-cv-navy"
+                  : "bg-cv-success-bg text-cv-field-green",
+              )}
+            >
+              {audience} side
+            </Badge>
+          ) : (
+            <span aria-hidden="true" />
           )}
-        >
-          {audience} side
-        </span>
+          {href ? (
+            <ArrowUpRight
+              aria-hidden="true"
+              className="size-4 text-cv-steel transition-colors group-hover/card:text-cv-copper"
+            />
+          ) : null}
+        </div>
+        <CardTitle className="mt-2 font-headline text-lg leading-snug font-semibold text-cv-navy @md/card:text-[19px]">
+          {title}
+        </CardTitle>
+      </CardHeader>
+      {description ? (
+        <CardContent>
+          <p className="text-sm leading-6 text-cv-steel">{description}</p>
+        </CardContent>
       ) : null}
-      <h3 className="mt-2 font-headline text-[18px] leading-[1.35] font-semibold text-cv-navy">
-        {title}
-      </h3>
-      {description ? <p className="mt-2 text-sm leading-6 text-cv-steel">{description}</p> : null}
-    </article>
+    </Card>
   );
 
-  if (!href) {
-    return content;
-  }
+  if (!href) return inner;
 
   return (
-    <Link to={href} className="block h-full">
-      {content}
+    <Link to={href} className="group/card-link block h-full">
+      {inner}
     </Link>
   );
 }
