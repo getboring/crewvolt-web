@@ -1,12 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useActionData, useNavigation, useSubmit } from "react-router";
+import { useActionData, useLoaderData, useNavigation, useSubmit } from "react-router";
 import { toast } from "sonner";
 
 import { CurrentlyFilling } from "~/components/currently-filling";
 import { JsonLdScript } from "~/components/json-ld-script";
 import { SectionWrapper } from "~/components/section-wrapper";
+import { listOpenRoles } from "~/lib/open-roles.server";
 import {
   Form,
   FormControl,
@@ -54,6 +55,11 @@ export function meta(_: Route.MetaArgs) {
 
 export function links() {
   return canonicalLinks("/join-our-network");
+}
+
+export async function loader({ context }: Route.LoaderArgs) {
+  const openRoles = await listOpenRoles(context.cloudflare.env.DB);
+  return { openRoles };
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
@@ -135,6 +141,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 }
 
 export default function JoinOurNetworkRoute() {
+  const { openRoles } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const submit = useSubmit();
   const navigation = useNavigation();
@@ -218,7 +225,7 @@ export default function JoinOurNetworkRoute() {
         </p>
 
         <div className="mt-8">
-          <CurrentlyFilling hideApply />
+          <CurrentlyFilling roles={openRoles} hideApply />
         </div>
 
         <div className="mt-8 rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">

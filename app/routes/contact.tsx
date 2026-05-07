@@ -138,14 +138,20 @@ export default function ContactRoute() {
             </p>
             <p className="mt-2 text-sm text-cv-charcoal">Tennessee LLC</p>
             <p className="mt-1 text-sm text-cv-charcoal">East Tennessee</p>
-            <p className="mt-2">
+            <div className="mt-4 space-y-1.5">
+              <a
+                href="tel:+1-423-555-0100"
+                className="block text-sm font-semibold text-cv-copper hover:text-cv-copper-dark"
+              >
+                +1 (423) 555-0100
+              </a>
               <a
                 href="mailto:staffing@crewvolt.com"
-                className="text-sm text-cv-copper hover:text-cv-copper-dark"
+                className="block text-sm text-cv-copper hover:text-cv-copper-dark"
               >
                 staffing@crewvolt.com
               </a>
-            </p>
+            </div>
             <div className="mt-4 space-y-1 border-t border-cv-border pt-4">
               <p className="text-xs font-semibold tracking-[1px] uppercase text-cv-steel">
                 Quick links

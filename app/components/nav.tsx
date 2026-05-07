@@ -1,4 +1,4 @@
-import { Menu } from "lucide-react";
+import { Menu, Phone } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router";
 
@@ -67,6 +67,15 @@ export function Nav() {
 
           <span aria-hidden="true" className="ml-2 h-5 w-px bg-cv-border" />
 
+          <a
+            href="tel:+1-423-555-0100"
+            className="hidden items-center gap-1.5 text-[13px] font-medium text-cv-steel transition-colors hover:text-cv-copper lg:inline-flex"
+            aria-label="Call CrewVolt"
+          >
+            <Phone className="size-3.5" aria-hidden="true" />
+            (423) 555-0100
+          </a>
+
           <Button asChild variant="secondary" size="sm">
             <Link to="/join-our-network">Join network</Link>
           </Button>
@@ -131,14 +140,21 @@ export function Nav() {
                 </SheetClose>
               </div>
 
-              <p className="mt-8 text-xs text-cv-steel">
+              <div className="mt-8 space-y-1.5 text-xs text-cv-steel">
+                <a
+                  href="tel:+1-423-555-0100"
+                  className="flex items-center gap-2 text-cv-copper hover:text-cv-copper-dark"
+                >
+                  <Phone className="size-3.5" aria-hidden="true" />
+                  +1 (423) 555-0100
+                </a>
                 <a
                   href="mailto:staffing@crewvolt.com"
-                  className="text-cv-copper hover:text-cv-copper-dark"
+                  className="block text-cv-copper hover:text-cv-copper-dark"
                 >
                   staffing@crewvolt.com
                 </a>
-              </p>
+              </div>
             </SheetContent>
           </Sheet>
         </div>

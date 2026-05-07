@@ -66,6 +66,29 @@ export default function ServicesOverviewRoute() {
         <h1 className="font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
           Leadership and inspection staffing for energy projects.
         </h1>
+        <nav
+          aria-label="On this page"
+          className="mt-8 flex flex-wrap gap-2 border-t border-cv-border pt-5"
+        >
+          <a
+            href="#owner-side"
+            className="inline-flex h-9 items-center rounded-md border border-cv-border bg-white px-3 text-xs font-semibold uppercase tracking-[1.2px] text-cv-navy transition-colors hover:border-cv-copper hover:text-cv-copper"
+          >
+            Owner side
+          </a>
+          <a
+            href="#contractor-side"
+            className="inline-flex h-9 items-center rounded-md border border-cv-border bg-white px-3 text-xs font-semibold uppercase tracking-[1.2px] text-cv-navy transition-colors hover:border-cv-copper hover:text-cv-copper"
+          >
+            Contractor side
+          </a>
+          <a
+            href="#project-specific"
+            className="inline-flex h-9 items-center rounded-md border border-cv-border bg-white px-3 text-xs font-semibold uppercase tracking-[1.2px] text-cv-navy transition-colors hover:border-cv-copper hover:text-cv-copper"
+          >
+            Project-specific
+          </a>
+        </nav>
         <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
           CrewVolt provides W-2 contract staffing for leadership and inspection roles on energy
           infrastructure projects. We handle employment, payroll, taxes, workers comp, and
@@ -108,7 +131,8 @@ export default function ServicesOverviewRoute() {
         </div>
       </SectionWrapper>
 
-      <SectionWrapper tone="parchment">
+      <SectionWrapper tone="parchment" className="scroll-mt-24" innerClassName="" >
+        <div id="owner-side" />
         <SectionEyebrow label="Owner-side roles" />
         <h2 className="font-headline text-[clamp(1.5rem,2.5vw,1.875rem)] leading-[1.15] font-semibold text-cv-navy">
           Inspectors and project leadership
@@ -120,7 +144,8 @@ export default function ServicesOverviewRoute() {
         </div>
       </SectionWrapper>
 
-      <SectionWrapper tone="white">
+      <SectionWrapper tone="white" className="scroll-mt-24">
+        <div id="contractor-side" />
         <SectionEyebrow label="Contractor-side roles" tone="field-green" />
         <h2 className="font-headline text-[clamp(1.5rem,2.5vw,1.875rem)] leading-[1.15] font-semibold text-cv-navy">
           Field leadership and quality
@@ -137,7 +162,8 @@ export default function ServicesOverviewRoute() {
         </div>
       </SectionWrapper>
 
-      <SectionWrapper tone="parchment">
+      <SectionWrapper tone="parchment" className="scroll-mt-24">
+        <div id="project-specific" />
         <SectionEyebrow label="Project-specific roles" />
         <h2 className="font-headline text-[clamp(1.5rem,2.5vw,1.875rem)] leading-[1.15] font-semibold text-cv-navy">
           Specialized seats we fill

@@ -1,4 +1,5 @@
-import { Link } from "react-router";
+import { Phone } from "lucide-react";
+import { Link, useRouteLoaderData } from "react-router";
 
 const companyLinks = [
   { to: "/about", label: "About" },
@@ -16,34 +17,69 @@ const workLinks = [
   { to: "/why-crewvolt", label: "Why CrewVolt" },
 ] as const;
 
+const PHONE_DISPLAY = "+1 (423) 555-0100";
+const PHONE_TEL = "+1-423-555-0100";
+
+function formatRevised(iso: string | undefined) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const rootData = useRouteLoaderData<{ serverDate?: string }>("root");
+  const lastRevised = formatRevised(rootData?.serverDate);
 
   return (
-    <footer className="bg-cv-navy-dark">
+    <footer
+      className="bg-cv-navy-dark"
+      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+    >
       <div className="mx-auto grid w-full max-w-6xl gap-12 px-6 py-12 md:grid-cols-[1.4fr_1fr_1fr] md:px-8">
         <div>
-          <p className="font-logo text-lg font-bold tracking-[1.5px] text-white">CREWVOLT</p>
-          <p className="mt-3 text-sm cv-dark-text-muted">Energy infrastructure staffing</p>
+          <p className="font-logo text-lg font-bold tracking-[1.5px] text-white">
+            CREWVOLT
+          </p>
+          <p className="mt-3 text-sm cv-dark-text-muted">
+            Energy infrastructure staffing
+          </p>
           <p className="mt-1 text-xs cv-dark-text-hint">Tennessee LLC</p>
-          <a
-            href="mailto:staffing@crewvolt.com"
-            className="mt-3 block text-sm cv-dark-text-secondary transition-colors hover:text-white"
-          >
-            staffing@crewvolt.com
-          </a>
-          <a
-            href="https://www.linkedin.com/company/crewvolt"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 inline-flex text-sm cv-dark-text-secondary transition-colors hover:text-white"
-          >
-            LinkedIn
-          </a>
+
+          <div className="mt-5 flex flex-col gap-2">
+            <a
+              href={`tel:${PHONE_TEL}`}
+              className="inline-flex items-center gap-2 text-sm cv-dark-text-secondary transition-colors hover:text-white"
+            >
+              <Phone className="size-4" aria-hidden="true" />
+              {PHONE_DISPLAY}
+            </a>
+            <a
+              href="mailto:staffing@crewvolt.com"
+              className="inline-block text-sm cv-dark-text-secondary transition-colors hover:text-white"
+            >
+              staffing@crewvolt.com
+            </a>
+            <a
+              href="https://www.linkedin.com/company/crewvolt"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-sm cv-dark-text-secondary transition-colors hover:text-white"
+            >
+              LinkedIn
+            </a>
+          </div>
         </div>
 
         <div>
-          <p className="text-xs font-semibold tracking-[1px] uppercase cv-dark-text-muted">Company</p>
+          <p className="text-xs font-semibold tracking-[1px] uppercase cv-dark-text-muted">
+            Company
+          </p>
           <ul className="mt-4 space-y-2">
             {companyLinks.map((link) => (
               <li key={link.to}>
@@ -78,9 +114,26 @@ export function Footer() {
       </div>
 
       <div className="border-t cv-dark-border">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 md:px-8">
-          <p className="text-xs cv-dark-text-hint">&copy; {currentYear} CrewVolt. All rights reserved.</p>
-          <p className="text-xs cv-dark-text-hint">East Tennessee</p>
+        <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-y-2 px-6 py-4 md:px-8">
+          <p className="text-xs cv-dark-text-hint">
+            &copy; {currentYear} CrewVolt. All rights reserved.
+          </p>
+          <p className="text-xs cv-dark-text-hint">
+            <span className="cv-dark-text-muted">East Tennessee</span>
+            {lastRevised ? (
+              <>
+                <span aria-hidden="true" className="mx-2">
+                  ·
+                </span>
+                <span>
+                  Last revised{" "}
+                  <time dateTime={rootData?.serverDate} className="tabular-nums">
+                    {lastRevised}
+                  </time>
+                </span>
+              </>
+            ) : null}
+          </p>
         </div>
       </div>
     </footer>

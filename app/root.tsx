@@ -10,6 +10,7 @@ import {
 import { Footer } from "~/components/footer";
 import { JsonLdScript } from "~/components/json-ld-script";
 import { Nav } from "~/components/nav";
+import { StickyMobileCta } from "~/components/sticky-mobile-cta";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { Toaster } from "~/components/ui/sonner";
 import { organizationSchema } from "~/lib/seo";
@@ -19,6 +20,8 @@ import "./styles/app.css";
 export function loader({ context }: Route.LoaderArgs) {
   return {
     analyticsToken: context.cloudflare.env.CF_WEB_ANALYTICS_TOKEN ?? "",
+    /** Server-side date stamp — used by the footer "Last revised" */
+    serverDate: new Date().toISOString(),
   };
 }
 
@@ -127,11 +130,12 @@ export default function App({ loaderData }: Route.ComponentProps) {
         <Outlet />
       </main>
       <Footer />
+      <StickyMobileCta />
       <Toaster
         position="bottom-center"
         richColors
-        offset={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)" }}
-        mobileOffset={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
+        offset={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 80px)" }}
+        mobileOffset={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 80px)" }}
       />
       {analyticsBeacon ? (
         <script

@@ -1,9 +1,10 @@
-import { Link } from "react-router";
+import { Link, useLoaderData } from "react-router";
 
 import { BenefitGrid } from "~/components/benefit-grid";
 import { CtaBanner } from "~/components/cta-banner";
 import { CurrentlyFilling } from "~/components/currently-filling";
 import { HeroSection } from "~/components/hero-section";
+import { IndustryPulse } from "~/components/industry-pulse";
 import { IndustryTile, type IndustryId } from "~/components/industry-tile";
 import { MetricCard } from "~/components/metric-card";
 import { ProofBar } from "~/components/proof-bar";
@@ -15,8 +16,14 @@ import { SplitCards } from "~/components/split-cards";
 import { StepCard } from "~/components/step-card";
 import { Button } from "~/components/ui/button";
 import { industries, rolesWeStaff } from "~/lib/content";
+import { listOpenRoles } from "~/lib/open-roles.server";
 import { buildPageMeta, canonicalLinks } from "~/lib/seo";
 import type { Route } from "./+types/_index";
+
+export async function loader({ context }: Route.LoaderArgs) {
+  const openRoles = await listOpenRoles(context.cloudflare.env.DB);
+  return { openRoles };
+}
 
 const clientPlanSteps = [
   {
@@ -62,6 +69,7 @@ export function links() {
 }
 
 export default function HomeRoute() {
+  const { openRoles } = useLoaderData<typeof loader>();
   return (
     <>
       <HeroSection />
@@ -185,15 +193,25 @@ export default function HomeRoute() {
         <SectionEyebrow
           label="Currently filling"
           index="09"
-          caption="Updated weekly"
+          caption="Live from our open-roles board"
         />
-        <CurrentlyFilling />
+        <CurrentlyFilling roles={openRoles} />
+      </SectionWrapper>
+
+      {/* Industry pulse — live-feeling rotation of citation-backed industry stats */}
+      <SectionWrapper tone="white" className="!py-12 md:!py-16">
+        <SectionEyebrow
+          label="Industry pulse"
+          index="10"
+          caption="Public data · refreshed monthly"
+        />
+        <IndustryPulse />
       </SectionWrapper>
 
       <SectionWrapper tone="white">
         <SectionEyebrow
           label="Roles we staff"
-          index="10"
+          index="11"
           caption="See full list →"
         />
         <div className="mb-8 flex flex-col items-start justify-between gap-3 md:flex-row md:items-end">
@@ -212,7 +230,7 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="parchment">
-        <SectionEyebrow label="Industries" index="11" caption="View industry detail →" />
+        <SectionEyebrow label="Industries" index="12" caption="View industry detail →" />
         <div className="mb-8 flex flex-col items-start justify-between gap-3 md:flex-row md:items-end">
           <h2 className="font-headline text-[clamp(1.5rem,2.5vw,1.875rem)] leading-[1.15] font-semibold text-cv-navy">
             Where we work.
@@ -241,7 +259,7 @@ export default function HomeRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="parchment">
-        <SectionEyebrow label="By the numbers" index="12" />
+        <SectionEyebrow label="By the numbers" index="13" />
         <h2 className="font-headline text-[clamp(1.5rem,2.5vw,1.875rem)] leading-[1.15] font-semibold text-cv-navy">
           A focused operation.
         </h2>

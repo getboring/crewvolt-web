@@ -160,6 +160,14 @@ html {
   /* Stop iOS rubber-band drag from pulling the whole document */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* Smooth-scroll for in-page anchor jumps (services mini-nav, etc.) */
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
@@ -200,6 +208,22 @@ body {
   [role="button"],
   [tabindex]:not([tabindex="-1"]) {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cv-copper focus-visible:ring-offset-2 focus-visible:ring-offset-cv-parchment;
+  }
+}
+
+@keyframes cv-pulse-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  10%,
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0.85;
+    transform: translateY(0);
   }
 }
 
