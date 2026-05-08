@@ -155,7 +155,7 @@ export function BenefitGrid({
       >
         {benefits.map((b) => (
           <li key={b.title}>
-            <Card className="@container/card h-full border-transparent bg-white shadow-sm ring-1 ring-cv-border">
+            <Card className="@container/card cv-reveal-up h-full border-transparent bg-white shadow-sm ring-1 ring-cv-border">
               <CardHeader>
                 <b.icon
                   aria-hidden="true"

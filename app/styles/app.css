@@ -211,6 +211,158 @@ body {
   }
 }
 
+/* === Scroll progress indicator (CSS scroll-driven) === */
+.cv-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--cv-copper);
+  transform-origin: left center;
+  transform: scaleX(0);
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+@supports (animation-timeline: scroll()) {
+  .cv-scroll-progress {
+    animation: cv-progress-fill linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+@keyframes cv-progress-fill {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* === Reveal-on-scroll (CSS view() timeline, progressive enhancement) === */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cv-reveal-up {
+      animation: cv-reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@keyframes cv-reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === Number count-up on MetricCard === */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cv-count-up {
+      animation: cv-count-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+  }
+}
+
+@keyframes cv-count-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* === Slow Ken-Burns on hero images === */
+@media (prefers-reduced-motion: no-preference) {
+  .cv-ken-burns {
+    animation: cv-ken-burns 22s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+}
+
+@keyframes cv-ken-burns {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.06) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+/* === Marquee horizontal scroll === */
+.cv-marquee {
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+}
+
+.cv-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 3rem;
+  animation: cv-marquee 38s linear infinite;
+}
+
+.cv-marquee:hover .cv-marquee-track,
+.cv-marquee:focus-within .cv-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cv-marquee-track {
+    animation: none;
+  }
+}
+
+@keyframes cv-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* === Card hover refinement === */
+[data-slot="card"] {
+  transition:
+    transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+a:hover [data-slot="card"],
+a:focus-visible [data-slot="card"] {
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 0 rgba(27, 54, 93, 0.06),
+    0 12px 24px -10px rgba(184, 115, 51, 0.18);
+}
+
 /* RR7 view-transition root crossfade — gated on prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(root),

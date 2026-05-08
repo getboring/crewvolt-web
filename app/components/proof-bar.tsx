@@ -55,7 +55,7 @@ export function ProofBar({ className }: ProofBarProps) {
         {testimonials.map((t) => (
           <Card
             key={t.attribution}
-            className="@container/card h-full border-transparent bg-white shadow-sm ring-1 ring-cv-border"
+            className="@container/card cv-reveal-up h-full border-transparent bg-white shadow-sm ring-1 ring-cv-border"
           >
             <CardContent className="flex flex-col gap-4 py-5">
               <Quote

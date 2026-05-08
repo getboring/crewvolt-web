@@ -97,8 +97,8 @@ export function IndustryTile({
   const inner = (
     <Card
       className={cn(
-        "@container/card group h-full overflow-hidden border-transparent bg-white shadow-sm ring-1 ring-cv-border transition-all duration-200",
-        href ? "hover:-translate-y-0.5 hover:shadow-md hover:ring-cv-copper/40" : "",
+        "@container/card cv-reveal-up group h-full overflow-hidden border-transparent bg-white shadow-sm ring-1 ring-cv-border",
+        href ? "hover:ring-cv-copper/40" : "",
       )}
     >
       {/* Visual header — real photography under a brand-tone gradient overlay */}

@@ -57,7 +57,7 @@ export default function WhyCrewVoltRoute() {
             loading="eager"
             fetchPriority="high"
             decoding="async"
-            className="h-full w-full object-cover opacity-50"
+            className="cv-ken-burns h-full w-full object-cover opacity-50"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-cv-navy-dark via-cv-navy/80 to-cv-navy/30" />
         </div>

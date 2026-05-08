@@ -23,7 +23,7 @@ export function HeroSection() {
           height={1200}
           fetchPriority="high"
           decoding="async"
-          className="h-full w-full object-cover opacity-50"
+          className="cv-ken-burns h-full w-full object-cover opacity-50"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-cv-navy-dark via-cv-navy/85 to-cv-navy/40" />
         <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-cv-copper/15 to-transparent" />

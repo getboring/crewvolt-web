@@ -184,6 +184,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
   return (
     <TooltipProvider>
       <JsonLdScript data={organizationSchema} />
+      <div className="cv-scroll-progress" aria-hidden="true" />
       <Nav />
       <main id="main-content">
         <Outlet />

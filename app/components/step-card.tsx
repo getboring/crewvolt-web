@@ -13,7 +13,7 @@ type StepCardProps = {
 
 export function StepCard({ step, title, body }: StepCardProps) {
   return (
-    <Card className="@container/card h-full border-transparent bg-white shadow-sm ring-1 ring-cv-border">
+    <Card className="@container/card cv-reveal-up h-full border-transparent bg-white shadow-sm ring-1 ring-cv-border">
       <CardHeader>
         <p
           aria-hidden="true"
