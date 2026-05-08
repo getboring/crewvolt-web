@@ -61,11 +61,39 @@ export default function ServicesOverviewRoute() {
     <>
       <JsonLdScript data={serviceSchema} />
 
+      {/* Hero with image bleed */}
+      <section className="relative isolate overflow-hidden bg-cv-navy-dark">
+        <div aria-hidden="true" className="absolute inset-0">
+          <img
+            src="/img/services-hero.jpg"
+            alt=""
+            width={1600}
+            height={1067}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            className="h-full w-full object-cover opacity-55"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-cv-navy-dark via-cv-navy/85 to-cv-navy/40" />
+        </div>
+        <div className="relative mx-auto w-full max-w-6xl px-6 py-20 md:px-8 md:py-24 lg:py-28">
+          <p className="text-[11px] font-semibold uppercase tracking-[2px] text-cv-copper-light">
+            Services
+          </p>
+          <h1 className="mt-5 max-w-3xl font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-white">
+            Leadership and inspection staffing for energy projects.
+          </h1>
+          <p className="mt-5 max-w-2xl text-base leading-7 text-white/80 md:text-lg md:leading-8">
+            CrewVolt provides W-2 contract staffing for leadership and inspection
+            roles on energy infrastructure projects. We handle employment,
+            payroll, taxes, workers comp, and onboarding so your team can focus
+            on execution.
+          </p>
+        </div>
+      </section>
+
       <SectionWrapper tone="parchment">
-        <SectionEyebrow label="Services" />
-        <h1 className="font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
-          Leadership and inspection staffing for energy projects.
-        </h1>
+        <SectionEyebrow label="On this page" />
         <nav
           aria-label="On this page"
           className="mt-8 flex flex-wrap gap-2 border-t border-cv-border pt-5"
@@ -89,11 +117,6 @@ export default function ServicesOverviewRoute() {
             Project-specific
           </a>
         </nav>
-        <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
-          CrewVolt provides W-2 contract staffing for leadership and inspection roles on energy
-          infrastructure projects. We handle employment, payroll, taxes, workers comp, and
-          onboarding so your team can focus on execution.
-        </p>
       </SectionWrapper>
 
       <SectionWrapper tone="white">

@@ -13,45 +13,45 @@ export type IndustryId =
   | "transmission"
   | "grid-modernization";
 
-type ToneClasses = {
-  /** Header band background — subtle gradient using brand tokens */
-  band: string;
-  /** Icon color */
-  icon: string;
+type IndustryTone = {
   /** Body accent for "Common roles" prefix */
   accent: string;
+  /** Subtle gradient overlay over the photo (anchors brand tone) */
+  overlay: string;
+  /** Icon color shown over the photo */
+  icon: string;
 };
 
-const toneByIndustry: Record<IndustryId, ToneClasses> = {
+const toneByIndustry: Record<IndustryId, IndustryTone> = {
   substations: {
-    band: "bg-gradient-to-br from-cv-navy to-cv-navy-light",
-    icon: "text-cv-copper-light",
     accent: "text-cv-copper",
+    overlay: "from-cv-navy/85 via-cv-navy/30 to-transparent",
+    icon: "text-cv-copper-light",
   },
   wind: {
-    band: "bg-gradient-to-br from-cv-field-green to-cv-navy-dark",
-    icon: "text-white",
     accent: "text-cv-field-green",
+    overlay: "from-cv-field-green/80 via-cv-navy-dark/30 to-transparent",
+    icon: "text-white",
   },
   solar: {
-    band: "bg-gradient-to-br from-cv-amber to-cv-copper-dark",
-    icon: "text-white",
     accent: "text-cv-amber",
+    overlay: "from-cv-navy-dark/70 via-cv-amber/15 to-transparent",
+    icon: "text-white",
   },
   bess: {
-    band: "bg-gradient-to-br from-cv-navy-dark to-cv-charcoal",
-    icon: "text-cv-copper-light",
     accent: "text-cv-copper",
+    overlay: "from-cv-navy-dark/85 via-cv-charcoal/30 to-transparent",
+    icon: "text-cv-copper-light",
   },
   transmission: {
-    band: "bg-gradient-to-br from-cv-charcoal to-cv-navy-dark",
-    icon: "text-cv-copper-light",
     accent: "text-cv-copper",
+    overlay: "from-cv-charcoal/85 via-cv-navy-dark/30 to-transparent",
+    icon: "text-cv-copper-light",
   },
   "grid-modernization": {
-    band: "bg-gradient-to-br from-cv-navy-light to-cv-navy",
-    icon: "text-cv-copper-light",
     accent: "text-cv-copper",
+    overlay: "from-cv-navy/80 via-cv-navy-light/20 to-transparent",
+    icon: "text-cv-copper-light",
   },
 };
 
@@ -62,6 +62,15 @@ const iconByIndustry: Record<IndustryId, LucideIcon> = {
   bess: Battery,
   transmission: ZapOff,
   "grid-modernization": GitBranch,
+};
+
+const imageByIndustry: Record<IndustryId, string> = {
+  substations: "/img/industry-substations.jpg",
+  wind: "/img/industry-wind.jpg",
+  solar: "/img/industry-solar.jpg",
+  bess: "/img/industry-bess.jpg",
+  transmission: "/img/industry-transmission.jpg",
+  "grid-modernization": "/img/industry-grid-mod.jpg",
 };
 
 type IndustryTileProps = {
@@ -83,6 +92,7 @@ export function IndustryTile({
 }: IndustryTileProps) {
   const tone = toneByIndustry[id];
   const Icon = iconByIndustry[id];
+  const imageSrc = imageByIndustry[id];
 
   const inner = (
     <Card
@@ -91,26 +101,29 @@ export function IndustryTile({
         href ? "hover:-translate-y-0.5 hover:shadow-md hover:ring-cv-copper/40" : "",
       )}
     >
-      {/* Visual header band with industry icon */}
+      {/* Visual header — real photography under a brand-tone gradient overlay */}
       <div
         aria-hidden="true"
-        className={cn(
-          "relative -mx-px -mt-px h-24 overflow-hidden",
-          tone.band,
-        )}
+        className="relative -mx-px -mt-px h-32 overflow-hidden md:h-36"
       >
-        {/* Subtle pattern overlay */}
+        <img
+          src={imageSrc}
+          alt=""
+          width={900}
+          height={600}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+        />
         <div
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
-            backgroundSize: "20px 20px",
-          }}
+          className={cn(
+            "absolute inset-0 bg-gradient-to-tr",
+            tone.overlay,
+          )}
         />
         <Icon
           className={cn(
-            "absolute right-5 top-5 size-12 transition-transform duration-300 group-hover:scale-110",
+            "absolute right-5 top-5 size-9 transition-transform duration-300 group-hover:scale-110",
             tone.icon,
           )}
         />

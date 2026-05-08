@@ -46,19 +46,43 @@ export default function WhyCrewVoltRoute() {
     <>
       <JsonLdScript data={faqSchema} />
 
-      <SectionWrapper tone="parchment">
-        <SectionEyebrow label="Why CrewVolt" />
-        <h1 className="font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-cv-navy">
-          Why CrewVolt.
-        </h1>
-        <p className="mt-5 max-w-4xl text-base leading-7 text-cv-charcoal">
-          Specialized energy staffing built for both sides of the project: clients who need proven
-          field leaders and workers who want fair pay and continuity. With over a quarter of oil,
-          gas, and mining workers{" "}
-          <a href="https://www.energy.gov/topics/energy-workforce" target="_blank" rel="noopener noreferrer" className="text-cv-copper underline underline-offset-4 hover:text-cv-copper-dark">nearing retirement</a>,
-          getting the right people on your project matters more than ever.
-        </p>
-      </SectionWrapper>
+      {/* Hero with image bleed */}
+      <section className="relative isolate overflow-hidden bg-cv-navy-dark">
+        <div aria-hidden="true" className="absolute inset-0">
+          <img
+            src="/img/why-crewvolt-hero.jpg"
+            alt=""
+            width={1600}
+            height={1067}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            className="h-full w-full object-cover opacity-50"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-cv-navy-dark via-cv-navy/80 to-cv-navy/30" />
+        </div>
+        <div className="relative mx-auto w-full max-w-6xl px-6 py-20 md:px-8 md:py-24 lg:py-28">
+          <p className="text-[11px] font-semibold uppercase tracking-[2px] text-cv-copper-light">
+            Why CrewVolt
+          </p>
+          <h1 className="mt-5 max-w-3xl font-headline text-[clamp(2.25rem,4vw,3rem)] leading-[1.05] font-bold text-white">
+            Specialized energy staffing for both sides of the project.
+          </h1>
+          <p className="mt-5 max-w-2xl text-base leading-7 text-white/80 md:text-lg md:leading-8">
+            Clients need proven field leaders. Workers want fair pay and
+            continuity. With over a quarter of oil, gas, and mining workers{" "}
+            <a
+              href="https://www.energy.gov/topics/energy-workforce"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-cv-copper-light underline underline-offset-4 hover:text-white"
+            >
+              nearing retirement
+            </a>
+            , getting the right people on your project matters more than ever.
+          </p>
+        </div>
+      </section>
 
       <SectionWrapper tone="white">
         <SectionEyebrow label="How we compare" />
