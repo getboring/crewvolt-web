@@ -1,6 +1,7 @@
 import { Link, useLoaderData } from "react-router";
 
 import { BenefitGrid } from "~/components/benefit-grid";
+import { ClientOnly } from "~/components/client-only";
 import { CtaBanner } from "~/components/cta-banner";
 import { CurrentlyFilling } from "~/components/currently-filling";
 import { HeroSection } from "~/components/hero-section";
@@ -198,14 +199,24 @@ export default function HomeRoute() {
         <CurrentlyFilling roles={openRoles} />
       </SectionWrapper>
 
-      {/* Industry pulse — live-feeling rotation of citation-backed industry stats */}
+      {/* Industry pulse — live-feeling rotation of citation-backed industry stats.
+          Client-only to avoid any animation/timing-driven hydration mismatch. */}
       <SectionWrapper tone="white" className="!py-12 md:!py-16">
         <SectionEyebrow
           label="Industry pulse"
           index="10"
           caption="Public data · refreshed monthly"
         />
-        <IndustryPulse />
+        <ClientOnly
+          fallback={
+            <div
+              aria-hidden="true"
+              className="min-h-[160px] rounded-xl border border-cv-border bg-cv-cream"
+            />
+          }
+        >
+          <IndustryPulse />
+        </ClientOnly>
       </SectionWrapper>
 
       <SectionWrapper tone="white">

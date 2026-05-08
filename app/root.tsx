@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import { ClientOnly } from "~/components/client-only";
 import { ClientToaster } from "~/components/client-toaster";
 import { Footer } from "~/components/footer";
 import { JsonLdScript } from "~/components/json-ld-script";
@@ -148,7 +149,9 @@ export default function App({ loaderData }: Route.ComponentProps) {
         <Outlet />
       </main>
       <Footer />
-      <StickyMobileCta />
+      <ClientOnly>
+        <StickyMobileCta />
+      </ClientOnly>
       <ClientToaster />
       {analyticsBeacon ? (
         <script
