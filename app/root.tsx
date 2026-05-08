@@ -17,11 +17,29 @@ import { organizationSchema } from "~/lib/seo";
 import type { Route } from "./+types/root";
 import "./styles/app.css";
 
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 export function loader({ context }: Route.LoaderArgs) {
+  const now = new Date();
   return {
     analyticsToken: context.cloudflare.env.CF_WEB_ANALYTICS_TOKEN ?? "",
-    /** Server-side date stamp — used by the footer "Last revised" */
-    serverDate: new Date().toISOString(),
+    /** Server-formatted "Last revised" string. Pre-computed so the
+     *  footer never hydrates with a TZ-shifted date. */
+    serverDate: now.toISOString(),
+    serverDateLabel: `${MONTHS[now.getUTCMonth()]} ${now.getUTCDate()}, ${now.getUTCFullYear()}`,
   };
 }
 

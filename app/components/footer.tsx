@@ -20,21 +20,16 @@ const workLinks = [
 const PHONE_DISPLAY = "+1 (423) 555-0100";
 const PHONE_TEL = "+1-423-555-0100";
 
-function formatRevised(iso: string | undefined) {
-  if (!iso) return null;
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return null;
-  return d.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
+type RootData = { serverDate?: string; serverDateLabel?: string };
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
-  const rootData = useRouteLoaderData<{ serverDate?: string }>("root");
-  const lastRevised = formatRevised(rootData?.serverDate);
+  const rootData = useRouteLoaderData<RootData>("root");
+  // Year computed from the server-formatted label (last 4 chars) so we
+  // never hit a TZ-driven hydration mismatch around year boundaries.
+  const lastRevised = rootData?.serverDateLabel ?? null;
+  const currentYear = lastRevised
+    ? lastRevised.slice(-4)
+    : new Date().getUTCFullYear();
 
   return (
     <footer
