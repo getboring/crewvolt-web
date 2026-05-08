@@ -17,11 +17,13 @@ export async function loader({ request }: Route.LoaderArgs) {
     "W-2 contract staffing for substations, wind, solar, BESS, transmission.";
   const eyebrow = url.searchParams.get("eyebrow") ?? "CrewVolt";
 
-  // Trim absurdly long text to keep the layout clean
   const safeTitle = title.length > 90 ? title.slice(0, 87).trimEnd() + "…" : title;
   const safeSubtitle =
     subtitle.length > 180 ? subtitle.slice(0, 177).trimEnd() + "…" : subtitle;
 
+  // Satori (the engine workers-og uses) only supports
+  // display: flex | block | none | -webkit-box. All elements use <div>
+  // with explicit display to avoid implicit "inline" failures.
   const html = `
     <div style="
       width:100%;
@@ -34,7 +36,6 @@ export async function loader({ request }: Route.LoaderArgs) {
       color:${PARCHMENT};
       font-family:system-ui,-apple-system,sans-serif;
       position:relative;
-      overflow:hidden;
     ">
       <div style="
         position:absolute;
@@ -44,13 +45,14 @@ export async function loader({ request }: Route.LoaderArgs) {
         height:520px;
         border-radius:9999px;
         background:radial-gradient(closest-side, rgba(184,115,51,0.42), rgba(184,115,51,0));
+        display:block;
       "></div>
 
       <div style="display:flex;flex-direction:column;">
-        <div style="display:flex;align-items:center;gap:14px;">
+        <div style="display:flex;align-items:center;">
           <div style="
-            width:36px;
-            height:36px;
+            width:40px;
+            height:40px;
             background:${PARCHMENT};
             color:${NAVY};
             border-radius:6px;
@@ -58,25 +60,26 @@ export async function loader({ request }: Route.LoaderArgs) {
             align-items:center;
             justify-content:center;
             font-weight:800;
-            font-size:18px;
+            font-size:20px;
             letter-spacing:1px;
+            margin-right:14px;
           ">CV</div>
-          <span style="
-            font-size:18px;
+          <div style="
+            font-size:20px;
             letter-spacing:5px;
             font-weight:700;
-            text-transform:uppercase;
             color:${PARCHMENT};
-          ">CREWVOLT</span>
+            display:flex;
+          ">CREWVOLT</div>
         </div>
-        <span style="
+        <div style="
           margin-top:42px;
           font-size:14px;
           letter-spacing:3px;
           font-weight:700;
-          text-transform:uppercase;
           color:${COPPER};
-        ">${escapeHtml(eyebrow)}</span>
+          display:flex;
+        ">${escapeHtml(eyebrow.toUpperCase())}</div>
       </div>
 
       <div style="display:flex;flex-direction:column;max-width:1040px;">
@@ -87,21 +90,30 @@ export async function loader({ request }: Route.LoaderArgs) {
           letter-spacing:-1px;
           color:${PARCHMENT};
           font-family:Georgia,serif;
+          display:flex;
         ">${escapeHtml(safeTitle)}</div>
         <div style="
           margin-top:28px;
           font-size:24px;
           line-height:1.45;
           color:${STEEL};
+          display:flex;
         ">${escapeHtml(safeSubtitle)}</div>
       </div>
 
       <div style="display:flex;justify-content:space-between;align-items:center;font-size:16px;color:${STEEL};">
-        <span style="display:flex;align-items:center;gap:14px;">
-          <span style="display:inline-block;width:8px;height:8px;border-radius:9999px;background:${COPPER};"></span>
-          W-2 only · Workers comp · Five-region coverage
-        </span>
-        <span style="font-weight:600;color:${PARCHMENT};">crewvolt.com</span>
+        <div style="display:flex;align-items:center;">
+          <div style="
+            display:block;
+            width:8px;
+            height:8px;
+            border-radius:9999px;
+            background:${COPPER};
+            margin-right:14px;
+          "></div>
+          <div style="display:flex;">W-2 only · Workers comp · Five-region coverage</div>
+        </div>
+        <div style="font-weight:600;color:${PARCHMENT};display:flex;">crewvolt.com</div>
       </div>
     </div>
   `;
@@ -117,8 +129,6 @@ export async function loader({ request }: Route.LoaderArgs) {
   });
 }
 
-// `loader` is enough for a leaf "asset" route — no React component needed.
-// We export an empty default so RR's typegen is happy.
 export default function OgRoute() {
   return null;
 }
