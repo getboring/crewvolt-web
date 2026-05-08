@@ -86,6 +86,24 @@ Capture the form ref synchronously *before* `form.handleSubmit` — RHF's async 
 - **`<IndustryPulse>`** — rotating citation-backed industry stats (LBL/BLS/DOE).
 - **Footer "Last revised"** — UTC-formatted server-side date stamp.
 
+## Visual motion (CSS-only, scroll-driven)
+
+- **Scroll progress bar** at top of viewport (`scroll(root)` timeline)
+- **Card reveal-on-scroll** — fade-up tied to `view()` timeline
+- **Number count-up** on metrics
+- **Ken-Burns** on hero images (slow scale + drift)
+- **View Transitions API** between routes (RR7 `<Link viewTransition>`)
+- All gated on `prefers-reduced-motion`. See `CLAUDE.md` Motion utilities section.
+
+## Photography
+
+10 self-hosted photos under `public/img/`:
+- 2 page heroes: `hero-offshore-wind.jpg`, `about-grid.jpg`
+- 2 page hero bleeds: `services-hero.jpg`, `why-crewvolt-hero.jpg`
+- 6 industry tiles: `industry-{substations,wind,solar,bess,transmission,grid-mod}.jpg`
+
+All Unsplash, free-commercial, sized at viewport-appropriate widths (~80–280 KB each).
+
 ## Security headers
 
 `workers/app.ts` applies CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy on non-asset responses.

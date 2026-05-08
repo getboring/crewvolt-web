@@ -110,6 +110,38 @@ accordion, badge, button, card, checkbox, form, input, label, select, sheet, son
 - **Card primitive:** shadcn `Card` + `@container/card` queries for component-level responsiveness
 - **Section padding:** `py-16 md:py-20` baseline; hero `py-20 md:py-28 lg:py-32`
 
+## Photography inventory
+
+All photos are self-hosted under `public/img/` (CSP-clean, no third-party fetch at runtime). Sourced from Unsplash under the free-commercial license, downloaded at viewport-appropriate sizes (~80–280 KB each).
+
+| File | Used at | Source |
+|---|---|---|
+| `hero-offshore-wind.jpg` | Home hero (right-bleed on lg+) | Offshore wind farm, calm blue |
+| `about-grid.jpg` | About page wide bleed | Transmission towers at sunset |
+| `services-hero.jpg` | `/services` hero bleed | Lineman working on transmission tower |
+| `why-crewvolt-hero.jpg` | `/why-crewvolt` hero bleed | Substation at twilight, glowing |
+| `industry-substations.jpg` | IndustryTile (substations) | Substation framework silhouette at dusk |
+| `industry-wind.jpg` | IndustryTile (wind) | Wind turbines on rolling green hills |
+| `industry-solar.jpg` | IndustryTile (solar) | Aerial drone over solar farm |
+| `industry-bess.jpg` | IndustryTile (bess) | Industrial transformer (BESS-adjacent) |
+| `industry-transmission.jpg` | IndustryTile (transmission) | Single transmission tower silhouette |
+| `industry-grid-mod.jpg` | IndustryTile (grid-modernization) | Transmission towers at orange sunrise |
+
+All `<img>` tags use explicit width/height + `loading="lazy"` for tiles and `loading="eager"` + `fetchPriority="high"` for hero images. Hero images include the `.cv-ken-burns` utility for slow scale animation.
+
+## Motion utilities (scroll-driven)
+
+All defined in `app/styles/app.css`. CSS-only — no JS. Gated on `prefers-reduced-motion: no-preference`. Falls back to static rendering on browsers without `animation-timeline` support.
+
+| Utility | What it does | Where applied |
+|---|---|---|
+| `.cv-scroll-progress` | 2px copper bar at top, scaleX driven by `scroll(root)` | `<div className="cv-scroll-progress" />` in root.tsx |
+| `.cv-reveal-up` | Fade-up animation tied to `view()` timeline (entry 0% → cover 30%) | RoleCard, IndustryTile, StepCard, BenefitGrid, ProofBar, MetricCard |
+| `.cv-count-up` | Subtle scale 0.94 → 1 + translate as element enters viewport | MetricCard value text |
+| `.cv-ken-burns` | 22s scale 1 → 1.06 + translate, alternate forever | Hero `<img>` on home, services, why-crewvolt |
+| `[data-slot="card"]` global hover | Parent `<a>:hover/focus` lifts card 3px with copper-tinted shadow | Every shadcn Card on the site |
+| `::view-transition-old/new(root)` | 250ms cubic-bezier crossfade between routes | Every internal `<Link viewTransition>` (nav, footer) |
+
 ## PWA / iOS / Android (2026)
 
 - `public/manifest.webmanifest` — name, short_name, theme_color, icons (SVG + 192/512 PNG + maskable), display=standalone, app shortcuts.
