@@ -14,5 +14,6 @@ export default [
   route("contact", "routes/contact.tsx"),
   route("vendor-readiness", "routes/vendor-readiness.tsx"),
   route("blog", "routes/blog._index.tsx"),
+  route("og.png", "routes/og[.png].tsx"),
   route("*", "routes/$.tsx"),
 ] satisfies RouteConfig;

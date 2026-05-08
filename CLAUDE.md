@@ -163,9 +163,11 @@ pnpm exec wrangler secret put RESEND_API_KEY
 ## SEO
 
 - All pages: title 50–60 chars, description 150–160 chars, canonical, OG, twitter:card.
-- OG image: `public/og/crewvolt-default.png` (single static — TODO: per-page via Workers OG)
+- **Per-page dynamic OG images** via `workers-og` package, served from `/og.png?title=...&subtitle=...&eyebrow=...`. The image renders a navy gradient with a copper accent ring, the page eyebrow + title + subtitle, and a brand wordmark + tagline strip. `buildPageMeta()` automatically generates the URL; pages can override with explicit `imagePath`. PNG cached for 1 day at the browser, 7 days at the edge.
 - Schema: ProfessionalService (global), Service (services), FAQ (why-crewvolt), LocalBusiness (contact), JobPosting (join-our-network — datePosted is computed dynamically server-side).
-- Sitemap: `public/sitemap.xml` with current lastmod.
+- Sitemap: `public/sitemap.xml` is **auto-generated** by `scripts/build-sitemap.mjs` via the `prebuild` npm hook. Routes + priorities + changefreq live in the script. `lastmod` is always the current UTC date at build time.
+- Favicon: light + dark SVG variants (`favicon.svg` + `favicon-dark.svg`) wired with `media="(prefers-color-scheme: ...)"` so dark-mode browsers get a parchment-on-navy mark.
+- `<noscript>` fallback in `Layout` shows a CrewVolt-branded message + email/phone for JS-disabled users.
 - Accessibility: skip-to-content link, semantic `<main>`, focus-visible rings, keyboard nav, `aria-current="page"` on active nav, copper underline on active link (color + shape — fixes WCAG 1.4.1).
 
 ## Operational notes
@@ -190,5 +192,5 @@ pnpm exec wrangler secret put RESEND_API_KEY
 - Write blog content (sheet placeholder until then)
 - Replace founder quote / placeholder name on About page
 - Real client logos in homepage proof bar
-- Per-page dynamic OG via `@cloudflare/workers-og` (M5 — deferred)
+- Per-page dynamic OG via `workers-og` (M5 — DONE; route at `/og.png`)
 - Cloudflare Turnstile on intake forms (post-demo hardening)

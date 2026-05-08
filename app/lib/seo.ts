@@ -10,14 +10,42 @@ export function absoluteUrl(path: string, baseUrl = DEFAULT_BASE_URL) {
   return `${baseUrl}${normalizedPath}`;
 }
 
+/** Build the dynamic OG image URL for a given page title + subtitle.
+ *  Routes to the /og.png loader which returns a freshly-rendered PNG. */
+function buildOgImagePath(opts: {
+  title: string;
+  subtitle: string;
+  eyebrow?: string;
+}) {
+  const params = new URLSearchParams({
+    title: opts.title,
+    subtitle: opts.subtitle,
+  });
+  if (opts.eyebrow) params.set("eyebrow", opts.eyebrow);
+  return `/og.png?${params.toString()}`;
+}
+
 export function buildPageMeta(params: {
   title: string;
   description: string;
   path: string;
+  /** Override the auto-generated dynamic OG image. */
   imagePath?: string;
+  /** Eyebrow text shown above the title in the OG image (e.g. "Industries") */
+  ogEyebrow?: string;
 }): MetaDescriptor[] {
   const pageUrl = absoluteUrl(params.path);
-  const ogImage = absoluteUrl(params.imagePath ?? "/og/crewvolt-default.png");
+  // Drop the "| CrewVolt" suffix from titles when rendering the OG, since
+  // the OG already shows the brand wordmark.
+  const ogTitle = params.title.replace(/\s*[|\-—]\s*CrewVolt.*$/i, "");
+  const ogImage = absoluteUrl(
+    params.imagePath ??
+      buildOgImagePath({
+        title: ogTitle,
+        subtitle: params.description,
+        eyebrow: params.ogEyebrow,
+      }),
+  );
 
   return [
     { title: params.title },
@@ -28,6 +56,8 @@ export function buildPageMeta(params: {
     { property: "og:description", content: params.description },
     { property: "og:url", content: pageUrl },
     { property: "og:image", content: ogImage },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: params.title },
     { name: "twitter:description", content: params.description },

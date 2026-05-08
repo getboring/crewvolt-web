@@ -79,8 +79,19 @@ export const links: Route.LinksFunction = () => [
   },
   // PWA manifest
   { rel: "manifest", href: "/manifest.webmanifest" },
-  // Favicons
-  { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+  // Favicons — light + dark variants for browser tabs in dark mode
+  {
+    rel: "icon",
+    href: "/favicon.svg",
+    type: "image/svg+xml",
+    media: "(prefers-color-scheme: light)",
+  },
+  {
+    rel: "icon",
+    href: "/favicon-dark.svg",
+    type: "image/svg+xml",
+    media: "(prefers-color-scheme: dark)",
+  },
   { rel: "icon", href: "/favicon.ico", sizes: "any" },
   // iOS home-screen icon
   { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
@@ -128,6 +139,35 @@ export function Layout({ children }: { children: React.ReactNode }) {
         >
           Skip to content
         </a>
+        <noscript>
+          <div
+            style={{
+              padding: "16px",
+              background: "#1B365D",
+              color: "#F7F4EF",
+              textAlign: "center",
+              fontFamily: "system-ui, sans-serif",
+              fontSize: "14px",
+            }}
+          >
+            CrewVolt works best with JavaScript enabled. The site is still
+            usable —{" "}
+            <a
+              href="mailto:staffing@crewvolt.com"
+              style={{ color: "#D4935A", textDecoration: "underline" }}
+            >
+              email us
+            </a>{" "}
+            or call{" "}
+            <a
+              href="tel:+1-423-555-0100"
+              style={{ color: "#D4935A", textDecoration: "underline" }}
+            >
+              +1 (423) 555-0100
+            </a>
+            .
+          </div>
+        </noscript>
         {children}
         <ScrollRestoration />
         <Scripts />
