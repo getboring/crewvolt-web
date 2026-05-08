@@ -40,7 +40,10 @@ export async function loader({ request }: Route.LoaderArgs) {
     `</div>` +
     `</div>`;
 
-  return new ImageResponse(html, {
+  // Throw the Response so RR7 short-circuits before route-component
+  // rendering. (Returning works in some cases but RR7 wraps non-`throw`
+  // responses inside the SSR HTML shell, defeating image serving.)
+  throw new ImageResponse(html, {
     width: 1200,
     height: 630,
     format: "png",
@@ -49,10 +52,6 @@ export async function loader({ request }: Route.LoaderArgs) {
       "Content-Type": "image/png",
     },
   });
-}
-
-export default function OgRoute() {
-  return null;
 }
 
 function escapeHtml(s: string) {
