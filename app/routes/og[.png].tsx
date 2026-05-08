@@ -22,10 +22,10 @@ export async function loader({ request }: Route.LoaderArgs) {
     subtitle.length > 180 ? subtitle.slice(0, 177).trimEnd() + "…" : subtitle;
 
   // Compact, every multi-child element has explicit display:flex.
-  // Use a flat single-column flex layout — no absolute positioning,
-  // no gradients-with-orbs (Satori is finicky about both).
+  // Root uses explicit pixel dimensions — Satori does not implement
+  // 'width:100%' the way browsers do, the canvas needs explicit sizing.
   const html =
-    `<div style="display:flex;flex-direction:column;justify-content:space-between;width:100%;height:100%;padding:80px;background-color:${NAVY_DARK};background-image:linear-gradient(135deg,${NAVY_DARK},${NAVY});color:${PARCHMENT};font-family:system-ui,sans-serif">` +
+    `<div style="display:flex;flex-direction:column;justify-content:space-between;width:1200px;height:630px;padding:80px;background-color:${NAVY_DARK};background-image:linear-gradient(135deg,${NAVY_DARK},${NAVY});color:${PARCHMENT};font-family:system-ui,sans-serif">` +
     `<div style="display:flex;flex-direction:column">` +
     `<div style="display:flex;font-size:22px;font-weight:700;letter-spacing:6px;color:${PARCHMENT}">CREWVOLT</div>` +
     `<div style="display:flex;margin-top:36px;font-size:14px;letter-spacing:3px;font-weight:700;color:${COPPER}">${escapeHtml(eyebrow.toUpperCase())}</div>` +
