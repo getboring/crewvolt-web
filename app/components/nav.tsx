@@ -32,12 +32,12 @@ export function Nav() {
   return (
     <nav
       aria-label="Primary"
-      className="sticky top-0 z-50 border-b border-cv-border bg-white/95 backdrop-blur cv-safe-px supports-[backdrop-filter]:bg-white/80"
-      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+      className="sticky top-0 z-50 border-b border-cv-border bg-white/95 backdrop-blur cv-safe-pt cv-safe-px supports-[backdrop-filter]:bg-white/80"
     >
       <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between px-6 md:px-8">
         <Link
           to="/"
+          viewTransition
           className="font-logo text-[20px] font-bold tracking-[1.5px] text-cv-navy transition-colors hover:text-cv-copper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cv-copper focus-visible:ring-offset-4 focus-visible:ring-offset-white"
         >
           CREWVOLT
@@ -51,6 +51,7 @@ export function Nav() {
               <Link
                 key={link.to}
                 to={link.to}
+                viewTransition
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "relative inline-flex h-10 items-center px-1 text-[13px] font-medium transition-colors",
@@ -112,6 +113,7 @@ export function Nav() {
                     <SheetClose asChild key={link.to}>
                       <Link
                         to={link.to}
+                        viewTransition
                         aria-current={active ? "page" : undefined}
                         className={cn(
                           "inline-flex min-h-12 items-center rounded-md border-l-2 px-3 text-sm font-medium transition-colors",

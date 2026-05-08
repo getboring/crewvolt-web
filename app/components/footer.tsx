@@ -32,10 +32,8 @@ export function Footer() {
     : new Date().getUTCFullYear();
 
   return (
-    <footer
-      className="bg-cv-navy-dark"
-      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
-    >
+    <footer className="bg-cv-navy-dark cv-safe-pb">
+
       <div className="mx-auto grid w-full max-w-6xl gap-12 px-6 py-12 md:grid-cols-[1.4fr_1fr_1fr] md:px-8">
         <div>
           <p className="font-logo text-lg font-bold tracking-[1.5px] text-white">
@@ -80,6 +78,7 @@ export function Footer() {
               <li key={link.to}>
                 <Link
                   to={link.to}
+                  viewTransition
                   className="text-sm cv-dark-text-secondary transition-colors hover:text-white"
                 >
                   {link.label}
@@ -98,6 +97,7 @@ export function Footer() {
               <li key={link.to}>
                 <Link
                   to={link.to}
+                  viewTransition
                   className="text-sm cv-dark-text-secondary transition-colors hover:text-white"
                 >
                   {link.label}

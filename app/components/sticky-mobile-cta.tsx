@@ -14,16 +14,10 @@ export function StickyMobileCta() {
   if (HIDE_ON.has(location.pathname)) return null;
 
   return (
-    <div
-      className="md:hidden"
-      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
-    >
+    <div className="cv-safe-pb md:hidden">
       {/* Spacer prevents content from sitting behind the fixed bar */}
       <div aria-hidden="true" className="h-16" />
-      <div
-        className="pointer-events-auto fixed bottom-0 left-0 right-0 z-40 grid grid-cols-[auto_1fr] border-t border-cv-border bg-white shadow-[0_-12px_32px_-16px_rgba(15,34,64,0.18)]"
-        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
-      >
+      <div className="cv-safe-pb pointer-events-auto fixed bottom-0 left-0 right-0 z-40 grid grid-cols-[auto_1fr] border-t border-cv-border bg-white shadow-[0_-12px_32px_-16px_rgba(15,34,64,0.18)]">
         <a
           href={`tel:${PHONE_TEL}`}
           className="flex h-14 w-14 items-center justify-center border-r border-cv-border bg-white text-cv-navy"

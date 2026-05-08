@@ -15,14 +15,17 @@ CrewVolt marketing website and lead intake system.
 - D1: `crewvolt-db` (`983b5f01-d94a-45e8-870f-8c76a7c57f08`)
 - R2: `crewvolt-uploads`
 
-## Stack
+## Stack (current as of 2026-05-08)
 
-- React Router v7 (framework mode)
-- Cloudflare Workers + Wrangler
-- Tailwind CSS v4 with custom CrewVolt tokens in `app/styles/app.css`
-- shadcn/ui (radix) primitives in `app/components/ui/`
-- React Hook Form + Zod for forms (full FormField/FormItem/FormMessage pattern)
-- Vitest for unit tests
+- React Router v7.15 (framework mode) — uses `viewTransition` prop on internal `<Link>` components for smooth route crossfades (gated on `prefers-reduced-motion`)
+- Cloudflare Workers + Wrangler 4.90 + `@cloudflare/vite-plugin` 1.36
+- Tailwind CSS v4.2.4 with custom CrewVolt tokens in `app/styles/app.css`
+- shadcn/ui (radix-ui) primitives in `app/components/ui/`
+- React 19.2.6 + React DOM 19.2.6
+- React Hook Form 7.75 + Zod 3.25 (Zod v4 is incompatible with @hookform/resolvers 5.2 type-side; revisit after resolver 5.3+)
+- TypeScript 6.0 (deprecated `baseUrl` removed from `tsconfig.json` — `paths` resolve relative to tsconfig location)
+- Vitest 4.1 for unit tests
+- workers-og for per-page dynamic OG PNGs
 - Cloudflare D1 + R2 + Workers runtime + Resend (notifications)
 
 ## Routes (14)
