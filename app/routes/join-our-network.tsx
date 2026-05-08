@@ -5,6 +5,7 @@ import { useActionData, useLoaderData, useNavigation, useSubmit } from "react-ro
 import { toast } from "sonner";
 
 import { CurrentlyFilling } from "~/components/currently-filling";
+import { FormSuccess } from "~/components/form-success";
 import { JsonLdScript } from "~/components/json-ld-script";
 import { SectionWrapper } from "~/components/section-wrapper";
 import { listOpenRoles } from "~/lib/open-roles.server";
@@ -170,6 +171,9 @@ export default function JoinOurNetworkRoute() {
       form.reset();
     } else {
       toast.error(actionData.message);
+      if ("fieldErrors" in actionData && actionData.fieldErrors) {
+        toast.error("Please fix the highlighted fields");
+      }
     }
   }, [actionData, form]);
 
@@ -228,6 +232,15 @@ export default function JoinOurNetworkRoute() {
           <CurrentlyFilling roles={openRoles} hideApply />
         </div>
 
+        {actionData?.ok ? (
+          <div className="mt-8">
+            <FormSuccess
+              message={actionData.message}
+              secondaryHref="/why-crewvolt"
+              secondaryLabel="Why CrewVolt"
+            />
+          </div>
+        ) : (
         <div className="mt-8 rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">
           <Form {...form}>
             <form
@@ -507,6 +520,7 @@ export default function JoinOurNetworkRoute() {
             </form>
           </Form>
         </div>
+        )}
       </SectionWrapper>
     </>
   );

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import { toast } from "sonner";
 
+import { FormSuccess } from "~/components/form-success";
 import { JsonLdScript } from "~/components/json-ld-script";
 import { SectionWrapper } from "~/components/section-wrapper";
 import {
@@ -103,6 +104,9 @@ export default function ContactRoute() {
       form.reset();
     } else {
       toast.error(actionData.message);
+      if ("fieldErrors" in actionData && actionData.fieldErrors) {
+        toast.error("Please fix the highlighted fields");
+      }
     }
   }, [actionData, form]);
 
@@ -177,6 +181,9 @@ export default function ContactRoute() {
             </div>
           </aside>
 
+          {actionData?.ok ? (
+            <FormSuccess message={actionData.message} />
+          ) : (
           <div className="rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">
             <Form {...form}>
               <form
@@ -282,6 +289,7 @@ export default function ContactRoute() {
               </form>
             </Form>
           </div>
+          )}
         </div>
       </SectionWrapper>
     </>

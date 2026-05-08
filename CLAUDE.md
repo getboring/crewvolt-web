@@ -1,4 +1,4 @@
-# CrewVolt Web - Project Notes
+# CrewVolt Web — Project Notes
 
 ## Purpose
 
@@ -18,131 +18,177 @@ CrewVolt marketing website and lead intake system.
 ## Stack
 
 - React Router v7 (framework mode)
+- Cloudflare Workers + Wrangler
 - Tailwind CSS v4 with custom CrewVolt tokens in `app/styles/app.css`
-- shadcn/ui (radix) components in `app/components/ui/`
-- React Hook Form + Zod for forms
-- Cloudflare D1 + R2 + Workers runtime
+- shadcn/ui (radix) primitives in `app/components/ui/`
+- React Hook Form + Zod for forms (full FormField/FormItem/FormMessage pattern)
+- Vitest for unit tests
+- Cloudflare D1 + R2 + Workers runtime + Resend (notifications)
+
+## Routes (14)
+
+```
+/                          Home (12 numbered sections)
+/about                     About + transmission-tower image bleed
+/services                  Services overview + mini-nav (Owner / Contractor / Project-specific anchors)
+/services/owner-side       Owner-side roles
+/services/contractor-side  Contractor-side roles
+/how-it-works              Sequence — for clients (01) + for workers (02)
+/industries                6-tile gradient + Lucide icon grid
+/why-crewvolt              Comparison matrix (4-column) + FAQ accordion
+/staff-my-project          Owner intake form (FormSuccess on submit)
+/join-our-network          Crew intake form + CurrentlyFilling top + FormSuccess
+/contact                   RFI form + phone/email/quick-links aside
+/vendor-readiness          Vendor onboarding checklist
+/blog                      Placeholder ("coming soon")
+*                          404 catch-all
+```
+
+## Live elements (D1 + dynamic data)
+
+- **`open_roles` table** (`workers/migrations/0002_open_roles.sql`) — id, title, industry, region, status (Open/Filling/Urgent), posted_at, active. Indexed on (active, posted_at DESC). Seeded with 4 rows. To add or update roles for the demo, edit rows in the remote DB:
+  ```bash
+  pnpm exec wrangler d1 execute crewvolt-db --remote --command "..."
+  ```
+- **`<CurrentlyFilling>`** — reads from D1 via the route loader. Each row carries a server-formatted `posted_relative` ("3d ago") to avoid hydration mismatch. Rendered on home (eyebrow 09) and on `/join-our-network`. Falls back to a hardcoded list if D1 is unreachable.
+- **`<IndustryPulse>`** — rotating citation-backed industry stats (LBL queue, BLS, DOE USEER, DOE FY26 spending). Auto-rotates every 5.5s, pauses on hover/focus, disables on prefers-reduced-motion. Wrapped in `<ClientOnly>` to avoid hydration race. Rendered on home (eyebrow 10).
+- **Footer "Last revised" timestamp** — root loader produces both an ISO `serverDate` and a UTC-formatted `serverDateLabel` so client and server render identical text. Footer reads via `useRouteLoaderData("root")`.
+
+## SSR / hydration rules (do not regress)
+
+React Router 7 server-renders the page including loader data. The client hydrates with the same data. Anything that produces *different* text between SSR and hydration triggers React error #418. Lessons learned:
+
+1. **Route-level `meta()` REPLACES root `meta()`.** Static `<head>` meta (PWA, theme-color, app-name) lives in the `Layout` component as literal markup, not in `meta()`.
+2. **Date / time formatting must use UTC** when rendered both server- and client-side. The footer uses a UTC-precomputed `serverDateLabel` string. Relative times for D1 rows are computed once on the server and stored as `posted_relative`.
+3. **`server.ts` files cannot be imported by client components.** Split shared types into a non-`.server` file (e.g. `app/lib/open-roles.ts` for types/helpers + `app/lib/open-roles.server.ts` for the D1 fetcher).
+4. **Components with client-only initial state** (matchMedia, useLocation edge cases, animation timing) go in `<ClientOnly>` (`app/components/client-only.tsx`). Renders `null`/fallback during SSR + first hydration; mounts after `useEffect`.
+5. **Sonner Toaster** is wrapped in `<ClientToaster>` for the same reason.
+
+## Form pipeline
+
+All three forms (`/contact`, `/staff-my-project`, `/join-our-network`):
+
+1. Validate with Zod via `zodResolver` (full shadcn `<Form>` + `<FormField>` + `<FormControl>` + `<FormMessage>` pattern, auto-wires `aria-describedby`/`aria-invalid`/htmlFor).
+2. Honeypot (`website` field, sr-only) — submitted bots get silent success with no D1 write.
+3. On `useSubmit` — capture `event.currentTarget` synchronously *before* `handleSubmit` runs (RHF's async resolver clears the synthetic event reference). See `app/routes/contact.tsx:106-112` for the canonical pattern.
+4. Save payload to `form_submissions` D1 table via `saveFormSubmission`.
+5. Upload resume to R2 (max 5 MB, server-enforced) when present on join form.
+6. Send Resend notification when `RESEND_API_KEY` is configured (otherwise saves to D1 only — TODO: set this secret).
+7. Action `catch` blocks `console.error` so `wrangler tail` surfaces failures.
+8. On success: render `<FormSuccess>` block with phone + email CTAs; the form is replaced. Toast also fires for assistive feedback.
+9. On field validation rejection: top-level `toast.error("Please fix the highlighted fields")` plus inline per-field messages from `FormMessage`.
+
+## Component inventory
+
+### Signature components
+- `HeroSection` — navy gradient + 55%-width offshore-wind image bleed on lg+, two tone-coded CTA cards (copper for owner/EPC, field-green for field professionals)
+- `SplitCards` — owner / worker decision cards
+- `ProofBar` — 3 anonymized worker testimonials + 5 client engagement marks
+- `BenefitGrid` — twin grids: 6 client benefits + 8 worker benefits, each with Lucide icon
+- `IndustryTile` — gradient header band + industry-specific Lucide icon (Zap/Wind/Sun/Battery/ZapOff/GitBranch), status badge, currentlySeeking line
+- `IndustryPulse` — rotating citation-backed industry stats (live element)
+- `CurrentlyFilling` — D1-backed open roles board with status pulse dots
+- `ComparisonMatrix` — 4-column spec comparison (CrewVolt vs general agency / direct hire / 1099)
+- `PullQuote` — large italic Playfair quote with copper left rule
+- `SectionEyebrow` — copper hairline + uppercase label + optional numbered index
+- `FormSuccess` — clean post-submit success card with CTAs
+- `StickyMobileCta` — bottom-fixed phone + Staff project bar (mobile only, hidden on form pages)
+- `ClientOnly` / `ClientToaster` — SSR-mismatch escape hatches
+
+### Primitives (shadcn/ui)
+accordion, badge, button, card, checkbox, form, input, label, select, sheet, sonner, textarea, tooltip
+
+## Design system
+
+- **Type:** Playfair Display (display), Source Sans 3 (body), IBM Plex Mono (data), Barlow Condensed (logo)
+- **Color tokens:** navy `#1B365D`, copper `#B87333`, field-green `#3D5A3E`, parchment `#F7F4EF`, cream `#FAFAF7`
+- **Hero H1:** `clamp(2.5rem, 5.5vw, 5rem)`
+- **Section H2:** `clamp(1.75rem, 3vw, 2.25rem)`
+- **Card primitive:** shadcn `Card` + `@container/card` queries for component-level responsiveness
+- **Section padding:** `py-16 md:py-20` baseline; hero `py-20 md:py-28 lg:py-32`
+
+## PWA / iOS / Android (2026)
+
+- `public/manifest.webmanifest` — name, short_name, theme_color, icons (SVG + 192/512 PNG + maskable), display=standalone, app shortcuts.
+- Icon set generated from `public/icons/icon-source.svg` via macOS `qlmanage` + `sips`. Regen instructions in this doc below.
+- Meta tags in literal `<head>` of `Layout` (not `meta()`):
+  - `mobile-web-app-capable` + `apple-mobile-web-app-capable`
+  - `apple-mobile-web-app-status-bar-style: black-translucent`
+  - `apple-mobile-web-app-title: CrewVolt`
+  - `application-name: CrewVolt`
+  - `format-detection: telephone=no`
+  - `theme-color` light + dark variants
+  - `color-scheme: light`
+  - `mask-icon` for Safari pinned tabs
+- Viewport: `width=device-width, initial-scale=1, viewport-fit=cover`.
+- Mobile CSS in `app.css`: tap-highlight-color transparent, touch-action manipulation, overscroll-behavior contain, antialiased font smoothing, safe-area utility classes (`.cv-safe-pt`, `.cv-safe-pb`, `.cv-safe-px`).
+- Nav header: `paddingTop: env(safe-area-inset-top)`.
+- Sticky mobile CTA + Sonner toaster: respect `env(safe-area-inset-bottom)`.
+
+### Regenerating icons after a brand change
+```bash
+qlmanage -t -s 1024 -o /tmp public/icons/icon-source.svg
+cp /tmp/icon-source.svg.png public/icons/icon-512.png
+sips -Z 512 public/icons/icon-512.png --out public/icons/icon-512.png
+sips -Z 192 public/icons/icon-512.png --out public/icons/icon-192.png
+sips -Z 180 public/icons/icon-512.png --out public/apple-touch-icon.png
+cp public/icons/icon-512.png public/icons/icon-maskable-512.png
+```
+
+## Security
+
+`workers/app.ts` applies these headers to non-asset responses:
+- `Content-Security-Policy` (default-src 'self' + Google Fonts + Cloudflare Insights + Resend)
+- `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload`
+- `X-Content-Type-Options: nosniff`
+- `X-Frame-Options: DENY`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Permissions-Policy` (locks down sensors / payment / camera)
+
+Honeypot field on all 3 forms catches naive bots. Turnstile not yet wired (skipped per plan; revisit post-demo).
 
 ## Commands
 
 ```bash
-pnpm dev
-pnpm typecheck
-pnpm build
-pnpm run deploy
+pnpm dev                                                 # local dev with CF runtime
+pnpm typecheck                                           # wrangler types + react-router typegen + tsc
+pnpm build                                               # production build
+pnpm test                                                # vitest run
+pnpm test:watch                                          # vitest watch mode
+pnpm run deploy                                          # build + deploy to CF Workers
 pnpm exec wrangler d1 migrations apply crewvolt-db --remote
 pnpm exec wrangler secret put RESEND_API_KEY
 ```
 
-## Key architecture
+## SEO
 
-- Route map is defined in `app/routes.ts` (14 routes including blog and catch-all)
-- SEO helpers and canonical metadata are in `app/lib/seo.ts`
-- Form schemas are in `app/lib/forms.ts`
-- Form submission persistence and notifications are in `app/lib/submissions.server.ts`
-- Database migrations are in `workers/migrations/`
-- Shared CTA component: `app/components/cta-banner.tsx` (dual client/worker CTA)
-- Content data: `app/lib/content.ts` (roles, industries, FAQ, how-it-works steps)
-
-## Routes
-
-```
-/                          Home
-/about                     About (founder credibility, values)
-/services                  Services overview (owner + contractor roles)
-/services/owner-side       Owner side staffing
-/services/contractor-side  Contractor side staffing
-/how-it-works              How it works (dual audience steps)
-/industries                Industries we serve (6 sectors)
-/why-crewvolt              Why CrewVolt (FAQ accordion, schema)
-/staff-my-project          Client intake form (D1 + Resend)
-/join-our-network          Worker intake form (D1 + R2 resume + Resend)
-/contact                   Contact form (D1 + Resend)
-/vendor-readiness          Vendor onboarding documentation
-/blog                      Blog placeholder (coming soon)
-*                          404 catch-all
-```
-
-## SEO status
-
-- All pages: title 50-60 chars, description 150-160 chars, canonical, OG tags, twitter:card
-- OG image: `public/og/crewvolt-default.png` (1200x630 PNG)
-- Schema: ProfessionalService (global), Service (services), FAQ (why-crewvolt), LocalBusiness (contact), JobPosting (join-our-network)
-- Sitemap: `public/sitemap.xml` with lastmod/priority
-- External links: DOE USEER, LBL Queues, BLS on relevant pages
-- Internal links: 2+ per page minimum, CtaBanner on all content pages
-- Accessibility: skip-to-content link, semantic `<main>`, focus rings, keyboard nav
-
-## Content and brand references
-
-- Build spec: `../CREWVOLT_BUILD_DOCUMENT_FINAL.md`
-- Full copy: `../CREWVOLT_WEBSITE_CONTENT_V3.md`
-- Brand tokens and visual system: `../crewvolt-brand-system.jsx`
-
-## Form submit pattern (do not regress)
-
-All three intake forms (`/contact`, `/staff-my-project`, `/join-our-network`) capture the form ref **synchronously** before calling `form.handleSubmit`, because the Zod resolver is async and `event.currentTarget` is null by the time the inner callback runs:
-
-```ts
-const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  const target = event.currentTarget; // capture before async
-  form.handleSubmit(() => {
-    submit(target, { method: "post" });
-  })(event);
-};
-```
-
-The naive `form.handleSubmit((_, event) => submit(event?.currentTarget, ...))` pattern fails silently — no POST, no error, no toast. Fixed in commit `336a97b`.
-
-## Verified working (2026-05-07)
-
-End-to-end Playwright smoke pass against the live Worker:
-
-- All 14 routes return 200 with correct titles and zero console errors.
-- `/contact`, `/staff-my-project`, `/join-our-network` each successfully POST → save to D1 `form_submissions` → reset the form on `actionData.ok`.
-- 404 catch-all renders correctly for unknown paths.
-
-## PWA / iOS / Android (2026)
-
-- `public/manifest.webmanifest` — name, short_name, theme_color, icons (SVG + 192/512 PNG + maskable), display=standalone, app-shortcuts for `/staff-my-project` and `/join-our-network`.
-- Icon set generated from `public/icons/icon-source.svg` via macOS `qlmanage` + `sips`. To regenerate after a brand change:
-  ```bash
-  qlmanage -t -s 1024 -o /tmp public/icons/icon-source.svg
-  cp /tmp/icon-source.svg.png public/icons/icon-512.png
-  sips -Z 512 public/icons/icon-512.png --out public/icons/icon-512.png
-  sips -Z 192 public/icons/icon-512.png --out public/icons/icon-192.png
-  sips -Z 180 public/icons/icon-512.png --out public/apple-touch-icon.png
-  cp public/icons/icon-512.png public/icons/icon-maskable-512.png
-  ```
-- Meta tags in `app/root.tsx`:
-  - `mobile-web-app-capable` + `apple-mobile-web-app-capable` for standalone install
-  - `apple-mobile-web-app-status-bar-style: black-translucent`
-  - `apple-mobile-web-app-title: CrewVolt`
-  - `application-name: CrewVolt`
-  - `format-detection: telephone=no` (prevents iOS auto-linking phone-like number patterns)
-  - `theme-color` with `(prefers-color-scheme: light)` and `(prefers-color-scheme: dark)` variants — Android Chrome address bar tints accordingly
-  - `color-scheme: light` meta + CSS declaration
-- Viewport: `width=device-width, initial-scale=1, viewport-fit=cover` — required for `env(safe-area-inset-*)` to work on notched devices.
-- Mobile-only CSS polish in `app/styles/app.css`:
-  - `-webkit-tap-highlight-color: transparent` on all interactive elements
-  - `touch-action: manipulation` (eliminates 300ms double-tap delay)
-  - `overscroll-behavior-y: contain` on body (no rubber-band scroll)
-  - `-webkit-font-smoothing: antialiased`
-  - Safe-area utility classes: `.cv-safe-pt`, `.cv-safe-pb`, `.cv-safe-px`
-- Sonner toaster repositioned to `bottom-center` with `env(safe-area-inset-bottom)` offset so it doesn't collide with the sticky top nav on mobile.
-- Nav header uses `paddingTop: env(safe-area-inset-top)` so notched-iPhone status bars don't overlap the logo.
+- All pages: title 50–60 chars, description 150–160 chars, canonical, OG, twitter:card.
+- OG image: `public/og/crewvolt-default.png` (single static — TODO: per-page via Workers OG)
+- Schema: ProfessionalService (global), Service (services), FAQ (why-crewvolt), LocalBusiness (contact), JobPosting (join-our-network — datePosted is computed dynamically server-side).
+- Sitemap: `public/sitemap.xml` with current lastmod.
+- Accessibility: skip-to-content link, semantic `<main>`, focus-visible rings, keyboard nav, `aria-current="page"` on active nav, copper underline on active link (color + shape — fixes WCAG 1.4.1).
 
 ## Operational notes
 
 - `RESEND_API_KEY` is required for email notifications. Without it, forms still save to D1.
-- `CF_WEB_ANALYTICS_TOKEN` is optional. If blank, analytics script is not injected.
-- Success toast auto-dismisses in ~5s, faster than Playwright's default 30s `waitFor`. The reliable assertion is "form fields cleared" + a D1 row appearing.
+- `CF_WEB_ANALYTICS_TOKEN` is optional. If blank, the analytics script is not injected.
+- Real phone DID is `+1-423-555-0100` placeholder — replace with the live number across:
+  - `app/components/footer.tsx` (`PHONE_DISPLAY` / `PHONE_TEL`)
+  - `app/components/nav.tsx` (`tel:` href + display string)
+  - `app/components/sticky-mobile-cta.tsx` (`PHONE_TEL`)
+  - `app/routes/contact.tsx` aside
+  - `app/components/form-success.tsx` (`PHONE_TEL` / `PHONE_DISPLAY`)
+- Success toast auto-dismisses in ~5s. The reliable success indicator is now the `<FormSuccess>` block that replaces the form on `actionData.ok`.
 
 ## TODO (needs human action)
 
-- Add real phone number across site (contact page, footer)
+- Wire real phone DID
 - Point `crewvolt.com` DNS to Cloudflare Workers
-- Add real testimonials/case studies when available
-- Write blog content
-- Replace founder quote on About page with real name when approved
-- Set `RESEND_API_KEY` Worker secret to enable email notifications on submissions
+- Set `RESEND_API_KEY` Worker secret
+- Set `CF_WEB_ANALYTICS_TOKEN` once a Web Analytics site is created
+- Add real testimonials/case studies as engagements progress
+- Write blog content (sheet placeholder until then)
+- Replace founder quote / placeholder name on About page
+- Real client logos in homepage proof bar
+- Per-page dynamic OG via `@cloudflare/workers-og` (M5 — deferred)
+- Cloudflare Turnstile on intake forms (post-demo hardening)

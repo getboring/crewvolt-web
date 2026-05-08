@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
+import { ComparisonMatrix } from "~/components/comparison-matrix";
 import { CtaBanner } from "~/components/cta-banner";
 import { JsonLdScript } from "~/components/json-ld-script";
 import { SectionEyebrow } from "~/components/section-eyebrow";
@@ -60,6 +61,56 @@ export default function WhyCrewVoltRoute() {
       </SectionWrapper>
 
       <SectionWrapper tone="white">
+        <SectionEyebrow label="How we compare" />
+        <h2 className="font-headline text-[clamp(1.75rem,3vw,2.25rem)] leading-[1.15] font-semibold text-cv-navy">
+          CrewVolt vs the alternatives.
+        </h2>
+        <p className="mt-3 max-w-3xl text-base leading-7 text-cv-charcoal">
+          A quick spec comparison against the four staffing models energy
+          construction projects typically choose between.
+        </p>
+        <div className="mt-8">
+          <ComparisonMatrix
+            columns={["CrewVolt", "General agency", "Direct hire", "1099 contractor"]}
+            rows={[
+              {
+                label: "Energy infrastructure specialization",
+                note: "Substation, wind, solar, BESS, transmission",
+                values: ["yes", "no", "partial", "partial"],
+              },
+              {
+                label: "W-2 employment with workers comp",
+                values: ["yes", "partial", "yes", "no"],
+              },
+              {
+                label: "Field-vetted references",
+                note: "Worked-alongside, not resume keywords",
+                values: ["yes", "no", "partial", "partial"],
+              },
+              {
+                label: "Project-timeline staffing",
+                note: "No permanent headcount risk",
+                values: ["yes", "yes", "no", "yes"],
+              },
+              {
+                label: "Continuity between projects",
+                values: ["yes", "no", "yes", "no"],
+              },
+              {
+                label: "One invoice, AP-friendly",
+                values: ["yes", "yes", "partial", "no"],
+              },
+              {
+                label: "Five-day average match window",
+                note: "Active network only",
+                values: ["yes", "no", "no", "partial"],
+              },
+            ]}
+          />
+        </div>
+      </SectionWrapper>
+
+      <SectionWrapper tone="parchment">
         <SectionEyebrow label="Frequently asked questions" />
         <Accordion type="single" collapsible className="rounded-xl border border-cv-border bg-cv-cream p-3">
           {whyCrewVoltFaq.map((item) => (
@@ -83,7 +134,7 @@ export default function WhyCrewVoltRoute() {
         </p>
       </SectionWrapper>
 
-      <SectionWrapper tone="parchment">
+      <SectionWrapper tone="white">
         <CtaBanner />
       </SectionWrapper>
     </>

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import { toast } from "sonner";
 
+import { FormSuccess } from "~/components/form-success";
 import { SectionWrapper } from "~/components/section-wrapper";
 import {
   Form,
@@ -148,6 +149,9 @@ export default function StaffMyProjectRoute() {
       form.reset();
     } else {
       toast.error(actionData.message);
+      if ("fieldErrors" in actionData && actionData.fieldErrors) {
+        toast.error("Please fix the highlighted fields");
+      }
     }
   }, [actionData, form]);
 
@@ -178,6 +182,15 @@ export default function StaffMyProjectRoute() {
         .
       </p>
 
+      {actionData?.ok ? (
+        <div className="mt-8">
+          <FormSuccess
+            message={actionData.message}
+            secondaryHref="/services"
+            secondaryLabel="See all services"
+          />
+        </div>
+      ) : (
       <div className="mt-8 rounded-xl border border-cv-border bg-white p-6 shadow-sm md:p-8">
         <Form {...form}>
           <form
@@ -432,6 +445,7 @@ export default function StaffMyProjectRoute() {
           </form>
         </Form>
       </div>
+      )}
     </SectionWrapper>
   );
 }
